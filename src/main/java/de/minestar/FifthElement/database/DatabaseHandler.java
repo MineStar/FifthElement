@@ -20,8 +20,12 @@ package de.minestar.FifthElement.database;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.bukkit.Location;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
@@ -30,6 +34,7 @@ import de.minestar.minestarlibrary.database.AbstractDatabaseHandler;
 import de.minestar.minestarlibrary.database.DatabaseConnection;
 import de.minestar.minestarlibrary.database.DatabaseType;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class DatabaseHandler extends AbstractDatabaseHandler {
 
@@ -55,13 +60,73 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     @Override
     protected void createStatements(String pluginName, Connection con) throws Exception {
-        // TODO: Create statements
+
+        addWarp = con.prepareStatement("INSERT INTO warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+
+        updateWarpLocation = con.prepareStatement("UPDATE warp SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+
     }
+
+    /* STATEMENTS */
+    private PreparedStatement addWarp;
+    private PreparedStatement updateWarpLocation;
 
     public Map<String, Warp> loadWarps() {
         Map<String, Warp> warpMap = new TreeMap<String, Warp>();
 
         return warpMap;
+    }
+
+    public boolean addWarp(Warp warp) {
+        try {
+
+            // INSERT WARP INTO TABLE
+            addWarp.setString(1, warp.getName());
+            addWarp.setString(2, warp.getOwner());
+            addWarp.setString(3, warp.getLocation().getWorld().getName().toLowerCase());
+            addWarp.setDouble(4, warp.getLocation().getX());
+            addWarp.setDouble(5, warp.getLocation().getY());
+            addWarp.setDouble(6, warp.getLocation().getZ());
+            addWarp.setFloat(7, warp.getLocation().getYaw());
+            addWarp.setFloat(8, warp.getLocation().getPitch());
+            addWarp.setBoolean(9, false);
+            addWarp.setString(10, "");
+
+            addWarp.executeUpdate();
+
+            // GET THE GENERATED ID
+            ResultSet rs = addWarp.getGeneratedKeys();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt(1);
+                warp.setId(id);
+                return true;
+            } else {
+                ConsoleUtils.printError(Core.NAME, "Can't get the id for the warp = " + warp);
+                return false;
+            }
+
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't insert the warp = " + warp);
+            return false;
+        }
+    }
+
+    public boolean updateWarpLocation(Warp warp) {
+        try {
+            Location loc = warp.getLocation();
+            updateWarpLocation.setString(1, loc.getWorld().getName().toLowerCase());
+            updateWarpLocation.setDouble(2, loc.getX());
+            updateWarpLocation.setDouble(3, loc.getY());
+            updateWarpLocation.setDouble(4, loc.getZ());
+            updateWarpLocation.setFloat(5, loc.getYaw());
+            updateWarpLocation.setFloat(6, loc.getPitch());
+            updateWarpLocation.setInt(7, warp.getId());
+            return updateWarpLocation.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update warp location of warp = " + warp);
+            return false;
+        }
     }
 
 }
