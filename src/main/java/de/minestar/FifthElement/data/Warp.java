@@ -20,6 +20,7 @@ package de.minestar.FifthElement.data;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -57,12 +58,13 @@ public class Warp {
     }
 
     // CONSTRUCTOR WHEN WARP IS LOADED FROM DATABASE
-    public Warp(int id, String name, boolean isPublic, String owner, Set<String> guests, String worldName, double x, double y, double z, float yaw, float pitch) {
+    public Warp(int id, String name, boolean isPublic, String owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch) {
         this.id = id;
         this.name = name;
-        this.isPublic = isPublic;
         this.owner = owner;
-        this.guests = guests;
+        this.isPublic = isPublic;
+        if (!isPublic)
+            parseGuestList(guestList);
 
         createLocation(worldName, x, y, z, yaw, pitch);
     }
@@ -197,4 +199,28 @@ public class Warp {
         return location;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getGuestList() {
+        StringBuilder sBuilder = new StringBuilder();
+
+        for (String guest : guests) {
+            sBuilder.append(guest);
+            sBuilder.append(";");
+        }
+        sBuilder.deleteCharAt(sBuilder.length() - 1);
+
+        return sBuilder.toString();
+    }
+
+    private final static Pattern P = Pattern.compile(";");
+
+    private void parseGuestList(String guestList) {
+        this.guests = new HashSet<String>();
+        String[] split = P.split(guestList);
+        for (String string : split)
+            guests.add(string);
+    }
 }
