@@ -18,13 +18,37 @@
 
 package de.minestar.FifthElement.core;
 
+import de.minestar.FifthElement.database.DatabaseHandler;
+import de.minestar.FifthElement.manager.WarpManager;
 import de.minestar.minestarlibrary.AbstractCore;
 
 public class Core extends AbstractCore {
 
     public static final String NAME = "FifthElement";
 
+    /* MANAGER */
+    public static DatabaseHandler dbHandler;
+    public static WarpManager warpManager;
+
     public Core() {
         super(NAME);
+    }
+
+    @Override
+    protected boolean createManager() {
+        dbHandler = new DatabaseHandler(getDataFolder());
+        if (!dbHandler.hasConnection())
+            return false;
+
+        warpManager = new WarpManager();
+
+        return true;
+    }
+
+    @Override
+    protected boolean commonDisable() {
+        dbHandler.closeConnection();
+
+        return !dbHandler.hasConnection();
     }
 }
