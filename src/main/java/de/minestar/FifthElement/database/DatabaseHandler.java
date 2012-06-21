@@ -22,6 +22,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -63,23 +64,72 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
         addWarp = con.prepareStatement("INSERT INTO warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
+        deleteWarp = con.prepareStatement("DELETE FROM warp WHERE id = ?");
+
         updateWarpLocation = con.prepareStatement("UPDATE warp SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
+        updateWarpName = con.prepareStatement("UPDATE warp SET name = ? WHERE id = ?");
+
+        updateGuestList = con.prepareStatement("UPDATE warp SET guests = ? WHERE id = ?");
+
+        updateAccess = con.prepareStatement("UPDATE warp SET isPublic = ? WHERE id = ?");
     }
 
     /* STATEMENTS */
     private PreparedStatement addWarp;
+    private PreparedStatement deleteWarp;
     private PreparedStatement updateWarpLocation;
+    private PreparedStatement updateWarpName;
+    private PreparedStatement updateGuestList;
+    private PreparedStatement updateAccess;
 
     public Map<String, Warp> loadWarps() {
         Map<String, Warp> warpMap = new TreeMap<String, Warp>();
+        try {
+            Statement stat = dbConnection.getConnection().createStatement();
+            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests FROM warp");
+            // TEMP VARIABLEN
+            int id;
+            String name;
+            String owner;
+            String worldName;
+            double x;
+            double y;
+            double z;
+            float yaw;
+            float pitch;
+            boolean isPublic;
+            String guests;
 
+            // CREATE WARPS
+            while (rs.next()) {
+                // LOAD VARIABLEN
+                id = rs.getInt(1);
+                name = rs.getString(2);
+                owner = rs.getString(3);
+                worldName = rs.getString(4);
+                x = rs.getDouble(5);
+                y = rs.getDouble(6);
+                z = rs.getDouble(7);
+                yaw = rs.getFloat(8);
+                pitch = rs.getFloat(9);
+                isPublic = rs.getBoolean(10);
+                guests = rs.getString(11);
+
+                // CREATE WARP AND PUT IT TO MAP
+                warpMap.put(name.toLowerCase(), new Warp(id, name, isPublic, owner, guests, worldName, x, y, z, yaw, pitch));
+            }
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't load warps from table!");
+            // RETURN AN EMPTY MAP WHEN THERE IS AN ERROR
+            warpMap.clear();
+        }
         return warpMap;
     }
 
     public boolean addWarp(Warp warp) {
-        try {
 
+        try {
             // INSERT WARP INTO TABLE
             addWarp.setString(1, warp.getName());
             addWarp.setString(2, warp.getOwner());
@@ -112,8 +162,22 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         }
     }
 
-    public boolean updateWarpLocation(Warp warp) {
+    public boolean deleteWarp(Warp warp) {
+
         try {
+            // DELETE WARP FROM TABLE
+            deleteWarp.setInt(1, warp.getId());
+            return deleteWarp.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't delete the warp = " + warp);
+            return false;
+        }
+    }
+
+    public boolean updateWarpLocation(Warp warp) {
+
+        try {
+            // UPDATE THE WARP LOCATION
             Location loc = warp.getLocation();
             updateWarpLocation.setString(1, loc.getWorld().getName().toLowerCase());
             updateWarpLocation.setDouble(2, loc.getX());
@@ -129,4 +193,42 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         }
     }
 
+    public boolean updateWarpName(Warp warp) {
+
+        try {
+            // UPDATE THE WARP NAME
+            updateWarpName.setString(1, warp.getName());
+            updateWarpName.setInt(2, warp.getId());
+            return updateWarpName.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update warp name of warp = " + warp);
+            return false;
+        }
+    }
+
+    public boolean updateGuests(Warp warp) {
+
+        try {
+            // UPDATE THE GUEST LIST
+            updateGuestList.setString(1, warp.getGuestList());
+            updateGuestList.setInt(2, warp.getId());
+            return updateGuestList.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update the guest list of warp = " + warp);
+            return false;
+        }
+    }
+
+    public boolean updateAccess(Warp warp) {
+
+        try {
+            // UPDATE THE ACCESS MODIFIER
+            updateAccess.setBoolean(1, warp.isPublic());
+            updateAccess.setInt(2, warp.getId());
+            return updateAccess.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update the access modifier of warp = " + warp);
+            return false;
+        }
+    }
 }
