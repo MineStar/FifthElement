@@ -18,6 +18,8 @@
 
 package de.minestar.FifthElement.core;
 
+import java.io.File;
+
 import de.minestar.FifthElement.database.DatabaseHandler;
 import de.minestar.FifthElement.manager.WarpManager;
 import de.minestar.FifthElement.statistics.PrivateWarpStat;
@@ -46,6 +48,11 @@ public class Core extends AbstractCore {
 
     public Core() {
         super(NAME);
+    }
+
+    @Override
+    protected boolean loadingConfigs(File dataFolder) {
+        return Settings.init(dataFolder, NAME, getDescription().getVersion());
     }
 
     @Override
