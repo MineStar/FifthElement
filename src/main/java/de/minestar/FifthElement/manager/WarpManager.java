@@ -58,7 +58,7 @@ public class WarpManager {
             // GET COUNTER FOR THE OWNER
             warpCounter = warpCounterMap.get(owner);
 
-            // IF THE OWNER WAS UNIKAT
+            // IF THE OWNER WAS UNIQUE
             if (warpCounter == null) {
                 warpCounter = new WarpCounter(warp.getOwner());
                 warpCounterMap.put(owner, warpCounter);
@@ -76,17 +76,84 @@ public class WarpManager {
         return counter;
     }
 
+    // EXACT NAME NEEDED
     public boolean isWarpExisting(String warpName) {
         return warpMap.containsKey(warpName.toLowerCase());
     }
 
+    // EXACT NAME NEEDED
     public Warp getWarp(String warpName) {
         return warpMap.get(warpName.toLowerCase());
     }
 
+    // NAME MUST BE UNIQUE
     public void createWarp(String warpName, Player creator) {
         Warp warp = new Warp(warpName, creator);
+        incrementWarpCount(warp);
         Core.dbHandler.addWarp(warp);
         warpMap.put(warpName.toLowerCase(), warp);
+    }
+
+    private void incrementWarpCount(Warp warp) {
+        WarpCounter counter = this.warpCounterMap.get(warp.getOwner().toLowerCase());
+        // CREATE A NEW COUNTER FOR THE USER
+        if (counter == null) {
+            counter = new WarpCounter(warp.getOwner());
+            this.warpCounterMap.put(warp.getOwner().toLowerCase(), counter);
+        }
+        if (warp.isPublic())
+            counter.incrementPublicWarps();
+        else
+            counter.incrementPrivateWarps();
+    }
+
+    public void deleteWarp(Warp warp) {
+        decrementWarpCount(warp);
+        Core.dbHandler.deleteWarp(warp);
+        warpMap.remove(warp.getName().toLowerCase());
+    }
+
+    private void decrementWarpCount(Warp warp) {
+        WarpCounter counter = this.warpCounterMap.get(warp.getOwner().toLowerCase());
+        // CREATE A NEW COUNTER FOR THE USER
+        if (counter == null) {
+            counter = new WarpCounter(warp.getOwner());
+            this.warpCounterMap.put(warp.getOwner().toLowerCase(), counter);
+        }
+        if (warp.isPublic())
+            counter.decrementPublicWarps();
+        else
+            counter.decrementPrivateWarps();
+    }
+
+    public void changeAccess(Warp warp, boolean toPublic) {
+        warp.setAccessMode(toPublic);
+        Core.dbHandler.updateAccess(warp);
+    }
+
+    public void addGuest(Warp warp, String guestName) {
+        warp.addGuest(guestName);
+        Core.dbHandler.updateGuests(warp);
+    }
+
+    public void removeGuest(Warp warp, String guestName) {
+        warp.removeGuest(guestName);
+        Core.dbHandler.updateGuests(warp);
+    }
+
+    public WarpCounter getWarpCounter(String owner) {
+        return warpCounterMap.get(owner.toLowerCase());
+    }
+
+    public boolean canCreatePublic(String playerName) {
+        WarpCounter counter = getWarpCounter(playerName);
+
+        return false;
+    }
+
+    public boolean canCreatePrivate(String playerName) {
+        WarpCounter counter = getWarpCounter(playerName);
+
+        return false;
     }
 }
