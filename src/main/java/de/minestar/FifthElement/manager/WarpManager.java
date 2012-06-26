@@ -24,8 +24,11 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.data.WarpCounter;
+import de.minestar.core.MinestarCore;
+import de.minestar.core.units.MinestarGroup;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class WarpManager {
@@ -95,12 +98,8 @@ public class WarpManager {
     }
 
     private void incrementWarpCount(Warp warp) {
-        WarpCounter counter = this.warpCounterMap.get(warp.getOwner().toLowerCase());
-        // CREATE A NEW COUNTER FOR THE USER
-        if (counter == null) {
-            counter = new WarpCounter(warp.getOwner());
-            this.warpCounterMap.put(warp.getOwner().toLowerCase(), counter);
-        }
+        WarpCounter counter = getWarpCounter(warp.getOwner());
+
         if (warp.isPublic())
             counter.incrementPublicWarps();
         else
@@ -114,12 +113,8 @@ public class WarpManager {
     }
 
     private void decrementWarpCount(Warp warp) {
-        WarpCounter counter = this.warpCounterMap.get(warp.getOwner().toLowerCase());
-        // CREATE A NEW COUNTER FOR THE USER
-        if (counter == null) {
-            counter = new WarpCounter(warp.getOwner());
-            this.warpCounterMap.put(warp.getOwner().toLowerCase(), counter);
-        }
+        WarpCounter counter = getWarpCounter(warp.getOwner());
+
         if (warp.isPublic())
             counter.decrementPublicWarps();
         else
@@ -142,18 +137,29 @@ public class WarpManager {
     }
 
     public WarpCounter getWarpCounter(String owner) {
-        return warpCounterMap.get(owner.toLowerCase());
+        WarpCounter counter = warpCounterMap.get(owner.toLowerCase());
+        if (counter == null) {
+            counter = new WarpCounter(owner);
+            warpCounterMap.put(owner.toLowerCase(), counter);
+        }
+        return counter;
     }
 
     public boolean canCreatePublic(String playerName) {
+        // GET THE CURRENT COUNT
         WarpCounter counter = getWarpCounter(playerName);
-
-        return false;
+        // GET THE GROUP OF THE PLAYER
+        MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
+        // CURRENT COUNTER IS LOWER THAN ALLOWED
+        return counter.getPublicWarps() < Settings.getMaxPublicWarps(group);
     }
 
     public boolean canCreatePrivate(String playerName) {
+        // GET THE CURRENT COUNT
         WarpCounter counter = getWarpCounter(playerName);
-
-        return false;
+        // GET THE GROUP OF THE PLAYER
+        MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
+        // CURRENT COUNTER IS LOWER THAN ALLOWED
+        return counter.getPrivateWarps() < Settings.getMaxPrivateWarps(group);
     }
 }
