@@ -18,8 +18,11 @@
 
 package de.minestar.FifthElement.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.bukkit.entity.Player;
 
@@ -33,18 +36,21 @@ import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class WarpManager {
 
-    private Map<String, Warp> warpMap;
+    private TreeMap<String, Warp> warpMap;
     private Map<String, WarpCounter> warpCounterMap;
 
     public WarpManager() {
         loadWarps();
     }
 
+    // **************************
+    // LOADING AND INITIALIZATION
+    // **************************
+
     private void loadWarps() {
         warpMap = Core.dbHandler.loadWarps();
         int[] counter = countWarps();
         ConsoleUtils.printInfo(Core.NAME, "Loaded " + warpMap.size() + " Warps. There were " + counter[0] + " public and " + counter[1] + " warps");
-
     }
 
     private int[] countWarps() {
@@ -59,13 +65,8 @@ public class WarpManager {
         for (Warp warp : warpMap.values()) {
             owner = warp.getOwner().toLowerCase();
             // GET COUNTER FOR THE OWNER
-            warpCounter = warpCounterMap.get(owner);
+            warpCounter = getWarpCounter(owner);
 
-            // IF THE OWNER WAS UNIQUE
-            if (warpCounter == null) {
-                warpCounter = new WarpCounter(warp.getOwner());
-                warpCounterMap.put(owner, warpCounter);
-            }
             // INCREMENT THE COUNTER
             if (warp.isPublic()) {
                 warpCounter.incrementPublicWarps();
@@ -79,6 +80,10 @@ public class WarpManager {
         return counter;
     }
 
+    // **************************
+    // ******* FIND WARPS *******
+    // **************************
+
     // EXACT NAME NEEDED
     public boolean isWarpExisting(String warpName) {
         return warpMap.containsKey(warpName.toLowerCase());
@@ -88,6 +93,30 @@ public class WarpManager {
     public Warp getWarp(String warpName) {
         return warpMap.get(warpName.toLowerCase());
     }
+
+    public List<Warp> findWarp(String searchWord) {
+
+        List<Warp> results = new ArrayList<Warp>();
+        // HAVE FOUND EXACT NAME
+        Warp warp = getWarp(searchWord);
+        if (warp != null)
+            results.add(warp);
+
+        searchWord = searchWord.toLowerCase();
+        warp = warpMap.ceilingEntry(searchWord).getValue();
+        if (warp != null)
+            results.add(warp);
+
+        warp = warpMap.floorEntry(searchWord).getValue();
+        if (warp != null)
+            results.add(warp);
+
+        return results;
+    }
+
+    // **************************
+    // MANIPULATE CURRENT WARPS
+    // **************************
 
     // NAME MUST BE UNIQUE
     public void createWarp(String warpName, Player creator) {

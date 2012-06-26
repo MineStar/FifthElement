@@ -23,7 +23,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.Location;
@@ -83,8 +82,8 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     private PreparedStatement updateGuestList;
     private PreparedStatement updateAccess;
 
-    public Map<String, Warp> loadWarps() {
-        Map<String, Warp> warpMap = new TreeMap<String, Warp>();
+    public TreeMap<String, Warp> loadWarps() {
+        TreeMap<String, Warp> warpMap = new TreeMap<String, Warp>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
             ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests FROM warp");
