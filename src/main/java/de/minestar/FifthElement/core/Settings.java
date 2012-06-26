@@ -18,14 +18,21 @@
 
 package de.minestar.FifthElement.core;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.bukkit.configuration.ConfigurationSection;
+
+import de.minestar.core.units.MinestarGroup;
 import de.minestar.minestarlibrary.config.MinestarConfig;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class Settings {
 
     /* VALUES */
-    
+    private static Map<MinestarGroup, Integer> maxPrivateWarps;
+    private static Map<MinestarGroup, Integer> maxPublicWarps;
 
     /* USED FOR SETTING */
     private static MinestarConfig config;
@@ -56,6 +63,40 @@ public class Settings {
 
     private static void loadValues() {
 
+        loadMaxWarps();
+
+    }
+
+    private static void loadMaxWarps() {
+        // GET THE SUB SECTION
+        ConfigurationSection section = config.getConfigurationSection("warpCounter.private");
+
+        // READ THE COUNTER FOR MAX ALLOWED PRIVATE WARPS
+        maxPrivateWarps = new HashMap<MinestarGroup, Integer>();
+        MinestarGroup group;
+        int count;
+        for (Entry<String, Object> configEntry : section.getValues(true).entrySet()) {
+            group = MinestarGroup.getGroup(configEntry.getKey());
+            count = Integer.parseInt(configEntry.getValue().toString());
+            maxPrivateWarps.put(group, count);
+        }
+
+        // READ THE COUNTER FOR MAX ALLOWED PUBLIC WARPS
+        section = config.getConfigurationSection("warpCounter.public");
+        maxPublicWarps = new HashMap<MinestarGroup, Integer>();
+        for (Entry<String, Object> configEntry : section.getValues(true).entrySet()) {
+            group = MinestarGroup.getGroup(configEntry.getKey());
+            count = Integer.parseInt(configEntry.getValue().toString());
+            maxPublicWarps.put(group, count);
+        }
+    }
+
+    public static Integer getMaxPrivateWarps(MinestarGroup group) {
+        return maxPrivateWarps.get(group);
+    }
+
+    public static Integer getMaxPublicWarps(MinestarGroup group) {
+        return maxPublicWarps.get(group);
     }
 
 }
