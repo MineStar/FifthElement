@@ -130,6 +130,43 @@ public class WarpManager {
         return results;
     }
 
+    // USERNAME MUST EXIST!
+    public List<Warp> getUserWarps(String userName) {
+
+        List<Warp> results = new LinkedList<Warp>();
+        userName = userName.toLowerCase();
+
+        for (Warp warp : warpMap.values()) {
+            if (warp.getOwner().equalsIgnoreCase(userName))
+                results.add(warp);
+        }
+        return results;
+    }
+
+    // RETURN ALL PUBLIC WARPS
+    public List<Warp> getPublicWarps() {
+
+        List<Warp> results = new LinkedList<Warp>();
+
+        for (Warp warp : warpMap.values()) {
+            if (warp.isPublic())
+                results.add(warp);
+        }
+
+        return results;
+    }
+
+    public List<Warp> getAccessableWarps(String userName) {
+
+        List<Warp> results = new LinkedList<Warp>();
+        for (Warp warp : warpMap.values()) {
+            if (warp.canUse(userName))
+                results.add(warp);
+        }
+
+        return results;
+    }
+
     // **************************
     // MANIPULATE CURRENT WARPS
     // **************************

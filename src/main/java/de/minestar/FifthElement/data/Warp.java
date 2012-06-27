@@ -89,7 +89,11 @@ public class Warp {
 
     // CHECK IF PLAYER IS OWNER
     public boolean isOwner(Player player) {
-        return this.owner.equals(player.getName());
+        return isOwner(player.getName());
+    }
+
+    private boolean isOwner(String playerName) {
+        return this.owner.equalsIgnoreCase(playerName);
     }
 
     // CHECK IF PLAYER CAN MOVE/RENAME/DELETE OR EDIT THE WARP
@@ -143,8 +147,12 @@ public class Warp {
         return isGuest(player.getName());
     }
 
+    public boolean canUse(String playerName) {
+        return isPublic || isOwner(playerName) || isGuest(playerName);
+    }
+
     public boolean canUse(Player player) {
-        return isOwner(player) || isPublic || isGuest(player);
+        return canUse(player.getName());
     }
 
     public void setId(int id) {
