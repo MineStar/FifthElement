@@ -20,8 +20,10 @@ package de.minestar.FifthElement.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.bukkit.entity.Player;
@@ -110,6 +112,20 @@ public class WarpManager {
         warp = warpMap.floorEntry(searchWord).getValue();
         if (warp != null)
             results.add(warp);
+
+        return results;
+    }
+
+    // SEARCH FOR WARP USING CONTAINS
+    public List<Warp> searchWarp(String searchWord) {
+        List<Warp> results = new LinkedList<Warp>();
+
+        searchWord = searchWord.toLowerCase();
+
+        for (Entry<String, Warp> entry : warpMap.entrySet()) {
+            if (entry.getKey().contains(searchWord))
+                results.add(entry.getValue());
+        }
 
         return results;
     }
