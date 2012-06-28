@@ -23,11 +23,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.bukkit.Location;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.data.Bank;
+import de.minestar.FifthElement.data.Home;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.minestarlibrary.config.MinestarConfig;
 import de.minestar.minestarlibrary.database.AbstractDatabaseHandler;
@@ -72,7 +76,20 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         updateGuestList = con.prepareStatement("UPDATE warp SET guests = ? WHERE id = ?");
 
         updateAccess = con.prepareStatement("UPDATE warp SET isPublic = ? WHERE id = ?");
+
+        addHome = con.prepareStatement("INSERT INTO home (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+
+        updateHomeLocation = con.prepareStatement("UPDATE home SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+
+        addBank = con.prepareStatement("INSERT INTO bank (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+
+        updateBankLocation = con.prepareStatement("UPDATE bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+
     }
+
+    // *****************
+    // ***** WARPS *****
+    // *****************
 
     /* STATEMENTS */
     private PreparedStatement addWarp;
@@ -230,4 +247,203 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
             return false;
         }
     }
+
+    // *****************
+    // ***** HOMES *****
+    // *****************
+
+    /* STATEMENTS */
+    private PreparedStatement addHome;
+    private PreparedStatement updateHomeLocation;
+
+    public Map<String, Home> loadHomes() {
+
+        Map<String, Home> homeMap = new HashMap<String, Home>();
+        try {
+            Statement stat = dbConnection.getConnection().createStatement();
+            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM home");
+            // TEMP VARIABLEN
+            int id;
+            String player;
+            String worldName;
+            double x;
+            double y;
+            double z;
+            float yaw;
+            float pitch;
+
+            // CREATE WARPS
+            while (rs.next()) {
+                // LOAD VARIABLEN
+                id = rs.getInt(1);
+                player = rs.getString(2);
+                worldName = rs.getString(3);
+                x = rs.getDouble(4);
+                y = rs.getDouble(5);
+                z = rs.getDouble(6);
+                yaw = rs.getFloat(7);
+                pitch = rs.getFloat(8);
+
+                // CREATE WARP AND PUT IT TO MAP
+                homeMap.put(player.toLowerCase(), new Home(id, player, x, y, z, yaw, pitch, worldName));
+            }
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't load homes from table!");
+            // RETURN AN EMPTY MAP WHEN THERE IS AN ERROR
+            homeMap.clear();
+        }
+        return homeMap;
+    }
+
+    public boolean addHome(Home home) {
+        try {
+            // INSERT NEW HOME
+            addHome.setString(1, home.getOwner());
+            addHome.setString(2, home.getLocation().getWorld().getName());
+            addHome.setDouble(3, home.getLocation().getX());
+            addHome.setDouble(4, home.getLocation().getY());
+            addHome.setDouble(5, home.getLocation().getZ());
+            addHome.setFloat(6, home.getLocation().getYaw());
+            addHome.setFloat(7, home.getLocation().getPitch());
+
+            addHome.executeUpdate();
+
+            // GET THE GENERATED ID
+            ResultSet rs = addHome.getGeneratedKeys();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt(1);
+                home.setId(id);
+                return true;
+            } else {
+                ConsoleUtils.printError(Core.NAME, "Can't get the id for the home = " + home);
+                return false;
+            }
+
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't add home to database! Home = " + home);
+            return false;
+        }
+    }
+
+    public boolean updateHomeLocation(Home home) {
+
+        try {
+            // SET NEW LOCATION VALUES
+            updateHomeLocation.setString(1, home.getLocation().getWorld().getName());
+            updateHomeLocation.setDouble(2, home.getLocation().getX());
+            updateHomeLocation.setDouble(3, home.getLocation().getY());
+            updateHomeLocation.setDouble(4, home.getLocation().getZ());
+            updateHomeLocation.setFloat(5, home.getLocation().getYaw());
+            updateHomeLocation.setFloat(6, home.getLocation().getPitch());
+            updateHomeLocation.setInt(7, home.getId());
+
+            // EXECUTE
+            return updateHomeLocation.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't store location change of home to database! Home = " + home);
+            return false;
+        }
+
+    }
+
+    // *****************
+    // ***** BANKS *****
+    // *****************
+
+    /* STATEMENTS */
+    private PreparedStatement addBank;
+    private PreparedStatement updateBankLocation;
+
+    public Map<String, Bank> loadBanks() {
+
+        Map<String, Bank> bankMap = new HashMap<String, Bank>();
+        try {
+            Statement stat = dbConnection.getConnection().createStatement();
+            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM bank");
+            // TEMP VARIABLEN
+            int id;
+            String player;
+            String worldName;
+            double x;
+            double y;
+            double z;
+            float yaw;
+            float pitch;
+
+            // CREATE WARPS
+            while (rs.next()) {
+                // LOAD VARIABLEN
+                id = rs.getInt(1);
+                player = rs.getString(2);
+                worldName = rs.getString(3);
+                x = rs.getDouble(4);
+                y = rs.getDouble(5);
+                z = rs.getDouble(6);
+                yaw = rs.getFloat(7);
+                pitch = rs.getFloat(8);
+
+                // CREATE WARP AND PUT IT TO MAP
+                bankMap.put(player.toLowerCase(), new Bank(id, player, x, y, z, yaw, pitch, worldName));
+            }
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't load bank from table!");
+            // RETURN AN EMPTY MAP WHEN THERE IS AN ERROR
+            bankMap.clear();
+        }
+        return bankMap;
+    }
+
+    public boolean addBank(Bank bank) {
+        try {
+            // INSERT NEW HOME
+            addBank.setString(1, bank.getOwner());
+            addBank.setString(2, bank.getLocation().getWorld().getName());
+            addBank.setDouble(3, bank.getLocation().getX());
+            addBank.setDouble(4, bank.getLocation().getY());
+            addBank.setDouble(5, bank.getLocation().getZ());
+            addBank.setFloat(6, bank.getLocation().getYaw());
+            addBank.setFloat(7, bank.getLocation().getPitch());
+
+            addBank.executeUpdate();
+
+            // GET THE GENERATED ID
+            ResultSet rs = addBank.getGeneratedKeys();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt(1);
+                bank.setId(id);
+                return true;
+            } else {
+                ConsoleUtils.printError(Core.NAME, "Can't get the id for the bank = " + bank);
+                return false;
+            }
+
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't add home to database! Bank = " + bank);
+            return false;
+        }
+    }
+
+    public boolean updateBankLocation(Bank bank) {
+
+        try {
+            // SET NEW LOCATION VALUES
+            updateBankLocation.setString(1, bank.getLocation().getWorld().getName());
+            updateBankLocation.setDouble(2, bank.getLocation().getX());
+            updateBankLocation.setDouble(3, bank.getLocation().getY());
+            updateBankLocation.setDouble(4, bank.getLocation().getZ());
+            updateBankLocation.setFloat(5, bank.getLocation().getYaw());
+            updateBankLocation.setFloat(6, bank.getLocation().getPitch());
+            updateBankLocation.setInt(7, bank.getId());
+
+            // EXECUTE
+            return updateBankLocation.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't store location change of Bank to database! Bank = " + bank);
+            return false;
+        }
+
+    }
+
 }
