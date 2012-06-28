@@ -21,6 +21,8 @@ package de.minestar.FifthElement.core;
 import java.io.File;
 
 import de.minestar.FifthElement.database.DatabaseHandler;
+import de.minestar.FifthElement.manager.BankManager;
+import de.minestar.FifthElement.manager.HomeManager;
 import de.minestar.FifthElement.manager.WarpManager;
 import de.minestar.FifthElement.statistics.PrivateWarpStat;
 import de.minestar.FifthElement.statistics.PublicWarpStat;
@@ -45,6 +47,8 @@ public class Core extends AbstractCore {
     /* MANAGER */
     public static DatabaseHandler dbHandler;
     public static WarpManager warpManager;
+    public static HomeManager homeManager;
+    public static BankManager bankManager;
 
     public Core() {
         super(NAME);
@@ -62,6 +66,8 @@ public class Core extends AbstractCore {
             return false;
 
         warpManager = new WarpManager();
+        homeManager = new HomeManager();
+        bankManager = new BankManager();
 
         return true;
     }
