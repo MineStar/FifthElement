@@ -2,20 +2,7 @@
 -- Table `home`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `home` (
-  `player` VARCHAR(32) NULL DEFAULT NULL ,
-  `world` VARCHAR(32) NOT NULL ,
-  `x` DOUBLE NOT NULL ,
-  `y` DOUBLE NOT NULL ,
-  `z` DOUBLE NOT NULL ,
-  `yaw` FLOAT NOT NULL ,
-  `pitch` FLOAT NOT NULL ,
-  PRIMARY KEY (`player`) );
-
-
--- -----------------------------------------------------
--- Table `bank`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `bank` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `player` VARCHAR(32) NOT NULL ,
   `world` VARCHAR(32) NOT NULL ,
   `x` DOUBLE NOT NULL ,
@@ -23,8 +10,21 @@ CREATE  TABLE IF NOT EXISTS `bank` (
   `z` DOUBLE NOT NULL ,
   `yaw` FLOAT NOT NULL ,
   `pitch` FLOAT NOT NULL ,
-  PRIMARY KEY (`player`) );
+  PRIMARY KEY (`id`) );
 
+-- -----------------------------------------------------
+-- Table `bank`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `bank` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `player` VARCHAR(32) NOT NULL ,
+  `world` VARCHAR(32) NOT NULL ,
+  `x` DOUBLE NOT NULL ,
+  `y` DOUBLE NOT NULL ,
+  `z` DOUBLE NOT NULL ,
+  `yaw` FLOAT NOT NULL ,
+  `pitch` FLOAT NOT NULL ,
+  PRIMARY KEY (`id`) );
 
 -- -----------------------------------------------------
 -- Table `warp`
