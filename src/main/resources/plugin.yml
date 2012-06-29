@@ -1,3 +1,10 @@
 name: FifthElement
 main: de.minestar.FifthElement.Core
 version: ${pom.version}
+commands:
+  home:
+    description: Teleportiert Spieler zum Zuhause
+    usage: /home
+  setHome:
+    description: Erstellt oder versetzt das Zuhause
+    usage: /setHome

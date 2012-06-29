@@ -20,6 +20,8 @@ package de.minestar.FifthElement.core;
 
 import java.io.File;
 
+import de.minestar.FifthElement.commands.home.cmdHome;
+import de.minestar.FifthElement.commands.home.cmdSetHome;
 import de.minestar.FifthElement.database.DatabaseHandler;
 import de.minestar.FifthElement.manager.BankManager;
 import de.minestar.FifthElement.manager.HomeManager;
@@ -38,6 +40,7 @@ import de.minestar.FifthElement.statistics.WarpUninviteStat;
 import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.AbstractCore;
 import de.minestar.minestarlibrary.annotations.UseStatistic;
+import de.minestar.minestarlibrary.commands.CommandList;
 
 @UseStatistic
 public class Core extends AbstractCore {
@@ -87,6 +90,20 @@ public class Core extends AbstractCore {
         IlluminatiCore.registerStatistic(WarpRenameStat.class);
         IlluminatiCore.registerStatistic(WarpToStat.class);
         IlluminatiCore.registerStatistic(WarpUninviteStat.class);
+
+        return true;
+    }
+
+    @Override
+    protected boolean createCommands() {
+
+        // @formatter:off
+        cmdList = new CommandList(NAME,
+
+                new cmdHome(        "/home",        "",         "fifthelement.command.home"),
+                new cmdSetHome(     "/setHome",     "" ,        "fifthelement.command.sethome")
+        );
+        // @formatter:on
 
         return true;
     }
