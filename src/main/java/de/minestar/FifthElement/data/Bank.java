@@ -21,7 +21,6 @@ package de.minestar.FifthElement.data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -33,9 +32,9 @@ public class Bank {
     private Location location;
 
     // CONSTRUCTOR WHEN PLAYER CREATES A HOME
-    public Bank(Player player) {
-        this.owner = player.getName();
-        this.location = player.getLocation();
+    public Bank(Location location, String owner) {
+        this.owner = owner;
+        this.location = location;
     }
 
     // CONSTUCTOR WHEN HOME IS LOADED FROM DATABASE

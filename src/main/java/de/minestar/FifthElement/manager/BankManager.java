@@ -51,9 +51,9 @@ public class BankManager {
     // MANIPULATE CURRENT BANKS
     // **************************
 
-    public void createBank(Player player) {
-        Bank bank = new Bank(player);
-        bankMap.put(player.getName().toLowerCase(), bank);
+    public void createBank(Player creator, String bankOwner) {
+        Bank bank = new Bank(creator.getLocation(), bankOwner);
+        bankMap.put(bankOwner, bank);
         Core.dbHandler.addBank(bank);
     }
 
