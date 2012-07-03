@@ -244,4 +244,9 @@ public class WarpManager {
         // CURRENT COUNTER IS LOWER THAN ALLOWED
         return counter.getPrivateWarps() < Settings.getMaxPrivateWarps(group);
     }
+    
+    public void moveWarp(Warp warp, Player player) {
+        warp.move(player);
+        Core.dbHandler.updateWarpLocation(warp);
+    }
 }
