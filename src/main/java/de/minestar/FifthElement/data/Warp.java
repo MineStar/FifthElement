@@ -211,6 +211,10 @@ public class Warp {
         return owner;
     }
 
+    public Set<String> getGuests() {
+        return new HashSet<String>(guests);
+    }
+
     public String getGuestList() {
         StringBuilder sBuilder = new StringBuilder();
 

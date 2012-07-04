@@ -244,9 +244,21 @@ public class WarpManager {
         // CURRENT COUNTER IS LOWER THAN ALLOWED
         return counter.getPrivateWarps() < Settings.getMaxPrivateWarps(group);
     }
-    
+
     public void moveWarp(Warp warp, Player player) {
         warp.move(player);
         Core.dbHandler.updateWarpLocation(warp);
     }
+
+    public void renameWarp(Warp warp, String newName) {
+        // DELETE OLD ENTRY
+        this.warpMap.remove(warp.getName().toLowerCase());
+        // RENAME
+        warp.rename(newName);
+        this.warpMap.put(warp.getName().toLowerCase(), warp);
+        // PERSIST
+        Core.dbHandler.updateWarpName(warp);
+    }
+    
+    
 }
