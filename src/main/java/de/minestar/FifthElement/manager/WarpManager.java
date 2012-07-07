@@ -133,7 +133,7 @@ public class WarpManager {
     // USERNAME MUST EXIST!
     public List<Warp> getUserWarps(String userName) {
 
-        List<Warp> results = new LinkedList<Warp>();
+        List<Warp> results = new ArrayList<Warp>(15);
         userName = userName.toLowerCase();
 
         for (Warp warp : warpMap.values()) {
@@ -146,7 +146,8 @@ public class WarpManager {
     // RETURN ALL PUBLIC WARPS
     public List<Warp> getPublicWarps() {
 
-        List<Warp> results = new LinkedList<Warp>();
+        // PUBLIC WARPS ARE CA. 10% OF ALL WARPS
+        List<Warp> results = new ArrayList<Warp>(warpMap.size() / 10);
 
         for (Warp warp : warpMap.values()) {
             if (warp.isPublic())
@@ -158,7 +159,9 @@ public class WarpManager {
 
     public List<Warp> getAccessableWarps(String userName) {
 
-        List<Warp> results = new LinkedList<Warp>();
+        // PUBLIC WARPS ARE CA. 10% OF ALL WARPS AND PRIVATE WARPS ARE TO FEW TO
+        // MATTER
+        List<Warp> results = new ArrayList<Warp>(warpMap.size() / 10);
         for (Warp warp : warpMap.values()) {
             if (warp.canUse(userName))
                 results.add(warp);
@@ -259,6 +262,5 @@ public class WarpManager {
         // PERSIST
         Core.dbHandler.updateWarpName(warp);
     }
-    
-    
+
 }
