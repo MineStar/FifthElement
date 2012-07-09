@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
+import de.minestar.FifthElement.statistics.BankStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -69,5 +71,8 @@ public class cmdBank extends AbstractCommand {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new BankStat(player.getName(), bank.getOwner()));
     }
 }

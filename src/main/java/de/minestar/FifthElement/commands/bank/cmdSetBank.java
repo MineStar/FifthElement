@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
+import de.minestar.FifthElement.statistics.SetBankStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -54,6 +56,9 @@ public class cmdSetBank extends AbstractCommand {
                 PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat für dich eine Bank erstellt!");
                 PlayerUtils.sendInfo(target, "Verwende den Befehl '/bank' um dich dort hin zu teleportieren!");
             }
+
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new SetBankStat(player.getName(), targetName, false));
         }
         // PLAYER HAS A BANK -> UPDATE POSITION
         else {
@@ -66,6 +71,8 @@ public class cmdSetBank extends AbstractCommand {
             if (target != null)
                 PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat deine Bankposition verändert!");
 
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new SetBankStat(player.getName(), targetName, true));
         }
 
     }
