@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Home;
+import de.minestar.FifthElement.statistics.SetHomeStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -39,11 +41,18 @@ public class cmdSetHome extends AbstractCommand {
             Core.homeManager.createHome(player);
             PlayerUtils.sendSuccess(player, pluginName, "Du hast dir nun ein Zuhause erstellt!");
             PlayerUtils.sendInfo(player, "Mit '/home' kommst du nach Hause.");
+
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new SetHomeStat(player.getName(), false));
         }
         // UPDATE HOME POSITION
         else {
             Core.homeManager.moveHome(player, home);
             PlayerUtils.sendSuccess(player, pluginName, "Dein Zuhause ist nun hier.");
+
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new SetHomeStat(player.getName(), true));
+
         }
     }
 }

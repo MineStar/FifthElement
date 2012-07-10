@@ -25,6 +25,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Home;
+import de.minestar.FifthElement.statistics.HomeInfoStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -74,8 +76,10 @@ public class cmdHomeInfo extends AbstractExtendedCommand {
         }
 
         displayHomeInformation(player, home);
-    }
 
+        // FIRE STATISTICS
+        IlluminatiCore.handleStatistic(new HomeInfoStat(player.getName(), home.getOwner()));
+    }
     // FORMATTER TO DISPLAY ONLY ONE DIGIT
     private final static DecimalFormat dF = new DecimalFormat("#0.0");
 

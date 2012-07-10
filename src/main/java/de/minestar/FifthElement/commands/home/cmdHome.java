@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Home;
+import de.minestar.FifthElement.statistics.HomeStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -71,5 +73,8 @@ public class cmdHome extends AbstractExtendedCommand {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new HomeStat(player.getName(), home.getOwner()));
     }
 }
