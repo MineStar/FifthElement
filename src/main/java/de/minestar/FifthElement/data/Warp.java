@@ -49,16 +49,28 @@ public class Warp {
     // THE LOCATION OF THE WARP
     private Location location;
 
+    // BIT MASK HOW THE WARP CAN BE USED
+    // IF 1 IS SET -> USED BY COMMANDS
+    // IF 2 IS SET -> USED BY SIGNS
+    private byte useMode;
+
+    // COONSTANTS FOR USE MODE
+    public final static byte COMMAND_USEMODE = 1;
+    public final static byte SIGN_USEMODE = 2;
+
     // CONSTRUCTOR WHEN PLAYER CREATES INGAME A WARP
     public Warp(String warpName, Player player) {
         this.name = warpName;
         this.owner = player.getName();
         this.isPublic = false;
         guests = null;
+
+        // WARP CAN BE USED BY SIGNS AND COMMANDS
+        this.useMode |= COMMAND_USEMODE | SIGN_USEMODE;
     }
 
     // CONSTRUCTOR WHEN WARP IS LOADED FROM DATABASE
-    public Warp(int id, String name, boolean isPublic, String owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch) {
+    public Warp(int id, String name, boolean isPublic, String owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch, byte useMode) {
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -67,6 +79,8 @@ public class Warp {
             parseGuestList(guestList);
 
         createLocation(worldName, x, y, z, yaw, pitch);
+
+        this.useMode = useMode;
     }
 
     private void createLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
@@ -234,5 +248,25 @@ public class Warp {
         String[] split = P.split(guestList);
         for (String string : split)
             guests.add(string);
+    }
+
+    // *************
+    // ** USEMODE **
+    // *************
+
+    public void addUseMode(byte useMode) {
+        this.useMode |= useMode;
+    }
+
+    public void removeUseMode(byte useMode) {
+        this.useMode ^= useMode;
+    }
+
+    public boolean canUsedBy(byte useMode) {
+        return (this.useMode & useMode) == useMode;
+    }
+
+    public byte getUseMode() {
+        return useMode;
     }
 }

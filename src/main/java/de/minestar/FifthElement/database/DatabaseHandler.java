@@ -85,6 +85,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
         updateBankLocation = con.prepareStatement("UPDATE bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
+        updateUseMode = con.prepareStatement("UPDATE warp SET useMode = ? WHERE id = ?");
     }
 
     // *****************
@@ -98,12 +99,13 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     private PreparedStatement updateWarpName;
     private PreparedStatement updateGuestList;
     private PreparedStatement updateAccess;
+    private PreparedStatement updateUseMode;
 
     public TreeMap<String, Warp> loadWarps() {
         TreeMap<String, Warp> warpMap = new TreeMap<String, Warp>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests FROM warp");
+            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode FROM warp");
             // TEMP VARIABLEN
             int id;
             String name;
@@ -116,6 +118,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
             float pitch;
             boolean isPublic;
             String guests;
+            byte useMode;
 
             // CREATE WARPS
             while (rs.next()) {
@@ -131,9 +134,10 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
                 pitch = rs.getFloat(9);
                 isPublic = rs.getBoolean(10);
                 guests = rs.getString(11);
+                useMode = rs.getByte(12);
 
                 // CREATE WARP AND PUT IT TO MAP
-                warpMap.put(name.toLowerCase(), new Warp(id, name, isPublic, owner, guests, worldName, x, y, z, yaw, pitch));
+                warpMap.put(name.toLowerCase(), new Warp(id, name, isPublic, owner, guests, worldName, x, y, z, yaw, pitch, useMode));
             }
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't load warps from table!");
@@ -446,4 +450,18 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
 
     }
 
+    public boolean updateUseMode(Warp warp) {
+
+        try {
+            // SET NEW USEMODE
+            updateUseMode.setByte(1, warp.getUseMode());
+            updateUseMode.setInt(2, warp.getId());
+
+            // EXECUTE
+            return updateUseMode.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't save useMode update for the warp = " + warp);
+            return false;
+        }
+    }
 }

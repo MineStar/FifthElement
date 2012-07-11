@@ -41,5 +41,6 @@ CREATE  TABLE IF NOT EXISTS `warp` (
   `pitch` FLOAT NOT NULL ,
   `isPublic` TINYINT(1) NOT NULL ,
   `guests` TEXT NULL ,
+  `useMode` SMALLINT NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
