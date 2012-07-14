@@ -31,6 +31,7 @@ import de.minestar.FifthElement.commands.teleport.cmdTeleportHere;
 import de.minestar.FifthElement.commands.warp.cmdWarp;
 import de.minestar.FifthElement.commands.warp.cmdWarpCreate;
 import de.minestar.FifthElement.commands.warp.cmdWarpDelete;
+import de.minestar.FifthElement.commands.warp.cmdWarpInfo;
 import de.minestar.FifthElement.commands.warp.cmdWarpInvite;
 import de.minestar.FifthElement.commands.warp.cmdWarpMove;
 import de.minestar.FifthElement.commands.warp.cmdWarpPrivate;
@@ -156,7 +157,8 @@ public class Core extends AbstractCore {
                         new cmdWarpRename(  "rename",       "<OldName> <NewName>",          "fifthelement.command.warprename"),
                         new cmdWarpRandom(  "random",       "",                             "fifthelement.command.warprandom"),
                         new cmdWarpPublic(  "public",       "<Warp>",                       "fifthelement.command.warppublic"),
-                        new cmdWarpPrivate( "private",      "<Warp>",                       "fifthelement.command.warpprivate")
+                        new cmdWarpPrivate( "private",      "<Warp>",                       "fifthelement.command.warpprivate"),
+                        new cmdWarpInfo(    "info",         "<Warp>",                       "fifthelement.command.warpinfo")
                 )
         );
         // @formatter:on
