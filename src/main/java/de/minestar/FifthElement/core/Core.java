@@ -20,8 +20,22 @@ package de.minestar.FifthElement.core;
 
 import java.io.File;
 
+import de.minestar.FifthElement.commands.bank.cmdBank;
+import de.minestar.FifthElement.commands.bank.cmdBankInfo;
+import de.minestar.FifthElement.commands.bank.cmdSetBank;
 import de.minestar.FifthElement.commands.home.cmdHome;
+import de.minestar.FifthElement.commands.home.cmdHomeInfo;
 import de.minestar.FifthElement.commands.home.cmdSetHome;
+import de.minestar.FifthElement.commands.teleport.cmdTeleport;
+import de.minestar.FifthElement.commands.teleport.cmdTeleportHere;
+import de.minestar.FifthElement.commands.warp.cmdWarp;
+import de.minestar.FifthElement.commands.warp.cmdWarpCreate;
+import de.minestar.FifthElement.commands.warp.cmdWarpDelete;
+import de.minestar.FifthElement.commands.warp.cmdWarpInvite;
+import de.minestar.FifthElement.commands.warp.cmdWarpMove;
+import de.minestar.FifthElement.commands.warp.cmdWarpRandom;
+import de.minestar.FifthElement.commands.warp.cmdWarpRename;
+import de.minestar.FifthElement.commands.warp.cmdWarpUninvite;
 import de.minestar.FifthElement.database.DatabaseHandler;
 import de.minestar.FifthElement.manager.BankManager;
 import de.minestar.FifthElement.manager.HomeManager;
@@ -114,14 +128,37 @@ public class Core extends AbstractCore {
         // @formatter:off
         cmdList = new CommandList(NAME,
 
-                new cmdHome(        "/home",        "",         "fifthelement.command.home"),
-                new cmdSetHome(     "/setHome",     "" ,        "fifthelement.command.sethome")
+                // HOME COMMANDS
+                new cmdHome(        "/home",        "[HomeOwner]",          "fifthelement.command.home"),
+                new cmdSetHome(     "/setHome",     "",                     "fifthelement.command.sethome"),
+                new cmdHomeInfo(    "/homeInfo",    "[HomeOwner]",          "fifthelement.command.homeinfo"),
+
+                // BANK COMMANDS
+                new cmdBank(        "/bank",        "[BankOwner]",         "fifthelement.command.bank"),
+                new cmdSetBank(     "/setBank",     "<BankOwner>",         "fifthelement.command.setbank"),
+                new cmdBankInfo(    "/bankInfo",    "[BankOwner]",         "fifthelement.command.bankinfo"),
+
+                // TELEPORT COMMANDS
+                new cmdTeleport(    "/tp",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
+                new cmdTeleportHere("/tpHere",      "<Target> ... [Target n]", "fifthelement.command.tphere"),
+
+                // WARP COMMANDS AND SUB COMMANDS
+                new cmdWarp(        "/warp",        "<Warp>",               "fifthelement.command.warp", 
+                        
+                        new cmdWarpCreate(  "create",       "<Warp>",                       "fifthelement.command.warpcreate"),
+                        new cmdWarpCreate(  "pcreate",      "<Warp>",                       "fifthelement.command.warpcreate"),
+                        new cmdWarpDelete(  "delete",       "<Warp>",                       "fifthelement.command.warpdelete"),
+                        new cmdWarpInvite(  "invite",       "<Warp> <Player> ...[PlayerN]", "fifthelement.command.warpinvite"),
+                        new cmdWarpUninvite("uninvite",     "<Warp> <Player> ...[PlayerN]", "fifthelement.command.warpuninvite"),
+                        new cmdWarpMove(    "move",         "<Warp>",                       "fifthelement.command.warpmove"),
+                        new cmdWarpRename(  "rename",       "<OldName> <NewName>",          "fifthelement.command.warprename"),
+                        new cmdWarpRandom(  "random",       "",                             "fifthelement.command.warprandom")
+                )
         );
         // @formatter:on
 
         return true;
     }
-
     @Override
     protected boolean commonDisable() {
         dbHandler.closeConnection();

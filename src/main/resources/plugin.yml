@@ -8,3 +8,24 @@ commands:
   setHome:
     description: Erstellt oder versetzt das Zuhause
     usage: /setHome
+  homeInfo:
+    description: Gibt Informationen über das Zuhause aus
+    usage: /homeInfo
+  bank:
+    description: Teleportiert Spieler zu ihrer Bank
+    usage: /home
+  setBank:
+    description: Erstellt oder versetzt die Bank eines Spielers
+    usage: /setHome
+  bankInfo:
+    description: Gibt Informationen über die Bank aus
+    usage: /homeInfo
+  tp:
+    description: Teleport den Spieler
+    usage: /tp
+  tpHere:
+    description: Teleportiert die Spieler zum Command caller
+    usage: /tpHere
+   warp:
+    description: Alle Warp Commandos
+    usage: /warp
