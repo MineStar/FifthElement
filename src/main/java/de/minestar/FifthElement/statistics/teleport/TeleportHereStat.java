@@ -16,27 +16,35 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.teleport;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.bukkit.Location;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class HomeStat implements Statistic {
+public class TeleportHereStat implements Statistic {
 
-    private final String playerName;
-    private final String homeOwner;
-    private final Date date;
+    private String playerName;
+    private String targetName;
+    private String playerLocation;
+    private Date date;
 
-    public HomeStat(String playerName, String homeOwner) {
+    public TeleportHereStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
+
+    public TeleportHereStat(String playerName, String targetName, Location playerLocation) {
         this.playerName = playerName;
-        this.homeOwner = homeOwner;
+        this.targetName = targetName;
+        this.playerLocation = playerLocation.toString();
         this.date = new Date();
     }
 
@@ -47,31 +55,26 @@ public class HomeStat implements Statistic {
 
     @Override
     public String getName() {
-        return "Home";
+        return "TeleportHere";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
-
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
-
         head.put("playerName", StatisticType.STRING);
-        head.put("homeOwner", StatisticType.STRING);
+        head.put("targetName", StatisticType.STRING);
+        head.put("playerLocation", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-
-        return head;
+        return null;
     }
 
     @Override
     public Queue<Object> getData() {
-
         Queue<Object> data = new LinkedList<Object>();
-
         data.add(playerName);
-        data.add(homeOwner);
+        data.add(targetName);
+        data.add(playerLocation);
         data.add(DatabaseUtils.getDateTimeString(date));
-
         return data;
     }
-
 }

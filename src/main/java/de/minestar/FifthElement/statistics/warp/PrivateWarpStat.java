@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,15 +28,19 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class BankStat implements Statistic {
+public class PrivateWarpStat implements Statistic {
 
-    private final String playerName;
-    private final String bankOwner;
-    private final Date date;
+    private String playerName;
+    private String warpName;
+    private Date date;
 
-    public BankStat(String playerName, String bankOwner) {
+    public PrivateWarpStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
+
+    public PrivateWarpStat(String playerName, String warpName) {
         this.playerName = playerName;
-        this.bankOwner = bankOwner;
+        this.warpName = warpName;
         this.date = new Date();
     }
 
@@ -47,29 +51,24 @@ public class BankStat implements Statistic {
 
     @Override
     public String getName() {
-        return "Bank";
+        return "WarpPrivate";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
-
-        head.put("player", StatisticType.STRING);
-        head.put("owner", StatisticType.STRING);
+        head.put("playerName", StatisticType.STRING);
+        head.put("warpName", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-
         return head;
     }
 
     @Override
     public Queue<Object> getData() {
-        Queue<Object> data = new LinkedList<Object>();
-
-        data.add(playerName);
-        data.add(bankOwner);
-        data.add(DatabaseUtils.getDateTimeString(date));
-
-        return data;
+        Queue<Object> queue = new LinkedList<Object>();
+        queue.add(playerName);
+        queue.add(warpName);
+        queue.add(DatabaseUtils.getDateTimeString(date));
+        return null;
     }
-
 }

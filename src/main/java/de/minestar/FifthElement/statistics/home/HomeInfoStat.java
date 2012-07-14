@@ -16,35 +16,27 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.home;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.bukkit.Location;
-
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpToStat implements Statistic {
+public class HomeInfoStat implements Statistic {
 
-    private String playerName;
-    private String warpName;
-    private String location;
-    private Date date;
+    private final String playerName;
+    private final String homeOwner;
+    private final Date date;
 
-    public WarpToStat() {
-        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
-    }
-
-    public WarpToStat(String playerName, String warpName, Location location) {
+    public HomeInfoStat(String playerName, String homeOwner) {
         this.playerName = playerName;
-        this.warpName = warpName;
-        this.location = location.toString();
+        this.homeOwner = homeOwner;
         this.date = new Date();
     }
 
@@ -55,26 +47,30 @@ public class WarpToStat implements Statistic {
 
     @Override
     public String getName() {
-        return "Warp";
+        return "HomeInfo";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
+
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("playerName", StatisticType.STRING);
-        head.put("warpName", StatisticType.STRING);
-        head.put("playerLocation", StatisticType.STRING);
+        head.put("homeOwner", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-        return null;
+
+        return head;
     }
 
     @Override
     public Queue<Object> getData() {
+
         Queue<Object> data = new LinkedList<Object>();
+
         data.add(playerName);
-        data.add(warpName);
-        data.add(location);
+        data.add(homeOwner);
         data.add(DatabaseUtils.getDateTimeString(date));
+
         return data;
     }
 }

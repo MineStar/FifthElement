@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Home;
-import de.minestar.FifthElement.statistics.SetHomeStat;
+import de.minestar.FifthElement.statistics.home.SetHomeStat;
 import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;

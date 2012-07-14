@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.bank;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,14 +28,16 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class SetHomeStat implements Statistic {
+public class SetBankStat implements Statistic {
 
     private final String playerName;
+    private final String bankOwner;
     private final boolean updated;
     private final Date date;
 
-    public SetHomeStat(String playerName, boolean updated) {
+    public SetBankStat(String playerName, String bankOwner, boolean updated) {
         this.playerName = playerName;
+        this.bankOwner = bankOwner;
         this.updated = updated;
         this.date = new Date();
     }
@@ -47,7 +49,7 @@ public class SetHomeStat implements Statistic {
 
     @Override
     public String getName() {
-        return "SetHome";
+        return "SetBank";
     }
 
     @Override
@@ -56,6 +58,7 @@ public class SetHomeStat implements Statistic {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
 
         head.put("playerName", StatisticType.STRING);
+        head.put("bankOwner", StatisticType.STRING);
         head.put("updated", StatisticType.INT);
         head.put("date", StatisticType.DATETIME);
 
@@ -68,8 +71,9 @@ public class SetHomeStat implements Statistic {
         Queue<Object> data = new LinkedList<Object>();
 
         data.add(playerName);
-        // 1 = Home location updated
-        // 0 = Home created
+        data.add(bankOwner);
+        // 1 = Bank location updated
+        // 0 = Bank created
         data.add(updated ? 1 : 0);
         data.add(DatabaseUtils.getDateTimeString(date));
 

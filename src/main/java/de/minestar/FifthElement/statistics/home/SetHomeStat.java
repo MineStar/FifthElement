@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.home;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,19 +28,15 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpCreateStat implements Statistic {
+public class SetHomeStat implements Statistic {
 
-    private String playerName;
-    private String warpName;
-    private Date date;
+    private final String playerName;
+    private final boolean updated;
+    private final Date date;
 
-    public WarpCreateStat() {
-        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
-    }
-
-    public WarpCreateStat(String playerName, String warpName) {
+    public SetHomeStat(String playerName, boolean updated) {
         this.playerName = playerName;
-        this.warpName = warpName;
+        this.updated = updated;
         this.date = new Date();
     }
 
@@ -51,24 +47,33 @@ public class WarpCreateStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpCreate";
+        return "SetHome";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
+
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("playerName", StatisticType.STRING);
-        head.put("warpName", StatisticType.STRING);
+        head.put("updated", StatisticType.INT);
         head.put("date", StatisticType.DATETIME);
-        return null;
+
+        return head;
     }
 
     @Override
     public Queue<Object> getData() {
+
         Queue<Object> data = new LinkedList<Object>();
+
         data.add(playerName);
-        data.add(warpName);
+        // 1 = Home location updated
+        // 0 = Home created
+        data.add(updated ? 1 : 0);
         data.add(DatabaseUtils.getDateTimeString(date));
+
         return data;
     }
+
 }

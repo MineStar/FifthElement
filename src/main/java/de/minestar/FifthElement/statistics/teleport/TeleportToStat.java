@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.teleport;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -30,23 +30,21 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpMoveStat implements Statistic {
+public class TeleportToStat implements Statistic {
 
     private String playerName;
-    private String warpName;
-    private String originLocation;
-    private String newLocation;
+    private String targetName;
+    private String targetLocation;
     private Date date;
 
-    public WarpMoveStat() {
+    public TeleportToStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public WarpMoveStat(String playerName, String warpName, Location originLocation, Location newLocation) {
+    public TeleportToStat(String playerName, String targetName, Location targetLocation) {
         this.playerName = playerName;
-        this.warpName = warpName;
-        this.originLocation = originLocation.toString();
-        this.newLocation = newLocation.toString();
+        this.targetName = targetName;
+        this.targetLocation = targetLocation.toString();
         this.date = new Date();
     }
 
@@ -57,16 +55,15 @@ public class WarpMoveStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpMove";
+        return "TeleportTo";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
         head.put("playerName", StatisticType.STRING);
-        head.put("warpName", StatisticType.STRING);
-        head.put("originLocation", StatisticType.STRING);
-        head.put("newLocation", StatisticType.STRING);
+        head.put("targetName", StatisticType.STRING);
+        head.put("targetLocation", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
         return null;
     }
@@ -75,9 +72,8 @@ public class WarpMoveStat implements Statistic {
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
         data.add(playerName);
-        data.add(warpName);
-        data.add(originLocation);
-        data.add(newLocation);
+        data.add(targetName);
+        data.add(targetLocation);
         data.add(DatabaseUtils.getDateTimeString(date));
         return data;
     }

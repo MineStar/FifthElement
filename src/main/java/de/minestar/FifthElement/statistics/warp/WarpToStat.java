@@ -16,29 +16,35 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.bukkit.Location;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class SetBankStat implements Statistic {
+public class WarpToStat implements Statistic {
 
-    private final String playerName;
-    private final String bankOwner;
-    private final boolean updated;
-    private final Date date;
+    private String playerName;
+    private String warpName;
+    private String location;
+    private Date date;
 
-    public SetBankStat(String playerName, String bankOwner, boolean updated) {
+    public WarpToStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
+
+    public WarpToStat(String playerName, String warpName, Location location) {
         this.playerName = playerName;
-        this.bankOwner = bankOwner;
-        this.updated = updated;
+        this.warpName = warpName;
+        this.location = location.toString();
         this.date = new Date();
     }
 
@@ -49,35 +55,26 @@ public class SetBankStat implements Statistic {
 
     @Override
     public String getName() {
-        return "SetBank";
+        return "Warp";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
-
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
-
         head.put("playerName", StatisticType.STRING);
-        head.put("bankOwner", StatisticType.STRING);
-        head.put("updated", StatisticType.INT);
+        head.put("warpName", StatisticType.STRING);
+        head.put("playerLocation", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-
-        return head;
+        return null;
     }
 
     @Override
     public Queue<Object> getData() {
-
         Queue<Object> data = new LinkedList<Object>();
-
         data.add(playerName);
-        data.add(bankOwner);
-        // 1 = Bank location updated
-        // 0 = Bank created
-        data.add(updated ? 1 : 0);
+        data.add(warpName);
+        data.add(location);
         data.add(DatabaseUtils.getDateTimeString(date));
-
         return data;
     }
-
 }

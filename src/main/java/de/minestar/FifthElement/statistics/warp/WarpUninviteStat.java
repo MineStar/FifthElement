@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,15 +28,21 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class BankInfoStat implements Statistic {
+public class WarpUninviteStat implements Statistic {
 
-    private final String playerName;
-    private final String bankOwner;
-    private final Date date;
+    private String warpName;
+    private String inviter;
+    private String guest;
+    private Date date;
 
-    public BankInfoStat(String playerName, String bankOwner) {
-        this.playerName = playerName;
-        this.bankOwner = bankOwner;
+    public WarpUninviteStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
+
+    public WarpUninviteStat(String warpName, String inviter, String guest) {
+        this.warpName = warpName;
+        this.inviter = inviter;
+        this.guest = guest;
         this.date = new Date();
     }
 
@@ -47,30 +53,26 @@ public class BankInfoStat implements Statistic {
 
     @Override
     public String getName() {
-        return "BankInfo";
+        return "WarpInvite";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
-
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
-
-        head.put("playerName", StatisticType.STRING);
-        head.put("bankOwner", StatisticType.STRING);
+        head.put("warpName", StatisticType.STRING);
+        head.put("inviter", StatisticType.STRING);
+        head.put("guest", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-
         return head;
     }
 
     @Override
     public Queue<Object> getData() {
-
         Queue<Object> data = new LinkedList<Object>();
-
-        data.add(playerName);
-        data.add(bankOwner);
+        data.add(warpName);
+        data.add(inviter);
+        data.add(guest);
         data.add(DatabaseUtils.getDateTimeString(date));
-
         return data;
     }
 }

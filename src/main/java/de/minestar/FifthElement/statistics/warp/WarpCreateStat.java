@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,21 +28,19 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpUninviteStat implements Statistic {
+public class WarpCreateStat implements Statistic {
 
+    private String playerName;
     private String warpName;
-    private String inviter;
-    private String guest;
     private Date date;
 
-    public WarpUninviteStat() {
+    public WarpCreateStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public WarpUninviteStat(String warpName, String inviter, String guest) {
+    public WarpCreateStat(String playerName, String warpName) {
+        this.playerName = playerName;
         this.warpName = warpName;
-        this.inviter = inviter;
-        this.guest = guest;
         this.date = new Date();
     }
 
@@ -53,25 +51,23 @@ public class WarpUninviteStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpInvite";
+        return "WarpCreate";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+        head.put("playerName", StatisticType.STRING);
         head.put("warpName", StatisticType.STRING);
-        head.put("inviter", StatisticType.STRING);
-        head.put("guest", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-        return head;
+        return null;
     }
 
     @Override
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
+        data.add(playerName);
         data.add(warpName);
-        data.add(inviter);
-        data.add(guest);
         data.add(DatabaseUtils.getDateTimeString(date));
         return data;
     }

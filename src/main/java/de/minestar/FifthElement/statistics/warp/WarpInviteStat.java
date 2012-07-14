@@ -16,35 +16,33 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.bukkit.Location;
-
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class TeleportHereStat implements Statistic {
+public class WarpInviteStat implements Statistic {
 
-    private String playerName;
-    private String targetName;
-    private String playerLocation;
+    private String warpName;
+    private String inviter;
+    private String guest;
     private Date date;
 
-    public TeleportHereStat() {
+    public WarpInviteStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public TeleportHereStat(String playerName, String targetName, Location playerLocation) {
-        this.playerName = playerName;
-        this.targetName = targetName;
-        this.playerLocation = playerLocation.toString();
+    public WarpInviteStat(String warpName, String inviter, String guest) {
+        this.warpName = warpName;
+        this.inviter = inviter;
+        this.guest = guest;
         this.date = new Date();
     }
 
@@ -55,25 +53,25 @@ public class TeleportHereStat implements Statistic {
 
     @Override
     public String getName() {
-        return "TeleportHere";
+        return "WarpInvite";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
-        head.put("playerName", StatisticType.STRING);
-        head.put("targetName", StatisticType.STRING);
-        head.put("playerLocation", StatisticType.STRING);
+        head.put("warpName", StatisticType.STRING);
+        head.put("inviter", StatisticType.STRING);
+        head.put("guest", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-        return null;
+        return head;
     }
 
     @Override
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
-        data.add(playerName);
-        data.add(targetName);
-        data.add(playerLocation);
+        data.add(warpName);
+        data.add(inviter);
+        data.add(guest);
         data.add(DatabaseUtils.getDateTimeString(date));
         return data;
     }

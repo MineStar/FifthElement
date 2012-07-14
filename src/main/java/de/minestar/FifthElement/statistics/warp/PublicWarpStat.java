@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,15 +28,19 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class HomeInfoStat implements Statistic {
+public class PublicWarpStat implements Statistic {
 
-    private final String playerName;
-    private final String homeOwner;
-    private final Date date;
+    private String playerName;
+    private String warpName;
+    private Date date;
 
-    public HomeInfoStat(String playerName, String homeOwner) {
+    public PublicWarpStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
+
+    public PublicWarpStat(String playerName, String warpName) {
         this.playerName = playerName;
-        this.homeOwner = homeOwner;
+        this.warpName = warpName;
         this.date = new Date();
     }
 
@@ -47,30 +51,24 @@ public class HomeInfoStat implements Statistic {
 
     @Override
     public String getName() {
-        return "HomeInfo";
+        return "WarpPrivate";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
-
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
-
         head.put("playerName", StatisticType.STRING);
-        head.put("homeOwner", StatisticType.STRING);
+        head.put("warpName", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-
         return head;
     }
 
     @Override
     public Queue<Object> getData() {
-
-        Queue<Object> data = new LinkedList<Object>();
-
-        data.add(playerName);
-        data.add(homeOwner);
-        data.add(DatabaseUtils.getDateTimeString(date));
-
-        return data;
+        Queue<Object> queue = new LinkedList<Object>();
+        queue.add(playerName);
+        queue.add(warpName);
+        queue.add(DatabaseUtils.getDateTimeString(date));
+        return null;
     }
 }

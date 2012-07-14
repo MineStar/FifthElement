@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.bank;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,19 +28,15 @@ import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class PublicWarpStat implements Statistic {
+public class BankInfoStat implements Statistic {
 
-    private String playerName;
-    private String warpName;
-    private Date date;
+    private final String playerName;
+    private final String bankOwner;
+    private final Date date;
 
-    public PublicWarpStat() {
-        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
-    }
-
-    public PublicWarpStat(String playerName, String warpName) {
+    public BankInfoStat(String playerName, String bankOwner) {
         this.playerName = playerName;
-        this.warpName = warpName;
+        this.bankOwner = bankOwner;
         this.date = new Date();
     }
 
@@ -51,24 +47,30 @@ public class PublicWarpStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpPrivate";
+        return "BankInfo";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
+
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("playerName", StatisticType.STRING);
-        head.put("warpName", StatisticType.STRING);
+        head.put("bankOwner", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
+
         return head;
     }
 
     @Override
     public Queue<Object> getData() {
-        Queue<Object> queue = new LinkedList<Object>();
-        queue.add(playerName);
-        queue.add(warpName);
-        queue.add(DatabaseUtils.getDateTimeString(date));
-        return null;
+
+        Queue<Object> data = new LinkedList<Object>();
+
+        data.add(playerName);
+        data.add(bankOwner);
+        data.add(DatabaseUtils.getDateTimeString(date));
+
+        return data;
     }
 }

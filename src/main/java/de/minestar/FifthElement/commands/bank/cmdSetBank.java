@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
-import de.minestar.FifthElement.statistics.SetBankStat;
+import de.minestar.FifthElement.statistics.bank.SetBankStat;
 import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;

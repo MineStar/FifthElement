@@ -16,31 +16,37 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics;
+package de.minestar.FifthElement.statistics.warp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.bukkit.Location;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class PrivateWarpStat implements Statistic {
+public class WarpMoveStat implements Statistic {
 
     private String playerName;
     private String warpName;
+    private String originLocation;
+    private String newLocation;
     private Date date;
 
-    public PrivateWarpStat() {
+    public WarpMoveStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public PrivateWarpStat(String playerName, String warpName) {
+    public WarpMoveStat(String playerName, String warpName, Location originLocation, Location newLocation) {
         this.playerName = playerName;
         this.warpName = warpName;
+        this.originLocation = originLocation.toString();
+        this.newLocation = newLocation.toString();
         this.date = new Date();
     }
 
@@ -51,7 +57,7 @@ public class PrivateWarpStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpPrivate";
+        return "WarpMove";
     }
 
     @Override
@@ -59,16 +65,20 @@ public class PrivateWarpStat implements Statistic {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
         head.put("playerName", StatisticType.STRING);
         head.put("warpName", StatisticType.STRING);
+        head.put("originLocation", StatisticType.STRING);
+        head.put("newLocation", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-        return head;
+        return null;
     }
 
     @Override
     public Queue<Object> getData() {
-        Queue<Object> queue = new LinkedList<Object>();
-        queue.add(playerName);
-        queue.add(warpName);
-        queue.add(DatabaseUtils.getDateTimeString(date));
-        return null;
+        Queue<Object> data = new LinkedList<Object>();
+        data.add(playerName);
+        data.add(warpName);
+        data.add(originLocation);
+        data.add(newLocation);
+        data.add(DatabaseUtils.getDateTimeString(date));
+        return data;
     }
 }
