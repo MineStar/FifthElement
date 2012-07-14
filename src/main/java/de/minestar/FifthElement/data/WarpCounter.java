@@ -42,7 +42,8 @@ public class WarpCounter {
     }
 
     public void decrementPrivateWarps() {
-        --privateWarps;
+        if (privateWarps > 0)
+            --privateWarps;
     }
 
     public void incrementPublicWarps() {
@@ -50,7 +51,8 @@ public class WarpCounter {
     }
 
     public void decrementPublicWarps() {
-        --publicWarps;
+        if (publicWarps > 0)
+            --publicWarps;
     }
 
     public int getPrivateWarps() {

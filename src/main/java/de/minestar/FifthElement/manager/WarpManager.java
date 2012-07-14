@@ -207,11 +207,15 @@ public class WarpManager {
     }
 
     public void changeAccess(Warp warp, boolean toPublic) {
-        // TODO: Change WarpCounter
+        WarpCounter counter = getWarpCounter(warp.getOwner());
+        if (toPublic)
+            counter.incrementPublicWarps();
+        else
+            counter.decrementPublicWarps();
+
         warp.setAccessMode(toPublic);
         Core.dbHandler.updateAccess(warp);
     }
-
     public void addGuest(Warp warp, String guestName) {
         warp.addGuest(guestName);
         Core.dbHandler.updateGuests(warp);
