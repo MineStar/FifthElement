@@ -207,6 +207,7 @@ public class WarpManager {
     }
 
     public void changeAccess(Warp warp, boolean toPublic) {
+        // TODO: Change WarpCounter
         warp.setAccessMode(toPublic);
         Core.dbHandler.updateAccess(warp);
     }
