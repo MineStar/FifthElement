@@ -33,6 +33,8 @@ import de.minestar.FifthElement.commands.warp.cmdWarpCreate;
 import de.minestar.FifthElement.commands.warp.cmdWarpDelete;
 import de.minestar.FifthElement.commands.warp.cmdWarpInvite;
 import de.minestar.FifthElement.commands.warp.cmdWarpMove;
+import de.minestar.FifthElement.commands.warp.cmdWarpPrivate;
+import de.minestar.FifthElement.commands.warp.cmdWarpPublic;
 import de.minestar.FifthElement.commands.warp.cmdWarpRandom;
 import de.minestar.FifthElement.commands.warp.cmdWarpRename;
 import de.minestar.FifthElement.commands.warp.cmdWarpUninvite;
@@ -152,13 +154,16 @@ public class Core extends AbstractCore {
                         new cmdWarpUninvite("uninvite",     "<Warp> <Player> ...[PlayerN]", "fifthelement.command.warpuninvite"),
                         new cmdWarpMove(    "move",         "<Warp>",                       "fifthelement.command.warpmove"),
                         new cmdWarpRename(  "rename",       "<OldName> <NewName>",          "fifthelement.command.warprename"),
-                        new cmdWarpRandom(  "random",       "",                             "fifthelement.command.warprandom")
+                        new cmdWarpRandom(  "random",       "",                             "fifthelement.command.warprandom"),
+                        new cmdWarpPublic(  "public",       "<Warp>",                       "fifthelement.command.warppublic"),
+                        new cmdWarpPrivate( "private",      "<Warp>",                       "fifthelement.command.warpprivate")
                 )
         );
         // @formatter:on
 
         return true;
     }
+
     @Override
     protected boolean commonDisable() {
         dbHandler.closeConnection();
