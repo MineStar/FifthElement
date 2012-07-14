@@ -50,7 +50,7 @@ public class cmdBank extends AbstractCommand {
         }
         // HOME OF OTHER PLAYER
         else if (args.length == 1) {
-            // CAN PLAYER USE OTHER HOMES
+            // CAN PLAYER USE OTHER BANKS
             if (checkSpecialPermission(player, OTHER_BANK_PERMISSION)) {
                 // FIND THE CORRECT PLAYER NAME
                 String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
