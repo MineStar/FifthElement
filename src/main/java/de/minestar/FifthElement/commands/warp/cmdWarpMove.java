@@ -25,9 +25,9 @@ import de.minestar.FifthElement.data.Warp;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdMove extends AbstractCommand {
+public class cmdWarpMove extends AbstractCommand {
 
-    public cmdMove(String syntax, String arguments, String node) {
+    public cmdWarpMove(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
     }
 
