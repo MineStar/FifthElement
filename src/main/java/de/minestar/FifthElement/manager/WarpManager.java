@@ -52,7 +52,7 @@ public class WarpManager {
     private void loadWarps() {
         warpMap = Core.dbHandler.loadWarps();
         int[] counter = countWarps();
-        ConsoleUtils.printInfo(Core.NAME, "Loaded " + warpMap.size() + " Warps. There were " + counter[0] + " public and " + counter[1] + " warps");
+        ConsoleUtils.printInfo(Core.NAME, "Loaded " + warpMap.size() + " Warps. There were " + counter[0] + " public and " + counter[1] + " private warps");
     }
 
     private int[] countWarps() {
