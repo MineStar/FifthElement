@@ -70,7 +70,7 @@ public class Home {
     }
 
     public void setId(int id) {
-        if (id == 0)
+        if (this.id == 0)
             this.id = id;
         else
             ConsoleUtils.printError(Core.NAME, "Home of '" + owner + "' has already an database id!");

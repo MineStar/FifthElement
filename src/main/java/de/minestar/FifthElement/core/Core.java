@@ -133,17 +133,17 @@ public class Core extends AbstractCore {
 
                 // HOME COMMANDS
                 new cmdHome(        "/home",        "[HomeOwner]",          "fifthelement.command.home"),
-                new cmdSetHome(     "/setHome",     "",                     "fifthelement.command.sethome"),
-                new cmdHomeInfo(    "/homeInfo",    "[HomeOwner]",          "fifthelement.command.homeinfo"),
+                new cmdSetHome(     "/sethome",     "",                     "fifthelement.command.sethome"),
+                new cmdHomeInfo(    "/homeinfo",    "[HomeOwner]",          "fifthelement.command.homeinfo"),
 
                 // BANK COMMANDS
                 new cmdBank(        "/bank",        "[BankOwner]",         "fifthelement.command.bank"),
-                new cmdSetBank(     "/setBank",     "<BankOwner>",         "fifthelement.command.setbank"),
-                new cmdBankInfo(    "/bankInfo",    "[BankOwner]",         "fifthelement.command.bankinfo"),
+                new cmdSetBank(     "/setbank",     "<BankOwner>",         "fifthelement.command.setbank"),
+                new cmdBankInfo(    "/bankinfo",    "[BankOwner]",         "fifthelement.command.bankinfo"),
 
                 // TELEPORT COMMANDS
                 new cmdTeleport(    "/tp",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
-                new cmdTeleportHere("/tpHere",      "<Target> ... [Target n]", "fifthelement.command.tphere"),
+                new cmdTeleportHere("/tphere",      "<Target> ... [Target n]", "fifthelement.command.tphere"),
 
                 // WARP COMMANDS AND SUB COMMANDS
                 new cmdWarp(        "/warp",        "<Warp>",               "fifthelement.command.warp", 

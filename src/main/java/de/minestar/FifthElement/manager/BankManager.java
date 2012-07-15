@@ -53,7 +53,7 @@ public class BankManager {
 
     public void createBank(Player creator, String bankOwner) {
         Bank bank = new Bank(creator.getLocation(), bankOwner);
-        bankMap.put(bankOwner, bank);
+        bankMap.put(bankOwner.toLowerCase(), bank);
         Core.dbHandler.addBank(bank);
     }
 

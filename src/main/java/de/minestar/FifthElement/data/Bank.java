@@ -69,7 +69,7 @@ public class Bank {
     }
 
     public void setId(int id) {
-        if (id == 0)
+        if (this.id == 0)
             this.id = id;
         else
             ConsoleUtils.printError(Core.NAME, "Bank of '" + owner + "' has already an database id!");
