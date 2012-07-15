@@ -227,7 +227,10 @@ public class Warp {
     }
 
     public Set<String> getGuests() {
-        return new HashSet<String>(guests);
+        if (guests == null)
+            return new HashSet<String>();
+        else
+            return new HashSet<String>(guests);
     }
 
     public String getGuestList() {
@@ -245,12 +248,14 @@ public class Warp {
     private final static Pattern P = Pattern.compile(";");
 
     private void parseGuestList(String guestList) {
+        if (guestList.isEmpty())
+            return;
+
         this.guests = new HashSet<String>();
         String[] split = P.split(guestList);
         for (String string : split)
             guests.add(string);
     }
-
     // *************
     // ** USEMODE **
     // *************

@@ -86,11 +86,11 @@ public class cmdBankInfo extends AbstractExtendedCommand {
 
     private void displayBankInformation(Player caller, Bank bank) {
 
-        Location homeLoc = bank.getLocation();
-        double distance = homeLoc.distance(caller.getLocation());
+        Location bankLoc = bank.getLocation();
+        double distance = bankLoc.distance(caller.getLocation());
 
         PlayerUtils.sendInfo(caller, pluginName, "Information über die Bank von " + bank.getOwner() + ":");
-        PlayerUtils.sendInfo(caller, "Position: " + homeLoc.getBlockX() + " " + homeLoc.getBlockY() + " " + homeLoc.getBlockZ() + " in " + homeLoc.getWorld().getName());
+        PlayerUtils.sendInfo(caller, "Position: " + bankLoc.getBlockX() + " " + bankLoc.getBlockY() + " " + bankLoc.getBlockZ() + " in " + bankLoc.getWorld().getName());
         PlayerUtils.sendInfo(caller, "Entfernung von hier: " + dF.format(distance) + "m");
     }
 }

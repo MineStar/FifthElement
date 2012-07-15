@@ -75,13 +75,15 @@ public class cmdWarpInfo extends AbstractCommand {
             ChatUtils.writeInfo(sender, "Öffentlich");
         else {
             ChatUtils.writeInfo(sender, "Privat");
-            ChatUtils.writeInfo(sender, "Gästeliste:");
-            ChatUtils.writeInfo(sender, warp.getGuestList());
+            if (warp.getGuests().size() > 0) {
+                ChatUtils.writeInfo(sender, "Gästeliste:");
+                ChatUtils.writeInfo(sender, warp.getGuestList());
+            }
         }
 
         // POSITION AND DISTANCE
         Location loc = warp.getLocation();
-        ChatUtils.writeInfo(sender, String.format("X= %d Y= %d Z= %d Welt= %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld()));
+        ChatUtils.writeInfo(sender, String.format("X: %d Y: %d Z: %d Welt: %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
         if (sender instanceof Player) {
             Location loc2 = ((Player) sender).getLocation();
             ChatUtils.writeInfo(sender, "Entfernung zum Warp = " + (int) (loc.distance(loc2)) + "m");
