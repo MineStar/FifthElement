@@ -1,6 +1,7 @@
 name: FifthElement
-main: de.minestar.FifthElement.Core
+main: de.minestar.FifthElement.core.Core
 version: ${pom.version}
+depend: [MineStarLibrary, MinestarCore]
 commands:
   home:
     description: Teleportiert Spieler zum Zuhause
@@ -9,7 +10,7 @@ commands:
     description: Erstellt oder versetzt das Zuhause
     usage: /setHome
   homeInfo:
-    description: Gibt Informationen über das Zuhause aus
+    description: Gibt Informationen ueber das Zuhause aus
     usage: /homeInfo
   bank:
     description: Teleportiert Spieler zu ihrer Bank
@@ -18,7 +19,7 @@ commands:
     description: Erstellt oder versetzt die Bank eines Spielers
     usage: /setHome
   bankInfo:
-    description: Gibt Informationen über die Bank aus
+    description: Gibt Informationen ueber die Bank aus
     usage: /homeInfo
   tp:
     description: Teleport den Spieler
@@ -26,6 +27,6 @@ commands:
   tpHere:
     description: Teleportiert die Spieler zum Command caller
     usage: /tpHere
-   warp:
+  warp:
     description: Alle Warp Commandos
     usage: /warp
