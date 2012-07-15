@@ -30,9 +30,13 @@ import de.minestar.minestarlibrary.stats.StatisticType;
 
 public class SetHomeStat implements Statistic {
 
-    private final String playerName;
-    private final boolean updated;
-    private final Date date;
+    private String playerName;
+    private boolean updated;
+    private Date date;
+
+    public SetHomeStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
 
     public SetHomeStat(String playerName, boolean updated) {
         this.playerName = playerName;

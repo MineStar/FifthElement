@@ -30,10 +30,14 @@ import de.minestar.minestarlibrary.stats.StatisticType;
 
 public class SetBankStat implements Statistic {
 
-    private final String playerName;
-    private final String bankOwner;
-    private final boolean updated;
-    private final Date date;
+    private String playerName;
+    private String bankOwner;
+    private boolean updated;
+    private Date date;
+
+    public SetBankStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
 
     public SetBankStat(String playerName, String bankOwner, boolean updated) {
         this.playerName = playerName;

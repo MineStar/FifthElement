@@ -57,18 +57,22 @@ public class PrivateWarpStat implements Statistic {
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("playerName", StatisticType.STRING);
         head.put("warpName", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
+
         return head;
     }
 
     @Override
     public Queue<Object> getData() {
         Queue<Object> queue = new LinkedList<Object>();
+
         queue.add(playerName);
         queue.add(warpName);
         queue.add(DatabaseUtils.getDateTimeString(date));
+
         return null;
     }
 }

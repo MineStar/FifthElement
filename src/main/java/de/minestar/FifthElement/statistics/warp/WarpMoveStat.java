@@ -63,12 +63,14 @@ public class WarpMoveStat implements Statistic {
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("playerName", StatisticType.STRING);
         head.put("warpName", StatisticType.STRING);
         head.put("originLocation", StatisticType.STRING);
         head.put("newLocation", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-        return null;
+
+        return head;
     }
 
     @Override

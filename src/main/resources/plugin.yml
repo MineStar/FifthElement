@@ -1,6 +1,7 @@
 name: FifthElement
 main: de.minestar.FifthElement.core.Core
 version: ${pom.version}
+softdepend: [Illuminati]
 depend: [MineStarLibrary, MinestarCore]
 commands:
   home:

@@ -30,9 +30,13 @@ import de.minestar.minestarlibrary.stats.StatisticType;
 
 public class HomeStat implements Statistic {
 
-    private final String playerName;
-    private final String homeOwner;
-    private final Date date;
+    private String playerName;
+    private String homeOwner;
+    private Date date;
+
+    public HomeStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
 
     public HomeStat(String playerName, String homeOwner) {
         this.playerName = playerName;

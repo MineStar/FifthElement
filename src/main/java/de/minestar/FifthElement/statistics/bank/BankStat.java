@@ -30,9 +30,13 @@ import de.minestar.minestarlibrary.stats.StatisticType;
 
 public class BankStat implements Statistic {
 
-    private final String playerName;
-    private final String bankOwner;
-    private final Date date;
+    private String playerName;
+    private String bankOwner;
+    private Date date;
+
+    public BankStat() {
+        // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
+    }
 
     public BankStat(String playerName, String bankOwner) {
         this.playerName = playerName;

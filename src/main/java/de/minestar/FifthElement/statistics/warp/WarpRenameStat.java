@@ -59,20 +59,24 @@ public class WarpRenameStat implements Statistic {
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("playerName", StatisticType.STRING);
         head.put("oldWarpName", StatisticType.STRING);
         head.put("newWarpName", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
-        return null;
+
+        return head;
     }
 
     @Override
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
+
         data.add(playerName);
         data.add(oldWarpName);
         data.add(newWarpName);
         data.add(DatabaseUtils.getDateTimeString(date));
+
         return data;
     }
 }

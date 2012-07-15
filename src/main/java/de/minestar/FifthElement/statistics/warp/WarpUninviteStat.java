@@ -59,20 +59,24 @@ public class WarpUninviteStat implements Statistic {
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+
         head.put("warpName", StatisticType.STRING);
         head.put("inviter", StatisticType.STRING);
         head.put("guest", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
+
         return head;
     }
 
     @Override
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
+
         data.add(warpName);
         data.add(inviter);
         data.add(guest);
         data.add(DatabaseUtils.getDateTimeString(date));
+
         return data;
     }
 }
