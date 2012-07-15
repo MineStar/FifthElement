@@ -40,6 +40,10 @@ public class cmdWarpRandom extends AbstractCommand {
     public void execute(String[] args, Player player) {
         // GET PUBLIC WARPS
         List<Warp> publicWarps = Core.warpManager.getPublicWarps();
+        if (publicWarps.isEmpty()) {
+            PlayerUtils.sendSuccess(player, pluginName, "Es gibt keine öffentlichen Warps.");
+            return;
+        }
 
         // GET RANDOM WARP
         int index = rand.nextInt(publicWarps.size());
