@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import de.minestar.core.MinestarCore;
 import de.minestar.core.units.MinestarGroup;
 import de.minestar.minestarlibrary.config.MinestarConfig;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -91,8 +92,16 @@ public class Settings {
         }
     }
 
+    public static Integer getMaxPrivateWarps(String playerName) {
+        return getMaxPrivateWarps(MinestarCore.getPlayer(playerName).getMinestarGroup());
+    }
+
     public static Integer getMaxPrivateWarps(MinestarGroup group) {
         return maxPrivateWarps.get(group);
+    }
+
+    public static Integer getMaxPublicWarps(String playerName) {
+        return getMaxPublicWarps(MinestarCore.getPlayer(playerName).getMinestarGroup());
     }
 
     public static Integer getMaxPublicWarps(MinestarGroup group) {

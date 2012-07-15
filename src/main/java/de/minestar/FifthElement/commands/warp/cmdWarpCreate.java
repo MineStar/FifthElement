@@ -21,6 +21,7 @@ package de.minestar.FifthElement.commands.warp;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.WarpCounter;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -45,8 +46,10 @@ public class cmdWarpCreate extends AbstractCommand {
             // CREATE THE NEW WARP
             Core.warpManager.createWarp(warpName, player);
             PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warpName + "' wurde erstellt!");
+
+            // PRINT OUT REST PRIVATE WARPS TO CREATE
             WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
-            PlayerUtils.sendInfo(player, "Du kannst noch " + counter.getPrivateWarps() + " private Warps erstellen.");
+            PlayerUtils.sendInfo(player, "Du kannst noch " + (Settings.getMaxPrivateWarps(player.getName()) - counter.getPrivateWarps()) + " private Warps erstellen.");
         }
         // PLAYER HAS TOO MANY WARPS
         else {
