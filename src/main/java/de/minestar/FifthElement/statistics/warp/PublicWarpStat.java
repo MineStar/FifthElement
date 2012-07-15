@@ -51,7 +51,7 @@ public class PublicWarpStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpPrivate";
+        return "WarpPublic";
     }
 
     @Override

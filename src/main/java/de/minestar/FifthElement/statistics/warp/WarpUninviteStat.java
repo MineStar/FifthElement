@@ -53,7 +53,7 @@ public class WarpUninviteStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpInvite";
+        return "WarpUninvite";
     }
 
     @Override
