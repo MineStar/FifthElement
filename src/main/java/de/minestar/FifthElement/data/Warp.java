@@ -63,7 +63,8 @@ public class Warp {
         this.name = warpName;
         this.owner = player.getName();
         this.isPublic = false;
-        guests = null;
+        this.guests = null;
+        this.location = player.getLocation();
 
         // WARP CAN BE USED BY SIGNS AND COMMANDS
         this.useMode |= COMMAND_USEMODE | SIGN_USEMODE;
@@ -170,7 +171,7 @@ public class Warp {
     }
 
     public void setId(int id) {
-        if (id == 0)
+        if (this.id == 0)
             this.id = id;
         else
             ConsoleUtils.printError(Core.NAME, "Warp '" + name + "' has already an database id!");

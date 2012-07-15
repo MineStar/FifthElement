@@ -65,7 +65,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
     @Override
     protected void createStatements(String pluginName, Connection con) throws Exception {
 
-        addWarp = con.prepareStatement("INSERT INTO warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        addWarp = con.prepareStatement("INSERT INTO warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         deleteWarp = con.prepareStatement("DELETE FROM warp WHERE id = ?");
 
@@ -159,8 +159,9 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
             addWarp.setDouble(6, warp.getLocation().getZ());
             addWarp.setFloat(7, warp.getLocation().getYaw());
             addWarp.setFloat(8, warp.getLocation().getPitch());
-            addWarp.setBoolean(9, false);
+            addWarp.setBoolean(9, warp.isPublic());
             addWarp.setString(10, "");
+            addWarp.setByte(11, warp.getUseMode());
 
             addWarp.executeUpdate();
 
