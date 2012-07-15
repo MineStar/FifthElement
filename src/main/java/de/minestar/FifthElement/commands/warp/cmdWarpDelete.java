@@ -59,10 +59,13 @@ public class cmdWarpDelete extends AbstractCommand {
         // PRIVATE WARPS - INFORM GUESTS
         else {
             Set<String> guests = warp.getGuests();
+            // NO GUESTS TO INFORM
+            if (guests.size() == 0)
+                return;
             Player guest = null;
             for (String guestName : guests) {
                 guest = Bukkit.getPlayerExact(guestName);
-                if (guests != null)
+                if (guest != null)
                     PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + warp.getName() + "' gelöscht!");
             }
         }
