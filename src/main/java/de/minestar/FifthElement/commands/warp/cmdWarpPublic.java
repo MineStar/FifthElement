@@ -28,7 +28,7 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 public class cmdWarpPublic extends AbstractCommand {
 
     public cmdWarpPublic(String syntax, String arguments, String node) {
-        super(syntax, arguments, node);
+        super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
