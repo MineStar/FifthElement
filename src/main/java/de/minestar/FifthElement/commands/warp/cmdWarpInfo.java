@@ -18,6 +18,10 @@
 
 package de.minestar.FifthElement.commands.warp;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -62,6 +66,8 @@ public class cmdWarpInfo extends AbstractCommand {
         displayInformation(warp, sender);
     }
 
+    private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:m 'am' d.M.Y");
+
     private void displayInformation(Warp warp, CommandSender sender) {
 
         // HEAD
@@ -69,6 +75,9 @@ public class cmdWarpInfo extends AbstractCommand {
 
         // OWNER
         ChatUtils.writeInfo(sender, "Erstellt von: " + warp.getOwner());
+
+        // CREATION DATE
+        ChatUtils.writeInfo(sender, "Erstellt: " + FORMAT.format(warp.getCreationDate()));
 
         // IS PUBLIC OR PRIVATE
         if (warp.isPublic())

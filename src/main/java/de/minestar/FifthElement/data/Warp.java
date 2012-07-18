@@ -18,6 +18,7 @@
 
 package de.minestar.FifthElement.data;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -49,6 +50,8 @@ public class Warp {
     // THE LOCATION OF THE WARP
     private Location location;
 
+    private final Date creationDate;
+
     // BIT MASK HOW THE WARP CAN BE USED
     // IF 1 IS SET -> USED BY COMMANDS
     // IF 2 IS SET -> USED BY SIGNS
@@ -65,13 +68,14 @@ public class Warp {
         this.isPublic = false;
         this.guests = null;
         this.location = player.getLocation();
+        this.creationDate = new Date();
 
         // WARP CAN BE USED BY SIGNS AND COMMANDS
         this.useMode |= COMMAND_USEMODE | SIGN_USEMODE;
     }
 
     // CONSTRUCTOR WHEN WARP IS LOADED FROM DATABASE
-    public Warp(int id, String name, boolean isPublic, String owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch, byte useMode) {
+    public Warp(int id, String name, boolean isPublic, String owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch, byte useMode, Date creationDate) {
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -82,6 +86,7 @@ public class Warp {
         createLocation(worldName, x, y, z, yaw, pitch);
 
         this.useMode = useMode;
+        this.creationDate = creationDate;
     }
 
     private void createLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
@@ -224,6 +229,10 @@ public class Warp {
 
     public String getOwner() {
         return owner;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     public Set<String> getGuests() {

@@ -42,5 +42,6 @@ CREATE  TABLE IF NOT EXISTS `warp` (
   `isPublic` TINYINT(1) NOT NULL ,
   `guests` TEXT NULL ,
   `useMode` SMALLINT NOT NULL ,
+  `creationDate` DATETIME NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
