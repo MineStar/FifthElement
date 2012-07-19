@@ -27,6 +27,8 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpMove extends AbstractCommand {
 
+    private final static String PUBLIC_MOVE_PERMISSION = "fifthelement.command.movepublic";
+
     public cmdWarpMove(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
     }
@@ -41,6 +43,10 @@ public class cmdWarpMove extends AbstractCommand {
         if (!warp.canEdit(player)) {
             PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht bewegen!");
             return;
+        }
+        // ONLY ADMINS CAN MOVE PUBLIC WARPS
+        if (warp.isPublic() && !checkSpecialPermission(player, PUBLIC_MOVE_PERMISSION)) {
+            PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps bewegen!");
         }
         Core.warpManager.moveWarp(warp, player);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde an diese Position verschoben.");
