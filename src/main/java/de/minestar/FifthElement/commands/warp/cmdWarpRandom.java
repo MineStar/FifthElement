@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -39,7 +40,7 @@ public class cmdWarpRandom extends AbstractCommand {
     @Override
     public void execute(String[] args, Player player) {
         // GET PUBLIC WARPS
-        List<Warp> publicWarps = Core.warpManager.getPublicWarps();
+        List<Warp> publicWarps = Core.warpManager.filterWarps(PublicFilter.getInstance());
         if (publicWarps.isEmpty()) {
             PlayerUtils.sendSuccess(player, pluginName, "Es gibt keine öffentlichen Warps.");
             return;

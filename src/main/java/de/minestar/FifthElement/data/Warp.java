@@ -112,7 +112,7 @@ public class Warp {
         return isOwner(player.getName());
     }
 
-    private boolean isOwner(String playerName) {
+    public boolean isOwner(String playerName) {
         return this.owner.equalsIgnoreCase(playerName);
     }
 

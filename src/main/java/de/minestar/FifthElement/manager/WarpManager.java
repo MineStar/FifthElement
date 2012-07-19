@@ -32,6 +32,7 @@ import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.data.WarpCounter;
+import de.minestar.FifthElement.data.filter.WarpFilter;
 import de.minestar.core.MinestarCore;
 import de.minestar.core.units.MinestarGroup;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -130,43 +131,17 @@ public class WarpManager {
         return results;
     }
 
-    // USERNAME MUST EXIST!
-    public List<Warp> getUserWarps(String userName) {
+    public List<Warp> filterWarps(WarpFilter... warpFilter) {
 
-        List<Warp> results = new ArrayList<Warp>(15);
-        userName = userName.toLowerCase();
+        List<Warp> results = new ArrayList<Warp>();
 
-        for (Warp warp : warpMap.values()) {
-            if (warp.getOwner().equalsIgnoreCase(userName))
-                results.add(warp);
+        out : for (Warp warp : warpMap.values()) {
+            for (WarpFilter filter : warpFilter) {
+                if (!filter.accept(warp))
+                    continue out;
+            }
+            results.add(warp);
         }
-        return results;
-    }
-
-    // RETURN ALL PUBLIC WARPS
-    public List<Warp> getPublicWarps() {
-
-        // PUBLIC WARPS ARE CA. 10% OF ALL WARPS
-        List<Warp> results = new ArrayList<Warp>(warpMap.size() / 10);
-
-        for (Warp warp : warpMap.values()) {
-            if (warp.isPublic())
-                results.add(warp);
-        }
-
-        return results;
-    }
-
-    public List<Warp> getAccessableWarps(String userName) {
-
-        // PUBLIC WARPS ARE CA. 10% OF ALL WARPS AND PRIVATE WARPS ARE TO FEW TO
-        // MATTER
-        List<Warp> results = new ArrayList<Warp>(warpMap.size() / 10);
-        for (Warp warp : warpMap.values()) {
-            if (warp.canUse(userName))
-                results.add(warp);
-        }
-
         return results;
     }
 
