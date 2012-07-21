@@ -33,4 +33,9 @@ public class UseFilter implements WarpFilter {
         return warp.canUse(playerName);
     }
 
+    @Override
+    public String toString() {
+        return "Benutzbar";
+    }
+
 }

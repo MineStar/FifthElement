@@ -145,6 +145,19 @@ public class WarpManager {
         return results;
     }
 
+    public List<Warp> filterWarps(List<WarpFilter> warpFilter) {
+        List<Warp> results = new ArrayList<Warp>();
+
+        out : for (Warp warp : warpMap.values()) {
+            for (WarpFilter filter : warpFilter) {
+                if (!filter.accept(warp))
+                    continue out;
+            }
+            results.add(warp);
+        }
+        return results;
+    }
+
     // **************************
     // MANIPULATE CURRENT WARPS
     // **************************

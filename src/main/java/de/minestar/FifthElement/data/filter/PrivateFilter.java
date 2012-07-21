@@ -37,4 +37,8 @@ public class PrivateFilter implements WarpFilter {
         return !warp.isPublic();
     }
 
+    @Override
+    public String toString() {
+        return "Privat";
+    }
 }

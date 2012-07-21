@@ -35,6 +35,8 @@ public class Settings {
     private static Map<MinestarGroup, Integer> maxPrivateWarps;
     private static Map<MinestarGroup, Integer> maxPublicWarps;
 
+    private static int pageSize;
+
     /* USED FOR SETTING */
     private static MinestarConfig config;
     private static File configFile;
@@ -65,6 +67,8 @@ public class Settings {
     private static void loadValues() {
 
         loadMaxWarps();
+
+        pageSize = config.getInt("common.pageSize");
 
     }
 
@@ -106,6 +110,10 @@ public class Settings {
 
     public static Integer getMaxPublicWarps(MinestarGroup group) {
         return maxPublicWarps.get(group);
+    }
+
+    public static int getPageSize() {
+        return pageSize;
     }
 
 }

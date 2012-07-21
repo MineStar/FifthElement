@@ -33,4 +33,9 @@ public class OwnerFilter implements WarpFilter {
         return warp.isOwner(playerName);
     }
 
+    @Override
+    public String toString() {
+        return "Ersteller";
+    }
+
 }

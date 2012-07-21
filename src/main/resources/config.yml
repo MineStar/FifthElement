@@ -1,4 +1,6 @@
 VERSION: ${pom.version}
+common:
+    pageSize: 15
 warpCounter:
     private:
         x: 0
