@@ -63,6 +63,7 @@ public class cmdBank extends AbstractCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Bank!");
                     return;
                 }
+                player.teleport(bank.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Bank von '" + bank.getOwner() + "'.");
             }
         }

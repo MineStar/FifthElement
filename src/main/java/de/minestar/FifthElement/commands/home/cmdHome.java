@@ -65,6 +65,7 @@ public class cmdHome extends AbstractExtendedCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat kein Zuhause erstellt!");
                     return;
                 }
+                player.teleport(home.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Haus von '" + home.getOwner() + "'.");
             }
         }
