@@ -75,5 +75,7 @@ public class cmdWarp extends AbstractSuperCommand {
         // TELEPORT PLAYER THE TO WARP
         player.teleport(bestMatch.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim Warp '" + bestMatch.getName() + "'.");
+        
+        // TODO: Ersteller und spezielle Permissions können unabhängig vom Usemode arbeiten
     }
 }

@@ -59,6 +59,8 @@ public class cmdWarpPublic extends AbstractCommand {
         // CONVERT TO PUBLIC WARP
         Core.warpManager.changeAccess(warp, true);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' ist nun öffentlich!");
+        
+        // TODO: Nachricht an alle auf dem Server senden
     }
 
 }

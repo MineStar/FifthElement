@@ -62,7 +62,9 @@ public class cmdWarpUninvite extends AbstractExtendedCommand {
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");
             // PLAYER WAS NO GUEST
             else
-                PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' konnte den '" + warp.getName() + "' nicht benutzen.");
+                PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' konnte den Warp '" + warp.getName() + "' nicht benutzen.");
+
+            // TODO: Nachricht an Spieler dass er eingeladen wurde von vom
         }
     }
 }

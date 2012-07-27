@@ -106,7 +106,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
         TreeMap<String, Warp> warpMap = new TreeMap<String, Warp>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode FROM warp");
+            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate FROM warp");
             // TEMP VARIABLEN
             int id;
             String name;
@@ -165,7 +165,9 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
             addWarp.setBoolean(9, warp.isPublic());
             addWarp.setString(10, "");
             addWarp.setByte(11, warp.getUseMode());
-            addWarp.setDate(12, (Date) warp.getCreationDate());
+            // TODO: Zeit stimmt noch nicht
+            addWarp.setDate(12, new Date(warp.getCreationDate().getTime()));
+            System.out.println(new Date(warp.getCreationDate().getTime()));
 
             addWarp.executeUpdate();
 

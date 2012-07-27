@@ -62,7 +62,9 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
             // PLAYER WAS ALREADY INVITED
             else
-                PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' kann bereits den '" + warp.getName() + "' benutzen.");
+                PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' kann bereits den Warp '" + warp.getName() + "' benutzen.");
+            
+            // TODO: Nachricht an Spieler dass er eingeladen wurde von vom
         }
     }
 }

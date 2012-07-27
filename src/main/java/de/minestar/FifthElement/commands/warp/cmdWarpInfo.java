@@ -68,6 +68,12 @@ public class cmdWarpInfo extends AbstractCommand {
 
     private void displayInformation(Warp warp, CommandSender sender) {
 
+        // TODO: AUsgabe neu schreiben
+        // TODO: --------------------
+        // TODO: Info über name
+        // Vorne immer ne andere farbe als das attribut
+        
+        // Abschließen mit --------------------------
         // HEAD
         ChatUtils.writeInfo(sender, pluginName, "Informationen über Warp '" + warp.getName() + "':");
 

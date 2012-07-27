@@ -34,6 +34,8 @@ public class cmdWarpCreate extends AbstractCommand {
 
     @Override
     public void execute(String[] args, Player player) {
+        
+        // TODO: Mindestens 3 Zeichen, maxmal 25
         // PLAYER CAN CREATE A NEW WARP
         if (Core.warpManager.canCreatePrivate(player.getName())) {
             String warpName = args[0];

@@ -66,7 +66,7 @@ public class Warp {
         this.name = warpName;
         this.owner = player.getName();
         this.isPublic = false;
-        this.guests = null;
+        this.guests = new HashSet<String>();
         this.location = player.getLocation();
         this.creationDate = new Date();
 
@@ -144,6 +144,7 @@ public class Warp {
     public boolean addGuest(String guestName) {
         guestName = guestName.toLowerCase();
         // RETURN TRUE WHEN GUEST WASN'T INVITED YET
+        System.out.println(guests);
         if (guests != null)
             return guests.add(guestName);
 
@@ -153,6 +154,7 @@ public class Warp {
     public boolean removeGuest(String guestName) {
         guestName = guestName.toLowerCase();
         // RETURN TRUE WHEN THE PLAYER WAS A GUEST
+        System.out.println(guests);
         if (guests != null)
             return guests.remove(guestName);
 
@@ -196,6 +198,8 @@ public class Warp {
         sBuilder.append(owner);
         sBuilder.append(", guests=");
         sBuilder.append(guests);
+        sBuilder.append(" ,date=");
+        sBuilder.append(creationDate);
         return sBuilder.toString();
     }
 

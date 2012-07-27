@@ -123,6 +123,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         }
 
         // GET THE SINGLE PAGE
+        // TODO: Hier wahrscheinlich der Fehler
         --pageNumber;
         int pageSize = Settings.getPageSize();
         int fromIndex = pageSize * pageNumber;
