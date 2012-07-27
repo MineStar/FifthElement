@@ -36,6 +36,8 @@ public class cmdWarpRename extends AbstractCommand {
 
     @Override
     public void execute(String[] args, Player player) {
+        
+        // TODO: Öffentliche Warps können nicht umbennent werden außer von Admins
         String oldName = args[0];
         String newName = args[1];
         // SEARCH WARP
