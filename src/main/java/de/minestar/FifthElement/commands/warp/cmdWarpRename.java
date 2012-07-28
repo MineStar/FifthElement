@@ -30,14 +30,15 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpRename extends AbstractCommand {
 
+    private final static String PUBLIC_RENAME_PERMISSION = "fifthelement.command.renamepublic";
+
     public cmdWarpRename(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
     public void execute(String[] args, Player player) {
-        
-        // TODO: Öffentliche Warps können nicht umbennent werden außer von Admins
+
         String oldName = args[0];
         String newName = args[1];
         // SEARCH WARP
@@ -45,6 +46,10 @@ public class cmdWarpRename extends AbstractCommand {
         // NO WARP FOUND
         if (warp == null) {
             PlayerUtils.sendError(player, pluginName, "Der Warp '" + oldName + "' existiert nicht!");
+            return;
+        }
+        if (warp.isPublic() && !checkSpecialPermission(player, PUBLIC_RENAME_PERMISSION)) {
+            PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps umbenennen!");
             return;
         }
         // NEW WARP NAME ALREADY EXISTS
@@ -77,7 +82,7 @@ public class cmdWarpRename extends AbstractCommand {
             for (String guestName : guests) {
                 guest = Bukkit.getPlayerExact(guestName);
                 if (guest != null)
-                    PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + oldName + "' in '" + warp.getName() + "' umbennant!");
+                    PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + oldName + "' in '" + warp.getName() + "' umbenannt!");
             }
         }
     }

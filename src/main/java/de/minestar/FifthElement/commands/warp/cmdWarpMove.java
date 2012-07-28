@@ -47,6 +47,7 @@ public class cmdWarpMove extends AbstractCommand {
         // ONLY ADMINS CAN MOVE PUBLIC WARPS
         if (warp.isPublic() && !checkSpecialPermission(player, PUBLIC_MOVE_PERMISSION)) {
             PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps bewegen!");
+            return;
         }
         Core.warpManager.moveWarp(warp, player);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde an diese Position verschoben.");
