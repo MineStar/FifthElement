@@ -50,6 +50,7 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
 
         // INVITE PERSON
         String targetName = null;
+        Player target = null;
         for (int i = 1; i < args.length; ++i) {
             targetName = PlayerUtils.getCorrectPlayerName(args[i]);
             // PLAYER NOT FOUND
@@ -64,7 +65,10 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
             else
                 PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' kann bereits den Warp '" + warp.getName() + "' benutzen.");
             
-            // TODO: Nachricht an Spieler dass er eingeladen wurde von vom
+            // INFORM PLAYER
+            target = PlayerUtils.getOnlinePlayer(targetName);
+            if (target != null)
+                PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' zum Warp '" + warp.getName() + "' eingeladen.");
         }
     }
 }
