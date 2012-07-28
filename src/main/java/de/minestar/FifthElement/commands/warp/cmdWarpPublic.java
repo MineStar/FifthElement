@@ -18,6 +18,8 @@
 
 package de.minestar.FifthElement.commands.warp;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
@@ -59,8 +61,8 @@ public class cmdWarpPublic extends AbstractCommand {
         // CONVERT TO PUBLIC WARP
         Core.warpManager.changeAccess(warp, true);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' ist nun öffentlich!");
-        
-        // TODO: Nachricht an alle auf dem Server senden
+
+        Bukkit.broadcastMessage(ChatColor.RED + "Der Warp '" + warp.getName() + "' ist nun öffentlich.");
     }
 
 }
