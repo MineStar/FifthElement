@@ -24,6 +24,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -165,9 +166,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
             addWarp.setBoolean(9, warp.isPublic());
             addWarp.setString(10, "");
             addWarp.setByte(11, warp.getUseMode());
-            // TODO: Zeit stimmt noch nicht
-            addWarp.setDate(12, new Date(warp.getCreationDate().getTime()));
-            System.out.println(new Date(warp.getCreationDate().getTime()));
+            addWarp.setTimestamp(12, new Timestamp(warp.getCreationDate().getTime()));
 
             addWarp.executeUpdate();
 
