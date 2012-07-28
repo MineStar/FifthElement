@@ -34,29 +34,36 @@ public class cmdWarpCreate extends AbstractCommand {
 
     @Override
     public void execute(String[] args, Player player) {
-        
-        // TODO: Mindestens 3 Zeichen, maxmal 25
-        // PLAYER CAN CREATE A NEW WARP
-        if (Core.warpManager.canCreatePrivate(player.getName())) {
-            String warpName = args[0];
-            // NO DUPLICATE WARPS
-            if (Core.warpManager.isWarpExisting(warpName)) {
-                PlayerUtils.sendError(player, pluginName, "Es existiert bereits ein Warp names '" + warpName + "' !");
-                return;
-            }
 
-            // CREATE THE NEW WARP
-            Core.warpManager.createWarp(warpName, player);
-            PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warpName + "' wurde erstellt!");
-
-            // PRINT OUT REST PRIVATE WARPS TO CREATE
-            WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
-            PlayerUtils.sendInfo(player, "Du kannst noch " + (Settings.getMaxPrivateWarps(player.getName()) - counter.getPrivateWarps()) + " private Warps erstellen.");
+        if (!isValidName(args[0])) {
+            PlayerUtils.sendError(player, pluginName, "Der Warpname ist ungültig!");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. 3 Zeichen und maximal 25. Zeichen lang sein.");
+            return;
         }
+
         // PLAYER HAS TOO MANY WARPS
-        else {
+        if (!Core.warpManager.canCreatePrivate(player.getName())) {
             PlayerUtils.sendError(player, pluginName, "Du kannst keinen weiteren privaten Warp erstellen!");
             return;
         }
+        String warpName = args[0];
+        // NO DUPLICATE WARPS
+        if (Core.warpManager.isWarpExisting(warpName)) {
+            PlayerUtils.sendError(player, pluginName, "Es existiert bereits ein Warp names '" + warpName + "' !");
+            return;
+        }
+
+        // CREATE THE NEW WARP
+        Core.warpManager.createWarp(warpName, player);
+        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warpName + "' wurde erstellt!");
+
+        // PRINT OUT REST PRIVATE WARPS TO CREATE
+        WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
+        PlayerUtils.sendInfo(player, "Du kannst noch " + (Settings.getMaxPrivateWarps(player.getName()) - counter.getPrivateWarps()) + " private Warps erstellen.");
+
+    }
+
+    private boolean isValidName(String warpName) {
+        return warpName.length() >= Settings.getMinWarpnameSize() && warpName.length() <= Settings.getMaxWarpnameSize();
     }
 }

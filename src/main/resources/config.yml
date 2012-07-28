@@ -1,6 +1,9 @@
 VERSION: ${pom.version}
 common:
     pageSize: 15
+warp:
+    minNameLength: 3
+    maxNameLength: 25
 warpCounter:
     private:
         x: 0

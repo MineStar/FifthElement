@@ -37,6 +37,9 @@ public class Settings {
 
     private static int pageSize;
 
+    private static int minWarpnameSize;
+    private static int maxWarpnameSize;
+
     /* USED FOR SETTING */
     private static MinestarConfig config;
     private static File configFile;
@@ -69,6 +72,9 @@ public class Settings {
         loadMaxWarps();
 
         pageSize = config.getInt("common.pageSize");
+        
+        minWarpnameSize = config.getInt("warp.minNameLength");
+        maxWarpnameSize = config.getInt("warp.maxNameLength");
 
     }
 
@@ -114,6 +120,14 @@ public class Settings {
 
     public static int getPageSize() {
         return pageSize;
+    }
+
+    public static int getMinWarpnameSize() {
+        return minWarpnameSize;
+    }
+
+    public static int getMaxWarpnameSize() {
+        return maxWarpnameSize;
     }
 
 }
