@@ -68,43 +68,47 @@ public class cmdWarpInfo extends AbstractCommand {
 
     private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm 'am' d.M.Y");
 
+    private final static String SEPERATOR = "----------------------------------------";
+    private final static ChatColor NAME_COLOR = ChatColor.GREEN;
+    private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
+
     private void displayInformation(Warp warp, CommandSender sender) {
         // HEAD
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, "------------------------------");
-        ChatUtils.writeColoredMessage(sender, ChatColor.BLUE, "Informationen über Warp '" + ChatColor.GRAY + warp.getName() + ChatColor.BLUE + "'");
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, SEPERATOR);
+        ChatUtils.writeColoredMessage(sender, NAME_COLOR, "Informationen über Warp '" + VALUE_COLOR + warp.getName() + NAME_COLOR + "'");
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, SEPERATOR);
 
         // OWNER
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Erstellt von:", ChatColor.GRAY + warp.getOwner()));
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwner()));
 
         // CREATION DATE
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Erstellt: ", ChatColor.GRAY + FORMAT.format(warp.getCreationDate())));
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt: ", VALUE_COLOR + FORMAT.format(warp.getCreationDate())));
 
         // USE MODE
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Benutzbar von: ", ChatColor.GRAY + useModeToText(warp.getUseMode())));
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Benutzbar von: ", VALUE_COLOR + useModeToText(warp.getUseMode())));
 
         // PUBLIC OR PRIVATE
         if (warp.isPublic())
-            ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Typ: ", ChatColor.GRAY + "Öffentlich"));
+            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ: ", VALUE_COLOR + "Öffentlich"));
         else {
-            ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Typ: ", ChatColor.GRAY + "Privat"));
+            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ: ", VALUE_COLOR + "Privat"));
             // HAS GUESTS
             if (warp.getGuests().size() > 0)
-                ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Gäste: ", ChatColor.GRAY + warp.getGuestList()));
+                ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Gäste: ", VALUE_COLOR + warp.getGuestList()));
         }
 
         // POSITION AND DISTANCE
         Location loc = warp.getLocation();
-        ChatUtils.writeInfo(sender, String.format(ChatColor.BLUE + "X:" + ChatColor.GRAY + " %d " + ChatColor.BLUE + "Y:" + ChatColor.GRAY + " %d " + ChatColor.BLUE + "Z: " + ChatColor.GRAY + "%d " + ChatColor.BLUE + "Welt:" + ChatColor.GRAY + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
+        ChatUtils.writeMessage(sender, String.format(NAME_COLOR + "X:" + VALUE_COLOR + " %d " + NAME_COLOR + "Y:" + VALUE_COLOR + " %d " + NAME_COLOR + "Z: " + VALUE_COLOR + "%d " + NAME_COLOR + "Welt:" + VALUE_COLOR + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
         if (sender instanceof Player) {
             Location loc2 = ((Player) sender).getLocation();
-            ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s m", ChatColor.BLUE + "Entfernung: ", (int) (loc.distance(loc2))));
+            ChatUtils.writeMessage(sender, String.format("%s %s m", NAME_COLOR + "Entfernung:", VALUE_COLOR + ("" + (int) (loc.distance(loc2)))));
         }
         // END OF INFORMATION
 
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, "------------------------------");
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, SEPERATOR);
 
     }
-
     private String useModeToText(byte useMode) {
         String result = "";
         if (useMode == Warp.COMMAND_USEMODE)
