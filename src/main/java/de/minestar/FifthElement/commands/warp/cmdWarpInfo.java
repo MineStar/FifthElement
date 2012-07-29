@@ -20,6 +20,7 @@ package de.minestar.FifthElement.commands.warp;
 
 import java.text.SimpleDateFormat;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -29,6 +30,7 @@ import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.ChatUtils;
+import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class cmdWarpInfo extends AbstractCommand {
 
@@ -67,39 +69,54 @@ public class cmdWarpInfo extends AbstractCommand {
     private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:m 'am' d.M.Y");
 
     private void displayInformation(Warp warp, CommandSender sender) {
-
-        // TODO: AUsgabe neu schreiben
-        // TODO: --------------------
-        // TODO: Info über name
-        // Vorne immer ne andere farbe als das attribut
-        
-        // Abschließen mit --------------------------
         // HEAD
-        ChatUtils.writeInfo(sender, pluginName, "Informationen über Warp '" + warp.getName() + "':");
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, "------------------------------");
+        ChatUtils.writeColoredMessage(sender, ChatColor.BLUE, "Informationen über Warp '" + warp.getName() + "'");
 
         // OWNER
-        ChatUtils.writeInfo(sender, "Erstellt von: " + warp.getOwner());
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Erstellt von:", ChatColor.GRAY + warp.getOwner()));
 
         // CREATION DATE
-        ChatUtils.writeInfo(sender, "Erstellt: " + FORMAT.format(warp.getCreationDate()));
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Erstellt: ", ChatColor.GRAY + FORMAT.format(warp.getCreationDate())));
 
-        // IS PUBLIC OR PRIVATE
+        // USE MODE
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Benutzbar von: ", ChatColor.GRAY + useModeToText(warp.getUseMode())));
+
+        // PUBLIC OR PRIVATE
         if (warp.isPublic())
-            ChatUtils.writeInfo(sender, "Öffentlich");
+            ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Typ: ", ChatColor.GRAY + "Öffentlich"));
         else {
-            ChatUtils.writeInfo(sender, "Privat");
-            if (warp.getGuests().size() > 0) {
-                ChatUtils.writeInfo(sender, "Gästeliste:");
-                ChatUtils.writeInfo(sender, warp.getGuestList());
-            }
+            ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Typ: ", ChatColor.GRAY + "Privat"));
+            // HAS GUESTS
+            if (warp.getGuests().size() > 0)
+                ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Gäste: ", ChatColor.GRAY + warp.getGuestList()));
         }
 
         // POSITION AND DISTANCE
         Location loc = warp.getLocation();
-        ChatUtils.writeInfo(sender, String.format("X: %d Y: %d Z: %d Welt: %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
+        ChatUtils.writeInfo(sender, String.format(ChatColor.BLUE + "X:" + ChatColor.GRAY + " %d " + ChatColor.BLUE + "Y:" + ChatColor.GRAY + " %d " + ChatColor.BLUE + "Z: " + ChatColor.GRAY + "%d " + ChatColor.BLUE + "Welt:" + ChatColor.GRAY + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
         if (sender instanceof Player) {
             Location loc2 = ((Player) sender).getLocation();
-            ChatUtils.writeInfo(sender, "Entfernung zum Warp = " + (int) (loc.distance(loc2)) + "m");
+            ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s m", ChatColor.BLUE + "Entfernung: ", (int) (loc.distance(loc2))));
         }
+        // END OF INFORMATION
+
+        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, "------------------------------");
+
+    }
+
+    private String useModeToText(byte useMode) {
+        String result = "";
+        if (useMode == Warp.COMMAND_USEMODE)
+            result = "Befehlen";
+        else if (useMode == Warp.SIGN_USEMODE)
+            result = "Schildern";
+        else if (useMode == (Warp.SIGN_USEMODE | Warp.COMMAND_USEMODE))
+            result = "Befehlen und Schilder";
+        else
+            ConsoleUtils.printError(pluginName, "Unknown usemode : " + useMode);
+
+        return result;
+
     }
 }
