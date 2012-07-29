@@ -256,15 +256,8 @@ public class WarpManager {
         Core.dbHandler.updateWarpName(warp);
     }
 
-    public void addUseMode(Warp warp, byte useMode) {
-        warp.addUseMode(useMode);
-
-        // PERSIST
-        Core.dbHandler.updateUseMode(warp);
-    }
-
-    public void removeUseMode(Warp warp, byte useMode) {
-        warp.addUseMode(useMode);
+    public void setUseMode(Warp warp, byte useMode) {
+        warp.setUseMode(useMode);
 
         // PERSIST
         Core.dbHandler.updateUseMode(warp);

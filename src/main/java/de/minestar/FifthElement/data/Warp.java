@@ -170,6 +170,7 @@ public class Warp {
     }
 
     public boolean canUse(String playerName) {
+        // TODO: IMPLEMENT PERMISSION FOR MODS / ADMINS
         return isPublic || isOwner(playerName) || isGuest(playerName);
     }
 
@@ -273,12 +274,8 @@ public class Warp {
     // ** USEMODE **
     // *************
 
-    public void addUseMode(byte useMode) {
-        this.useMode |= useMode;
-    }
-
-    public void removeUseMode(byte useMode) {
-        this.useMode ^= useMode;
+    public void setUseMode(byte useMode) {
+        this.useMode = useMode;
     }
 
     public boolean canUsedBy(byte useMode) {
