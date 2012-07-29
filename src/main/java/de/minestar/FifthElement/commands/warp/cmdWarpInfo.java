@@ -82,19 +82,19 @@ public class cmdWarpInfo extends AbstractCommand {
         ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwner()));
 
         // CREATION DATE
-        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt: ", VALUE_COLOR + FORMAT.format(warp.getCreationDate())));
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt:", VALUE_COLOR + FORMAT.format(warp.getCreationDate())));
 
         // USE MODE
-        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Benutzbar von: ", VALUE_COLOR + useModeToText(warp.getUseMode())));
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Benutzbar von:", VALUE_COLOR + useModeToText(warp.getUseMode())));
 
         // PUBLIC OR PRIVATE
         if (warp.isPublic())
-            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ: ", VALUE_COLOR + "Öffentlich"));
+            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Öffentlich"));
         else {
-            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ: ", VALUE_COLOR + "Privat"));
+            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Privat"));
             // HAS GUESTS
             if (warp.getGuests().size() > 0)
-                ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Gäste: ", VALUE_COLOR + warp.getGuestList()));
+                ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Gäste:", VALUE_COLOR + warp.getGuestList()));
         }
 
         // POSITION AND DISTANCE
