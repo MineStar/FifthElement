@@ -18,19 +18,21 @@
 
 package de.minestar.FifthElement.data.filter;
 
+import org.bukkit.entity.Player;
+
 import de.minestar.FifthElement.data.Warp;
 
 public class UseFilter implements WarpFilter {
 
-    private final String playerName;
+    private final Player player;
 
-    public UseFilter(String playerName) {
-        this.playerName = playerName;
+    public UseFilter(Player player) {
+        this.player = player;
     }
 
     @Override
     public boolean accept(Warp warp) {
-        return warp.canUse(playerName);
+        return warp.canUse(player);
     }
 
     @Override

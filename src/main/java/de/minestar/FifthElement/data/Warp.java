@@ -28,6 +28,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.utils.UtilPermissions;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
@@ -60,6 +62,9 @@ public class Warp {
     // COONSTANTS FOR USE MODE
     public final static byte COMMAND_USEMODE = 1;
     public final static byte SIGN_USEMODE = 2;
+
+    private final static String PERMISSION_USE_ALL_WARPS = "fifthelement.useallwarps";
+    private final static String PERMISSION_EDIT_ALL_WARPS = "fifthelement.editallwarps";
 
     // CONSTRUCTOR WHEN PLAYER CREATES INGAME A WARP
     public Warp(String warpName, Player player) {
@@ -119,8 +124,7 @@ public class Warp {
     // CHECK IF PLAYER CAN MOVE/RENAME/DELETE OR EDIT THE WARP
     // ONLY THE OWNER AND ADMINS/MODS ARE ALLOWED TO DO IT
     public boolean canEdit(Player player) {
-        // TODO: IMPLEMENT PERMISSION FOR MODS / ADMINS
-        return isOwner(player);
+        return isOwner(player) || UtilPermissions.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
     }
 
     public void setAccessMode(boolean isPublic) {
@@ -170,12 +174,11 @@ public class Warp {
     }
 
     public boolean canUse(String playerName) {
-        // TODO: IMPLEMENT PERMISSION FOR MODS / ADMINS
         return isPublic || isOwner(playerName) || isGuest(playerName);
     }
 
     public boolean canUse(Player player) {
-        return canUse(player.getName());
+        return canUse(player.getName()) || UtilPermissions.playerCanUseCommand(player, PERMISSION_EDIT_ALL_WARPS);
     }
 
     public void setId(int id) {

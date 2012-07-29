@@ -51,7 +51,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
         // DISPLAY USEABLE WARPS
         if (args.length == 0)
-            filterList.add(new UseFilter(player.getName()));
+            filterList.add(new UseFilter(player));
         // APPLY FILTER
         else {
             for (int i = 0; i < args.length; ++i) {
@@ -83,7 +83,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 }
                 // DISPLAY USEABLE PRIVATE WARPS
                 else if (arg.equalsIgnoreCase("-private")) {
-                    filterList.add(new UseFilter(player.getName()));
+                    filterList.add(new UseFilter(player));
                     filterList.add(PrivateFilter.getInstance());
                 }
                 // DISPLAY PUBLIC WARPS
@@ -103,7 +103,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                             return;
                         }
 
-                        filterList.add(new UseFilter(player.getName()));
+                        filterList.add(new UseFilter(player));
                         filterList.add(new OwnerFilter(targetName));
                     } else {
                         PlayerUtils.sendError(player, pluginName, "Es fehlt bei '-player' der Name des Spielers!");
@@ -160,7 +160,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         Collections.sort(list, PUBLIC_PRIVATE_SORT);
 
         ChatColor color = null;
-        
+
         PlayerUtils.sendInfo(player, "Warps:");
         // DISPLAY
         for (Warp warp : list) {
