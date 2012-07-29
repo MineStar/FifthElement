@@ -138,7 +138,7 @@ public class DatabaseHandler extends AbstractDatabaseHandler {
                 isPublic = rs.getBoolean(10);
                 guests = rs.getString(11);
                 useMode = rs.getByte(12);
-                date = rs.getDate(13);
+                date = new Date(rs.getTimestamp(13).getTime());
 
                 // CREATE WARP AND PUT IT TO MAP
                 warpMap.put(name.toLowerCase(), new Warp(id, name, isPublic, owner, guests, worldName, x, y, z, yaw, pitch, useMode, date));

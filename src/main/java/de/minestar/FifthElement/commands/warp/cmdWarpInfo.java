@@ -66,12 +66,12 @@ public class cmdWarpInfo extends AbstractCommand {
         displayInformation(warp, sender);
     }
 
-    private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:m 'am' d.M.Y");
+    private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm 'am' d.M.Y");
 
     private void displayInformation(Warp warp, CommandSender sender) {
         // HEAD
         ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, "------------------------------");
-        ChatUtils.writeColoredMessage(sender, ChatColor.BLUE, "Informationen über Warp '" + warp.getName() + "'");
+        ChatUtils.writeColoredMessage(sender, ChatColor.BLUE, "Informationen über Warp '" + ChatColor.GRAY + warp.getName() + ChatColor.BLUE + "'");
 
         // OWNER
         ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, String.format("%s %s", ChatColor.BLUE + "Erstellt von:", ChatColor.GRAY + warp.getOwner()));

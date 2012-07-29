@@ -37,7 +37,7 @@ public class cmdWarpCreate extends AbstractCommand {
 
         if (!isValidName(args[0])) {
             PlayerUtils.sendError(player, pluginName, "Der Warpname ist ungültig!");
-            PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. 3 Zeichen und maximal 25. Zeichen lang sein.");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");
             return;
         }
 
