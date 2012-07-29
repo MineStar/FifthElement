@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.utils.UtilPermissions;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
@@ -30,6 +32,8 @@ import de.minestar.minestarlibrary.commands.AbstractSuperCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarp extends AbstractSuperCommand {
+
+    private final static String IGNORE_USE_MODE = "fifthelement.command.ignoreusemode";
 
     public cmdWarp(String syntax, String arguments, String node, AbstractCommand... subCommands) {
         super(Core.NAME, syntax, arguments, node, true, subCommands);
@@ -45,11 +49,11 @@ public class cmdWarp extends AbstractSuperCommand {
             return;
         }
 
-        // SORT OUT WARPS THE PLAYER CAN'T USE
+        // SORT OUT WARPS THE PLAYER CAN'T USE OR THE WARP CAN ONLY USE BY SIGNS
         Iterator<Warp> iter = matches.iterator();
         while (iter.hasNext()) {
             Warp warp = iter.next();
-            if (!warp.canUse(player))
+            if (!canUse(warp, player))
                 iter.remove();
         }
 
@@ -75,7 +79,14 @@ public class cmdWarp extends AbstractSuperCommand {
         // TELEPORT PLAYER THE TO WARP
         player.teleport(bestMatch.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim Warp '" + bestMatch.getName() + "'.");
-        
-        // TODO: Ersteller und spezielle Permissions können unabhängig vom Usemode arbeiten
+    }
+
+    private boolean canUse(Warp warp, Player player) {
+        // OWNER AND GUYS WITH SPECIAL PERMISSION CAN ACCESS ALL WARPS
+        if (warp.isOwner(player) || UtilPermissions.playerCanUseCommand(player, IGNORE_USE_MODE))
+            return true;
+
+        // WARP CAN ACCESSED BY COMMAND AND PLAYER CAN USE THE WARP
+        return warp.canUsedBy(Warp.COMMAND_USEMODE) && warp.canUse(player);
     }
 }
