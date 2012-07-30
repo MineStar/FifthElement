@@ -18,13 +18,12 @@
 
 package de.minestar.FifthElement.statistics.warp;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import de.minestar.FifthElement.core.Core;
-import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
@@ -33,7 +32,7 @@ public class WarpRenameStat implements Statistic {
     private String playerName;
     private String oldWarpName;
     private String newWarpName;
-    private Date date;
+    private Timestamp date;
 
     public WarpRenameStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
@@ -43,7 +42,7 @@ public class WarpRenameStat implements Statistic {
         this.playerName = playerName;
         this.oldWarpName = oldWarpName;
         this.newWarpName = newWarpName;
-        this.date = new Date();
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -75,7 +74,7 @@ public class WarpRenameStat implements Statistic {
         data.add(playerName);
         data.add(oldWarpName);
         data.add(newWarpName);
-        data.add(DatabaseUtils.getDateTimeString(date));
+        data.add(date);
 
         return data;
     }

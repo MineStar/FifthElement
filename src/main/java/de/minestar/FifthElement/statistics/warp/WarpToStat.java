@@ -18,7 +18,7 @@
 
 package de.minestar.FifthElement.statistics.warp;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -26,7 +26,6 @@ import java.util.Queue;
 import org.bukkit.Location;
 
 import de.minestar.FifthElement.core.Core;
-import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
@@ -35,7 +34,7 @@ public class WarpToStat implements Statistic {
     private String playerName;
     private String warpName;
     private String location;
-    private Date date;
+    private Timestamp date;
 
     public WarpToStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
@@ -45,7 +44,7 @@ public class WarpToStat implements Statistic {
         this.playerName = playerName;
         this.warpName = warpName;
         this.location = location.toString();
-        this.date = new Date();
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -77,7 +76,7 @@ public class WarpToStat implements Statistic {
         data.add(playerName);
         data.add(warpName);
         data.add(location);
-        data.add(DatabaseUtils.getDateTimeString(date));
+        data.add(date);
 
         return data;
     }

@@ -26,6 +26,8 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.data.filter.PublicFilter;
+import de.minestar.FifthElement.statistics.warp.WarpRandomStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -52,5 +54,8 @@ public class cmdWarpRandom extends AbstractCommand {
 
         player.teleport(warp.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim zufälligen Warp '" + warp.getName() + "'.");
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new WarpRandomStat(player.getName(), warp.getName()));
     }
 }

@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.statistics.warp.PrivateWarpStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -55,6 +57,9 @@ public class cmdWarpPrivate extends AbstractCommand {
         // CONVERT TO PUBLIC WARP
         Core.warpManager.changeAccess(warp, false);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' ist nun privat!");
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new PrivateWarpStat(player.getName(), warp.getName()));
     }
 
 }

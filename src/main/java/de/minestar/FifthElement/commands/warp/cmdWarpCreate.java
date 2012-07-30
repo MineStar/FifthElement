@@ -23,6 +23,8 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.WarpCounter;
+import de.minestar.FifthElement.statistics.warp.WarpCreateStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -61,6 +63,8 @@ public class cmdWarpCreate extends AbstractCommand {
         WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
         PlayerUtils.sendInfo(player, "Du kannst noch " + (Settings.getMaxPrivateWarps(player.getName()) - counter.getPrivateWarps()) + " private Warps erstellen.");
 
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new WarpCreateStat(player.getName(), warpName));
     }
 
     private boolean isValidName(String warpName) {

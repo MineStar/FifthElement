@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.statistics.warp.WarpInviteStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -60,12 +62,15 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
             }
             // TODO: Some bug here :(
             // PLAYER IS NEW GUEST
-            if (warp.addGuest(targetName))
+            if (warp.addGuest(targetName)) {
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
+                // FIRE STATISTIC
+                IlluminatiCore.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));
+            }
             // PLAYER WAS ALREADY INVITED
             else
                 PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' kann bereits den Warp '" + warp.getName() + "' benutzen.");
-            
+
             // INFORM PLAYER
             target = PlayerUtils.getOnlinePlayer(targetName);
             if (target != null)

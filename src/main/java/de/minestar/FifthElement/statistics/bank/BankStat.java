@@ -18,13 +18,12 @@
 
 package de.minestar.FifthElement.statistics.bank;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import de.minestar.FifthElement.core.Core;
-import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
@@ -32,7 +31,7 @@ public class BankStat implements Statistic {
 
     private String playerName;
     private String bankOwner;
-    private Date date;
+    private Timestamp date;
 
     public BankStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
@@ -41,7 +40,7 @@ public class BankStat implements Statistic {
     public BankStat(String playerName, String bankOwner) {
         this.playerName = playerName;
         this.bankOwner = bankOwner;
-        this.date = new Date();
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -71,9 +70,8 @@ public class BankStat implements Statistic {
 
         data.add(playerName);
         data.add(bankOwner);
-        data.add(DatabaseUtils.getDateTimeString(date));
+        data.add(date);
 
         return data;
     }
-
 }

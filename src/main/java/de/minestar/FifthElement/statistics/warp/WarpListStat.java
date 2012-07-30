@@ -21,27 +21,29 @@ package de.minestar.FifthElement.statistics.warp;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.data.filter.WarpFilter;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpInviteStat implements Statistic {
+public class WarpListStat implements Statistic {
 
-    private String warpName;
-    private String inviter;
-    private String guest;
+    private String player;
+    private int results;
+    private String args;
     private Timestamp date;
 
-    public WarpInviteStat() {
+    public WarpListStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public WarpInviteStat(String warpName, String inviter, String guest) {
-        this.warpName = warpName;
-        this.inviter = inviter;
-        this.guest = guest;
+    public WarpListStat(String player, int results, List<WarpFilter> filter) {
+        this.player = player;
+        this.results = results;
+        this.args = filter.toString();
         this.date = new Timestamp(System.currentTimeMillis());
     }
 
@@ -52,16 +54,16 @@ public class WarpInviteStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpInvite";
+        return "WarpList";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
 
-        head.put("warpName", StatisticType.STRING);
-        head.put("inviter", StatisticType.STRING);
-        head.put("guest", StatisticType.STRING);
+        head.put("player", StatisticType.STRING);
+        head.put("results", StatisticType.INT);
+        head.put("args", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
 
         return head;
@@ -71,11 +73,12 @@ public class WarpInviteStat implements Statistic {
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
 
-        data.add(warpName);
-        data.add(inviter);
-        data.add(guest);
+        data.add(player);
+        data.add(results);
+        data.add(args);
         data.add(date);
 
         return data;
+
     }
 }

@@ -25,6 +25,8 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.statistics.warp.WarpDeleteStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -69,5 +71,9 @@ public class cmdWarpDelete extends AbstractCommand {
                     PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + warp.getName() + "' gelöscht!");
             }
         }
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new WarpDeleteStat(warp.getName(), player.getName()));
+
     }
 }

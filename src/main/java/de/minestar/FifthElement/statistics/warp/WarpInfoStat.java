@@ -27,21 +27,19 @@ import de.minestar.FifthElement.core.Core;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpInviteStat implements Statistic {
+public class WarpInfoStat implements Statistic {
 
-    private String warpName;
-    private String inviter;
-    private String guest;
+    private String warp;
+    private String player;
     private Timestamp date;
 
-    public WarpInviteStat() {
+    public WarpInfoStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public WarpInviteStat(String warpName, String inviter, String guest) {
-        this.warpName = warpName;
-        this.inviter = inviter;
-        this.guest = guest;
+    public WarpInfoStat(String warp, String player) {
+        this.warp = warp;
+        this.player = player;
         this.date = new Timestamp(System.currentTimeMillis());
     }
 
@@ -52,16 +50,15 @@ public class WarpInviteStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpInvite";
+        return "WarpInfo";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
 
-        head.put("warpName", StatisticType.STRING);
-        head.put("inviter", StatisticType.STRING);
-        head.put("guest", StatisticType.STRING);
+        head.put("warp", StatisticType.STRING);
+        head.put("player", StatisticType.STRING);
         head.put("date", StatisticType.DATETIME);
 
         return head;
@@ -71,11 +68,11 @@ public class WarpInviteStat implements Statistic {
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
 
-        data.add(warpName);
-        data.add(inviter);
-        data.add(guest);
+        data.add(warp);
+        data.add(player);
         data.add(date);
 
         return data;
+
     }
 }

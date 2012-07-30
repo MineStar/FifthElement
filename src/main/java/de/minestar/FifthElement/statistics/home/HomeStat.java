@@ -18,13 +18,13 @@
 
 package de.minestar.FifthElement.statistics.home;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import de.minestar.FifthElement.core.Core;
-import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
@@ -41,7 +41,7 @@ public class HomeStat implements Statistic {
     public HomeStat(String playerName, String homeOwner) {
         this.playerName = playerName;
         this.homeOwner = homeOwner;
-        this.date = new Date();
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -73,9 +73,8 @@ public class HomeStat implements Statistic {
 
         data.add(playerName);
         data.add(homeOwner);
-        data.add(DatabaseUtils.getDateTimeString(date));
+        data.add(date);
 
         return data;
     }
-
 }

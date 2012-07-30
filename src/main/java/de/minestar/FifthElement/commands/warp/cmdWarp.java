@@ -27,6 +27,8 @@ import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.statistics.warp.WarpToStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.commands.AbstractSuperCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -79,6 +81,9 @@ public class cmdWarp extends AbstractSuperCommand {
         // TELEPORT PLAYER THE TO WARP
         player.teleport(bestMatch.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim Warp '" + bestMatch.getName() + "'.");
+        
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new WarpToStat(player.getName(), bestMatch.getName(), player.getLocation()));
     }
 
     private boolean canUse(Warp warp, Player player) {

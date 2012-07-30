@@ -24,24 +24,27 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.data.Warp;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
-public class WarpInviteStat implements Statistic {
+public class WarpModeStat implements Statistic {
 
+    private String player;
     private String warpName;
-    private String inviter;
-    private String guest;
+    private byte oldUseMode;
+    private byte newUseMode;
     private Timestamp date;
 
-    public WarpInviteStat() {
+    public WarpModeStat() {
         // EMPTY CONSTRUCTOR FOR REFLECTION ACCESS
     }
 
-    public WarpInviteStat(String warpName, String inviter, String guest) {
-        this.warpName = warpName;
-        this.inviter = inviter;
-        this.guest = guest;
+    public WarpModeStat(String player, byte oldUseMode, Warp warp) {
+        this.player = player;
+        this.oldUseMode = oldUseMode;
+        this.newUseMode = warp.getUseMode();
+        this.warpName = warp.getName();
         this.date = new Timestamp(System.currentTimeMillis());
     }
 
@@ -52,16 +55,17 @@ public class WarpInviteStat implements Statistic {
 
     @Override
     public String getName() {
-        return "WarpInvite";
+        return "WarpMode";
     }
 
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
         LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
 
-        head.put("warpName", StatisticType.STRING);
-        head.put("inviter", StatisticType.STRING);
-        head.put("guest", StatisticType.STRING);
+        head.put("player", StatisticType.STRING);
+        head.put("warp", StatisticType.STRING);
+        head.put("oldUseMode", StatisticType.INT);
+        head.put("newUseMode", StatisticType.INT);
         head.put("date", StatisticType.DATETIME);
 
         return head;
@@ -71,11 +75,13 @@ public class WarpInviteStat implements Statistic {
     public Queue<Object> getData() {
         Queue<Object> data = new LinkedList<Object>();
 
+        data.add(player);
         data.add(warpName);
-        data.add(inviter);
-        data.add(guest);
+        data.add(oldUseMode);
+        data.add(newUseMode);
         data.add(date);
 
         return data;
+
     }
 }

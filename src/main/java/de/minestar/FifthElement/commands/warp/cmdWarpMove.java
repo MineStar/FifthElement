@@ -18,10 +18,13 @@
 
 package de.minestar.FifthElement.commands.warp;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.statistics.warp.WarpMoveStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -49,8 +52,12 @@ public class cmdWarpMove extends AbstractCommand {
             PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps bewegen!");
             return;
         }
+        Location oldLocation = warp.getLocation();
         Core.warpManager.moveWarp(warp, player);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde an diese Position verschoben.");
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new WarpMoveStat(player.getName(), warp.getName(), oldLocation, warp.getLocation()));
     }
 
 }

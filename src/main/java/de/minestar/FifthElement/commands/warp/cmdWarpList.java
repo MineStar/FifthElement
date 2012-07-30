@@ -34,6 +34,8 @@ import de.minestar.FifthElement.data.filter.PrivateFilter;
 import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.FifthElement.data.filter.UseFilter;
 import de.minestar.FifthElement.data.filter.WarpFilter;
+import de.minestar.FifthElement.statistics.warp.WarpListStat;
+import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -122,6 +124,8 @@ public class cmdWarpList extends AbstractExtendedCommand {
             return;
         }
 
+        int resultSize = results.size();
+
         // GET THE SINGLE PAGE
         // TODO: Hier wahrscheinlich der Fehler
         --pageNumber;
@@ -138,6 +142,9 @@ public class cmdWarpList extends AbstractExtendedCommand {
         results = results.subList(fromIndex, toIndex);
 
         displayList(results, player, pageNumber);
+
+        // FIRE STATISTIC
+        IlluminatiCore.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
     }
 
     // USED FOR SORTING PUBLIC AND PRIVATE WARPS
