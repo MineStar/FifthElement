@@ -20,6 +20,9 @@ package de.minestar.FifthElement.core;
 
 import java.io.File;
 
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
+
 import de.minestar.FifthElement.commands.bank.cmdBank;
 import de.minestar.FifthElement.commands.bank.cmdBankInfo;
 import de.minestar.FifthElement.commands.bank.cmdSetBank;
@@ -42,6 +45,7 @@ import de.minestar.FifthElement.commands.warp.cmdWarpRandom;
 import de.minestar.FifthElement.commands.warp.cmdWarpRename;
 import de.minestar.FifthElement.commands.warp.cmdWarpUninvite;
 import de.minestar.FifthElement.database.DatabaseHandler;
+import de.minestar.FifthElement.listener.SignListener;
 import de.minestar.FifthElement.manager.BankManager;
 import de.minestar.FifthElement.manager.HomeManager;
 import de.minestar.FifthElement.manager.WarpManager;
@@ -65,6 +69,7 @@ import de.minestar.FifthElement.statistics.warp.WarpModeStat;
 import de.minestar.FifthElement.statistics.warp.WarpMoveStat;
 import de.minestar.FifthElement.statistics.warp.WarpRandomStat;
 import de.minestar.FifthElement.statistics.warp.WarpRenameStat;
+import de.minestar.FifthElement.statistics.warp.WarpSignStat;
 import de.minestar.FifthElement.statistics.warp.WarpToStat;
 import de.minestar.FifthElement.statistics.warp.WarpUninviteStat;
 import de.minestar.illuminati.IlluminatiCore;
@@ -82,6 +87,9 @@ public class Core extends AbstractCore {
     public static WarpManager warpManager;
     public static HomeManager homeManager;
     public static BankManager bankManager;
+
+    /* LISTENER */
+    private Listener warpSignListener;
 
     public Core() {
         super(NAME);
@@ -134,6 +142,8 @@ public class Core extends AbstractCore {
         IlluminatiCore.registerStatistic(HomeStat.class);
         IlluminatiCore.registerStatistic(SetHomeStat.class);
 
+        IlluminatiCore.registerStatistic(WarpSignStat.class);
+
         return true;
     }
 
@@ -177,6 +187,21 @@ public class Core extends AbstractCore {
         );
         // @formatter:on
 
+        return true;
+    }
+
+    @Override
+    protected boolean createListener() {
+
+        this.warpSignListener = new SignListener();
+
+        return true;
+    }
+
+    @Override
+    protected boolean registerEvents(PluginManager pm) {
+
+        pm.registerEvents(warpSignListener, this);
         return true;
     }
 
