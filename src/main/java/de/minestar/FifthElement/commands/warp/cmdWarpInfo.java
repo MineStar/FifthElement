@@ -66,22 +66,22 @@ public class cmdWarpInfo extends AbstractCommand {
         }
 
         displayInformation(warp, sender);
-        
+
         // FIRE STATISTIC
         IlluminatiCore.handleStatistic(new WarpInfoStat(warp.getName(), sender.getName()));
     }
 
     private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm 'am' d.M.Y");
 
-    private final static String SEPERATOR = "----------------------------------------";
+    private final static String SEPERATOR = ChatColor.WHITE + "----------------------------------------";
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
     private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
     private void displayInformation(Warp warp, CommandSender sender) {
         // HEAD
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, SEPERATOR);
+        ChatUtils.writeMessage(sender, SEPERATOR);
         ChatUtils.writeColoredMessage(sender, NAME_COLOR, "Informationen über Warp '" + VALUE_COLOR + warp.getName() + NAME_COLOR + "'");
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, SEPERATOR);
+        ChatUtils.writeMessage(sender, SEPERATOR);
 
         // OWNER
         ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwner()));
@@ -111,7 +111,7 @@ public class cmdWarpInfo extends AbstractCommand {
         }
         // END OF INFORMATION
 
-        ChatUtils.writeColoredMessage(sender, ChatColor.WHITE, SEPERATOR);
+        ChatUtils.writeMessage(sender, SEPERATOR);
 
     }
 

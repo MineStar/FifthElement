@@ -18,8 +18,7 @@
 
 package de.minestar.FifthElement.commands.bank;
 
-import java.text.DecimalFormat;
-
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -81,16 +80,18 @@ public class cmdBankInfo extends AbstractExtendedCommand {
         IlluminatiCore.handleStatistic(new BankInfoStat(player.getName(), bank.getOwner()));
     }
 
-    // FORMATTER TO DISPLAY ONLY ONE DIGIT
-    private final static DecimalFormat dF = new DecimalFormat("#0.0");
+    private final static String SEPERATOR = "----------------------------------------";
+    private final static ChatColor NAME_COLOR = ChatColor.GREEN;
+    private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-    private void displayBankInformation(Player caller, Bank bank) {
+    private void displayBankInformation(Player player, Bank bank) {
 
-        Location bankLoc = bank.getLocation();
-        double distance = bankLoc.distance(caller.getLocation());
+        PlayerUtils.sendInfo(player, SEPERATOR);
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Bank von:", VALUE_COLOR + bank.getOwner()));
+        PlayerUtils.sendInfo(player, SEPERATOR);
 
-        PlayerUtils.sendInfo(caller, pluginName, "Information über die Bank von " + bank.getOwner() + ":");
-        PlayerUtils.sendInfo(caller, "Position: " + bankLoc.getBlockX() + " " + bankLoc.getBlockY() + " " + bankLoc.getBlockZ() + " in " + bankLoc.getWorld().getName());
-        PlayerUtils.sendInfo(caller, "Entfernung von hier: " + dF.format(distance) + "m");
+        Location loc = bank.getLocation();
+        PlayerUtils.sendInfo(player, String.format(NAME_COLOR + "X:" + VALUE_COLOR + " %d " + NAME_COLOR + "Y:" + VALUE_COLOR + " %d " + NAME_COLOR + "Z: " + VALUE_COLOR + "%d " + NAME_COLOR + "Welt:" + VALUE_COLOR + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
+        PlayerUtils.sendInfo(player, String.format("%s %s m", NAME_COLOR + "Entfernung:", VALUE_COLOR + Integer.toString((int) player.getLocation().distance(loc))));
     }
 }

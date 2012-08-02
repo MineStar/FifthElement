@@ -18,8 +18,7 @@
 
 package de.minestar.FifthElement.commands.home;
 
-import java.text.DecimalFormat;
-
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -80,16 +79,19 @@ public class cmdHomeInfo extends AbstractExtendedCommand {
         // FIRE STATISTICS
         IlluminatiCore.handleStatistic(new HomeInfoStat(player.getName(), home.getOwner()));
     }
-    // FORMATTER TO DISPLAY ONLY ONE DIGIT
-    private final static DecimalFormat dF = new DecimalFormat("#0.0");
 
-    private void displayHomeInformation(Player caller, Home home) {
+    private final static String SEPERATOR = "----------------------------------------";
+    private final static ChatColor NAME_COLOR = ChatColor.GREEN;
+    private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-        Location homeLoc = home.getLocation();
-        double distance = homeLoc.distance(caller.getLocation());
+    private void displayHomeInformation(Player player, Home home) {
 
-        PlayerUtils.sendInfo(caller, pluginName, "Information über das Zuhause von " + home.getOwner() + ":");
-        PlayerUtils.sendInfo(caller, "Position: " + homeLoc.getBlockX() + " " + homeLoc.getBlockY() + " " + homeLoc.getBlockZ() + " in " + homeLoc.getWorld().getName());
-        PlayerUtils.sendInfo(caller, "Entfernung von hier: " + dF.format(distance) + "m");
+        PlayerUtils.sendInfo(player, SEPERATOR);
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Home von:", VALUE_COLOR + home.getOwner()));
+        PlayerUtils.sendInfo(player, SEPERATOR);
+
+        Location loc = home.getLocation();
+        PlayerUtils.sendInfo(player, String.format(NAME_COLOR + "X:" + VALUE_COLOR + " %d " + NAME_COLOR + "Y:" + VALUE_COLOR + " %d " + NAME_COLOR + "Z: " + VALUE_COLOR + "%d " + NAME_COLOR + "Welt:" + VALUE_COLOR + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
+        PlayerUtils.sendInfo(player, String.format("%s %s m", NAME_COLOR + "Entfernung:", VALUE_COLOR + Integer.toString((int) player.getLocation().distance(loc))));
     }
 }

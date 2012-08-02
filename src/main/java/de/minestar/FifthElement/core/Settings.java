@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.minestar.core.MinestarCore;
@@ -39,6 +40,10 @@ public class Settings {
 
     private static int minWarpnameSize;
     private static int maxWarpnameSize;
+
+    private static ChatColor warpListPublic;
+    private static ChatColor warpListPrivate;
+    private static ChatColor warpListOwned;
 
     /* USED FOR SETTING */
     private static MinestarConfig config;
@@ -72,9 +77,13 @@ public class Settings {
         loadMaxWarps();
 
         pageSize = config.getInt("common.pageSize");
-        
+
         minWarpnameSize = config.getInt("warp.minNameLength");
         maxWarpnameSize = config.getInt("warp.maxNameLength");
+
+        warpListOwned = ChatColor.getByChar(config.getString("warpList.ownedWarp"));
+        warpListPublic = ChatColor.getByChar(config.getString("warpList.publicWarp"));
+        warpListPrivate = ChatColor.getByChar(config.getString("warpList.privateWarp"));
 
     }
 
@@ -130,4 +139,15 @@ public class Settings {
         return maxWarpnameSize;
     }
 
+    public static ChatColor getWarpListOwned() {
+        return warpListOwned;
+    }
+
+    public static ChatColor getWarpListPrivate() {
+        return warpListPrivate;
+    }
+
+    public static ChatColor getWarpListPublic() {
+        return warpListPublic;
+    }
 }

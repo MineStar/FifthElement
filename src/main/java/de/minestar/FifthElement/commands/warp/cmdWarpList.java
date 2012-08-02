@@ -50,12 +50,10 @@ public class cmdWarpList extends AbstractExtendedCommand {
         List<WarpFilter> filterList = new ArrayList<WarpFilter>();
 
         int pageNumber = 1;
+        filterList.add(new UseFilter(player));
 
-        // DISPLAY USEABLE WARPS
-        if (args.length == 0)
-            filterList.add(new UseFilter(player));
         // APPLY FILTER
-        else {
+        if (args.length > 0) {
             for (int i = 0; i < args.length; ++i) {
                 String arg = args[i];
                 // PAGE NUMBER
@@ -127,10 +125,8 @@ public class cmdWarpList extends AbstractExtendedCommand {
         int resultSize = results.size();
 
         // GET THE SINGLE PAGE
-        // TODO: Hier wahrscheinlich der Fehler
-        --pageNumber;
         int pageSize = Settings.getPageSize();
-        int fromIndex = pageSize * pageNumber;
+        int fromIndex = pageSize * (pageNumber - 1);
         if (fromIndex >= results.size()) {
             PlayerUtils.sendError(player, pluginName, "Zu hohe Seitenzahl!");
             return;
@@ -140,8 +136,8 @@ public class cmdWarpList extends AbstractExtendedCommand {
             toIndex = results.size();
 
         results = results.subList(fromIndex, toIndex);
-
-        displayList(results, player, pageNumber);
+        Collections.sort(results, PUBLIC_PRIVATE_SORT);
+        displayList(results, player, pageNumber, filterList);
 
         // FIRE STATISTIC
         IlluminatiCore.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
@@ -161,22 +157,50 @@ public class cmdWarpList extends AbstractExtendedCommand {
         }
     };
 
-    // TODO: Ausgabe verbessern
-    private void displayList(List<Warp> list, Player player, int pageNumber) {
-        // SORT BY PUBLIC / PRIVATE
-        Collections.sort(list, PUBLIC_PRIVATE_SORT);
+    private final static String SEPERATOR = ChatColor.WHITE + "----------------------------------------";
+    private final static ChatColor NAME_COLOR = ChatColor.GREEN;
+    private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
+    private void displayList(List<Warp> list, Player player, int pageNumber, List<WarpFilter> filter) {
+
+        // HEAD
+        PlayerUtils.sendInfo(player, SEPERATOR);
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Seite:", VALUE_COLOR + Integer.toString(pageNumber)));
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Filter:", VALUE_COLOR + filter.toString()));
+        PlayerUtils.sendInfo(player, SEPERATOR);
+
+        // GET WARP INDEX TO START WITH
+        int index = ((pageNumber - 1) * Settings.getPageSize()) + 1;
+        if (index < 0)
+            index = 1;
+
+        // HEAD FOR PUBLIC WARPS
+        if (list.get(0).isPublic())
+            PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Öffentliche Warps", ""));
+
+        boolean priv = false;
         ChatColor color = null;
-
-        PlayerUtils.sendInfo(player, "Warps:");
-        // DISPLAY
+        // DISPLAY WARPS
         for (Warp warp : list) {
+
+            // SEPERATE PUBLIC AND PRIVATE WARPS
+            if (!priv && !warp.isPublic()) {
+                priv = true;
+                PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Private Warps", ""));
+            }
+            // COLORS FOR WARPS
+
+            // PUBLIC WARPS
             if (warp.isPublic())
-                color = ChatColor.AQUA;
+                color = Settings.getWarpListPublic();
+            // OWNED WARPS
+            else if (warp.isOwner(player))
+                color = Settings.getWarpListOwned();
+            // INVITED TO PRIVATE WARPS
             else
-                color = ChatColor.RED;
-            PlayerUtils.sendMessage(player, color, warp.getName());
+                color = Settings.getWarpListPrivate();
+
+            PlayerUtils.sendInfo(player, String.format("%s%s %s%s", NAME_COLOR + "#", VALUE_COLOR + Integer.toString(index++), color, warp.getName()));
         }
     }
-
 }
