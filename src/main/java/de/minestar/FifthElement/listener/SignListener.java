@@ -42,15 +42,17 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
-        if (event.isCancelled() || !event.getBlock().getType().equals(Material.SIGN_POST) || !event.getBlock().getType().equals(Material.WALL_SIGN))
+        if (event.isCancelled() || !(event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN)))
             return;
 
         String[] lines = event.getLines();
         if (lines[1] != null && lines[1].equalsIgnoreCase("[warp]") && lines[2] != null) {
             Player player = event.getPlayer();
-            if (Core.warpManager.isWarpExisting(lines[2]))
-                PlayerUtils.sendSuccess(player, Core.NAME, "Du kannst das Schild nun mit Rechtsklick benutzen!");
-            else {
+            Warp warp = Core.warpManager.getWarp(lines[2]);
+            if (warp != null) {
+                PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dihc zum Warp '" + warp.getName() + "'.");
+                event.setLine(2, warp.getName());
+            } else {
                 PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + lines[2] + "' existiert nicht!");
                 event.setCancelled(true);
                 event.getBlock().breakNaturally();
