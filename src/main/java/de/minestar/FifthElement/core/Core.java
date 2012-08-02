@@ -23,6 +23,7 @@ import java.io.File;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
+import de.minestar.FifthElement.commands.back.cmdBack;
 import de.minestar.FifthElement.commands.bank.cmdBank;
 import de.minestar.FifthElement.commands.bank.cmdBankInfo;
 import de.minestar.FifthElement.commands.bank.cmdSetBank;
@@ -46,6 +47,7 @@ import de.minestar.FifthElement.commands.warp.cmdWarpRename;
 import de.minestar.FifthElement.commands.warp.cmdWarpUninvite;
 import de.minestar.FifthElement.database.DatabaseHandler;
 import de.minestar.FifthElement.listener.SignListener;
+import de.minestar.FifthElement.manager.BackManager;
 import de.minestar.FifthElement.manager.BankManager;
 import de.minestar.FifthElement.manager.HomeManager;
 import de.minestar.FifthElement.manager.WarpManager;
@@ -87,6 +89,7 @@ public class Core extends AbstractCore {
     public static WarpManager warpManager;
     public static HomeManager homeManager;
     public static BankManager bankManager;
+    public static BackManager backManager;
 
     /* LISTENER */
     private Listener warpSignListener;
@@ -109,6 +112,7 @@ public class Core extends AbstractCore {
         warpManager = new WarpManager();
         homeManager = new HomeManager();
         bankManager = new BankManager();
+        backManager = new BackManager();
 
         return true;
     }
@@ -166,6 +170,8 @@ public class Core extends AbstractCore {
                 // TELEPORT COMMANDS
                 new cmdTeleport(    "/tp",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
                 new cmdTeleportHere("/tphere",      "<Target> ... [Target n]", "fifthelement.command.tphere"),
+                
+                new cmdBack(        "/back",        "",                     "fifthelement.command.back"),    
 
                 // WARP COMMANDS AND SUB COMMANDS
                 new cmdWarp(        "/warp",        "<Warp>",               "fifthelement.command.warp", 

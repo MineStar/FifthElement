@@ -4,6 +4,8 @@ common:
 warp:
     minNameLength: 3
     maxNameLength: 25
+back:
+    limit: 10
 # Possible color codes are:
 # 0 = Black
 # 1 = Dark Blue

@@ -31,3 +31,6 @@ commands:
   warp:
     description: Alle Warp Commandos
     usage: /warp
+  back:
+    description: Teleportiert den Spieler zum letzten Punkt
+    usage: /back

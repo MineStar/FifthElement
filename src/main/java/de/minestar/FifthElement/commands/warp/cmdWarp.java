@@ -77,11 +77,13 @@ public class cmdWarp extends AbstractSuperCommand {
                 delta = curDelta;
             }
         }
+        // STORE EVENTUALLY LAST POSITION
+        Core.backManager.handleTeleport(player);
 
         // TELEPORT PLAYER THE TO WARP
         player.teleport(bestMatch.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim Warp '" + bestMatch.getName() + "'.");
-        
+
         // FIRE STATISTIC
         IlluminatiCore.handleStatistic(new WarpToStat(player.getName(), bestMatch.getName(), player.getLocation()));
     }

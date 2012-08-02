@@ -65,6 +65,9 @@ public class cmdTeleport extends AbstractExtendedCommand {
             return;
         }
 
+        // STORE EVENTUALLY LAST POSITION
+        Core.backManager.handleTeleport(player);
+
         // TELEPORT THE COMMAND CALLER TO TARGET
         player.teleport(target);
         PlayerUtils.sendSuccess(player, "Du bist nun beim Spieler '" + target.getName() + "'!");
@@ -88,6 +91,9 @@ public class cmdTeleport extends AbstractExtendedCommand {
             return;
         }
 
+        // STORE EVENTUALLY LAST POSITION
+        Core.backManager.handleTeleport(playerToTeleport);
+
         // TELEPORT PLAYER TO TARGET
         playerToTeleport.teleport(target);
 
@@ -97,7 +103,6 @@ public class cmdTeleport extends AbstractExtendedCommand {
 
         // INFORMATION FOR COMMAND EXECUTER
         PlayerUtils.sendSuccess(player, pluginName, "Der Spieler '" + playerToTeleport.getName() + "' wurde zu '" + target.getName() + "' teleportiert!");
-
     }
 
     private void teleportToCoords(String[] args, Player player) {
@@ -129,8 +134,12 @@ public class cmdTeleport extends AbstractExtendedCommand {
         } else
             targetWorld = player.getWorld();
 
+        // STORE EVENTUALLY LAST POSITION
+        Core.backManager.handleTeleport(player);
+
         // TELEPORT TO COORDINATES
         player.teleport(new Location(targetWorld, x, y, z));
         PlayerUtils.sendSuccess(player, pluginName, "Du wurdest erfolgreich zur der Position X=" + x + " Y=" + y + " Z=" + z + " in der Welt " + targetWorld.getName());
+
     }
 }

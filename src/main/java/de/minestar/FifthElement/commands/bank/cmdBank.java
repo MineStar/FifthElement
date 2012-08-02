@@ -45,6 +45,10 @@ public class cmdBank extends AbstractCommand {
                 PlayerUtils.sendError(player, pluginName, "Du hast keine Bank!");
                 return;
             }
+
+            // STORE EVENTUALLY LAST POSITION
+            Core.backManager.handleTeleport(player);
+
             player.teleport(bank.getLocation());
             PlayerUtils.sendSuccess(player, pluginName, "Willkommen in deiner Bank.");
         }
@@ -63,6 +67,10 @@ public class cmdBank extends AbstractCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Bank!");
                     return;
                 }
+
+                // STORE EVENTUALLY LAST POSITION
+                Core.backManager.handleTeleport(player);
+
                 player.teleport(bank.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Bank von '" + bank.getOwner() + "'.");
             }

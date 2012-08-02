@@ -47,6 +47,9 @@ public class cmdHome extends AbstractExtendedCommand {
                 PlayerUtils.sendInfo(player, "Mit '/setHome' erstellst du dir ein Zuhause.");
                 return;
             }
+            // STORE EVENTUALLY LAST POSITION
+            Core.backManager.handleTeleport(player);
+
             player.teleport(home.getLocation());
             PlayerUtils.sendSuccess(player, pluginName, "Willkommen zu Hause.");
         }
@@ -65,6 +68,10 @@ public class cmdHome extends AbstractExtendedCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat kein Zuhause erstellt!");
                     return;
                 }
+
+                // STORE EVENTUALLY LAST POSITION
+                Core.backManager.handleTeleport(player);
+
                 player.teleport(home.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Haus von '" + home.getOwner() + "'.");
             }
