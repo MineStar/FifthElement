@@ -148,9 +148,14 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
         @Override
         public int compare(Warp o1, Warp o2) {
-            if (o1.isPublic() && o2.isPublic())
-                return o1.getName().compareTo(o2.getName());
-            if (o1.isPublic() && !o2.isPublic()) {
+            if (!o1.isPublic() && !o2.isPublic()) {
+                if (o1.getOwner().equals(o2.getOwner())) {
+                    return o1.getName().compareTo(o2.getName());
+                } else
+                    return o1.getOwner().compareTo(o2.getOwner());
+            }
+
+            if (!o1.isPublic() && o2.isPublic()) {
                 return -1;
             } else
                 return 1;
@@ -175,8 +180,8 @@ public class cmdWarpList extends AbstractExtendedCommand {
             index = 1;
 
         // HEAD FOR PUBLIC WARPS
-        if (list.get(0).isPublic())
-            PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Öffentliche Warps", ""));
+        if (!list.get(0).isPublic())
+            PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Private Warps", ""));
 
         boolean priv = false;
         ChatColor color = null;
@@ -184,9 +189,9 @@ public class cmdWarpList extends AbstractExtendedCommand {
         for (Warp warp : list) {
 
             // SEPERATE PUBLIC AND PRIVATE WARPS
-            if (!priv && !warp.isPublic()) {
+            if (!priv && warp.isPublic()) {
                 priv = true;
-                PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Private Warps", ""));
+                PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Öffentliche Warps", ""));
             }
             // COLORS FOR WARPS
 
@@ -200,7 +205,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
             else
                 color = Settings.getWarpListPrivate();
 
-            PlayerUtils.sendInfo(player, String.format("%s%s %s%s", NAME_COLOR + "#", VALUE_COLOR + Integer.toString(index++), color, warp.getName()));
+            PlayerUtils.sendInfo(player, String.format("%s%s %s%s %s(%s%s)", NAME_COLOR + "#", VALUE_COLOR + Integer.toString(index++), color, warp.getName(), NAME_COLOR, VALUE_COLOR + warp.getOwner(), NAME_COLOR));
         }
     }
 }
