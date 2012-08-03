@@ -116,8 +116,9 @@ public class SignListener implements Listener {
                 handleBank(player, sign);
             else
                 return;
-            
-            // TODO: Keinen Block setzen!
+
+            // DISALLOW PLACING BLOCKS
+            event.setCancelled(true);
         }
     }
 
