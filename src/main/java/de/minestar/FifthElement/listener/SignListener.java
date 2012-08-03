@@ -31,7 +31,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.data.Bank;
+import de.minestar.FifthElement.data.Home;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.statistics.bank.BankSignStat;
+import de.minestar.FifthElement.statistics.home.HomeSignStat;
 import de.minestar.FifthElement.statistics.warp.WarpSignStat;
 import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -40,20 +44,48 @@ public class SignListener implements Listener {
 
     private final static String IGNORE_USE_MODE = "fifthelement.command.ignoreusemode";
 
+    private final static String WARP_SIGN = "[warp]";
+    private final static String HOME_SIGN = "[home]";
+    private final static String BANK_SIGN = "[bank]";
+
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
         if (event.isCancelled() || !(event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN)))
             return;
 
         String[] lines = event.getLines();
-        if (lines[1] != null && lines[1].equalsIgnoreCase("[warp]") && lines[2] != null) {
-            Player player = event.getPlayer();
+        if (lines[1] == null)
+            return;
+
+        Player player = event.getPlayer();
+        // WARP SIGN
+        if (lines[1].equalsIgnoreCase(WARP_SIGN) && lines[2] != null) {
             Warp warp = Core.warpManager.getWarp(lines[2]);
             if (warp != null) {
                 PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zum Warp '" + warp.getName() + "'.");
                 event.setLine(2, warp.getName());
             } else {
                 PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + lines[2] + "' existiert nicht!");
+                event.setCancelled(true);
+                event.getBlock().breakNaturally();
+            }
+        }
+        // HOME SIGN
+        else if (lines[1].equals(HOME_SIGN)) {
+            if (Core.homeManager.getHome(player.getName()) != null)
+                PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zu deinem Zuhause.");
+            else {
+                PlayerUtils.sendError(player, Core.NAME, "Du hast im Moment kein Zuhause!");
+                event.setCancelled(true);
+                event.getBlock().breakNaturally();
+            }
+        }
+        // BANK SIGN
+        else if (lines[1].equals(BANK_SIGN)) {
+            if (Core.homeManager.getHome(player.getName()) != null)
+                PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zu deiner Bank.");
+            else {
+                PlayerUtils.sendError(player, Core.NAME, "Du hast im Moment keine Bank!");
                 event.setCancelled(true);
                 event.getBlock().breakNaturally();
             }
@@ -69,23 +101,72 @@ public class SignListener implements Listener {
         if (block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
             Sign sign = (Sign) block.getState();
             String[] lines = sign.getLines();
-            if (lines[1] != null && lines[1].equalsIgnoreCase("[warp]") && lines[2] != null && lines[2].length() >= 1) {
-                Warp warp = Core.warpManager.getWarp(lines[2]);
-                // WARP DOES NOT EXIST ANYMORE
-                if (warp == null) {
-                    sign.getBlock().breakNaturally();
-                    PlayerUtils.sendError(event.getPlayer(), Core.NAME, "Der Warp '" + lines[2] + "' existiert nicht mehr! Das Schild wurde abgerissen.");
-                } else
-                    handleWarp(warp, event.getPlayer(), sign);
-            }
+            if (lines[1] == null)
+                return;
+
+            Player player = event.getPlayer();
+            // WARP SIGN
+            if (lines[1].equalsIgnoreCase(WARP_SIGN) && lines[2] != null && lines[2].length() >= 1)
+                handleWarp(lines[2], player, sign);
+            // HOME SIGN
+            else if (lines[1].equalsIgnoreCase(HOME_SIGN))
+                handleHome(player, sign);
+            // BANK SIGN
+            else if (lines[1].equalsIgnoreCase(BANK_SIGN))
+                handleBank(player, sign);
+            else
+                return;
+            
+            // TODO: Keinen Block setzen!
         }
     }
 
-    private void handleWarp(Warp warp, Player player, Sign sign) {
+    private void handleBank(Player player, Sign sign) {
+        Bank bank = Core.bankManager.getBank(player.getName());
+        if (bank == null)
+            PlayerUtils.sendError(player, Core.NAME, "Du hast kein Zuhause erstellt!");
+        else {
+            // STORE EVENTUALLY LAST POSITION
+            Core.backManager.handleTeleport(player);
+
+            player.teleport(bank.getLocation());
+            PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen in deiner Bank.");
+
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new BankSignStat(player.getName(), sign.getLocation()));
+        }
+    }
+
+    private void handleHome(Player player, Sign sign) {
+        Home home = Core.homeManager.getHome(player.getName());
+        if (home == null)
+            PlayerUtils.sendError(player, Core.NAME, "Du hast kein Zuhause erstellt!");
+        else {
+            // STORE EVENTUALLY LAST POSITION
+            Core.backManager.handleTeleport(player);
+
+            player.teleport(home.getLocation());
+            PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen zu Hause.");
+
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new HomeSignStat(player.getName(), sign.getLocation()));
+        }
+    }
+
+    private void handleWarp(String warpName, Player player, Sign sign) {
+        Warp warp = Core.warpManager.getWarp(warpName);
+        if (warp == null) {
+            PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + warpName + "' existiert nicht mehr! Das Schild wurde abgerissen.");
+            sign.getBlock().breakNaturally();
+            return;
+        }
         if (!canUse(warp, player)) {
             PlayerUtils.sendError(player, Core.NAME, "Du kannst den Warp '" + warp.getName() + "' nicht benutzen!");
             return;
         }
+        // STORE EVENTUALLY LAST POSITION
+        Core.backManager.handleTeleport(player);
+
         player.teleport(warp.getLocation());
         PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen beim Warp '" + warp.getName() + "'.");
 

@@ -52,9 +52,11 @@ import de.minestar.FifthElement.manager.BankManager;
 import de.minestar.FifthElement.manager.HomeManager;
 import de.minestar.FifthElement.manager.WarpManager;
 import de.minestar.FifthElement.statistics.bank.BankInfoStat;
+import de.minestar.FifthElement.statistics.bank.BankSignStat;
 import de.minestar.FifthElement.statistics.bank.BankStat;
 import de.minestar.FifthElement.statistics.bank.SetBankStat;
 import de.minestar.FifthElement.statistics.home.HomeInfoStat;
+import de.minestar.FifthElement.statistics.home.HomeSignStat;
 import de.minestar.FifthElement.statistics.home.HomeStat;
 import de.minestar.FifthElement.statistics.home.SetHomeStat;
 import de.minestar.FifthElement.statistics.teleport.TeleportHereStat;
@@ -146,6 +148,8 @@ public class Core extends AbstractCore {
         IlluminatiCore.registerStatistic(HomeStat.class);
         IlluminatiCore.registerStatistic(SetHomeStat.class);
 
+        IlluminatiCore.registerStatistic(BankSignStat.class);
+        IlluminatiCore.registerStatistic(HomeSignStat.class);
         IlluminatiCore.registerStatistic(WarpSignStat.class);
 
         return true;

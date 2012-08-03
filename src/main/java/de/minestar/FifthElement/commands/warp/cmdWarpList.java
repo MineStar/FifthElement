@@ -83,7 +83,6 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 }
                 // DISPLAY USEABLE PRIVATE WARPS
                 else if (arg.equalsIgnoreCase("-private")) {
-                    filterList.add(new UseFilter(player));
                     filterList.add(PrivateFilter.getInstance());
                 }
                 // DISPLAY PUBLIC WARPS
@@ -103,7 +102,6 @@ public class cmdWarpList extends AbstractExtendedCommand {
                             return;
                         }
 
-                        filterList.add(new UseFilter(player));
                         filterList.add(new OwnerFilter(targetName));
                     } else {
                         PlayerUtils.sendError(player, pluginName, "Es fehlt bei '-player' der Name des Spielers!");
@@ -135,9 +133,11 @@ public class cmdWarpList extends AbstractExtendedCommand {
         if (toIndex > results.size())
             toIndex = results.size();
 
+        int maxNumber = (results.size() / Settings.getPageSize()) + 1;
+
         results = results.subList(fromIndex, toIndex);
         Collections.sort(results, PUBLIC_PRIVATE_SORT);
-        displayList(results, player, pageNumber, filterList);
+        displayList(results, player, pageNumber, maxNumber, filterList);
 
         // FIRE STATISTIC
         IlluminatiCore.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
@@ -166,11 +166,11 @@ public class cmdWarpList extends AbstractExtendedCommand {
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
     private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-    private void displayList(List<Warp> list, Player player, int pageNumber, List<WarpFilter> filter) {
+    private void displayList(List<Warp> list, Player player, int pageNumber, int maxNumber, List<WarpFilter> filter) {
 
         // HEAD
         PlayerUtils.sendInfo(player, SEPERATOR);
-        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Seite:", VALUE_COLOR + Integer.toString(pageNumber)));
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Seite:", VALUE_COLOR + Integer.toString(pageNumber)) + "/" + Integer.toString(maxNumber));
         PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Filter:", VALUE_COLOR + filter.toString()));
         PlayerUtils.sendInfo(player, SEPERATOR);
 
