@@ -177,7 +177,6 @@ public class Core extends AbstractCore {
                 new cmdWarp(        "/warp",        "<Warp>",               "fifthelement.command.warp", 
                         
                         new cmdWarpCreate(  "create",       "<Warp>",                       "fifthelement.command.warpcreate"),
-                        new cmdWarpCreate(  "pcreate",      "<Warp>",                       "fifthelement.command.warpcreate"),
                         new cmdWarpDelete(  "delete",       "<Warp>",                       "fifthelement.command.warpdelete"),
                         new cmdWarpInvite(  "invite",       "<Warp> <Player> ...[PlayerN]", "fifthelement.command.warpinvite"),
                         new cmdWarpUninvite("uninvite",     "<Warp> <Player> ...[PlayerN]", "fifthelement.command.warpuninvite"),
