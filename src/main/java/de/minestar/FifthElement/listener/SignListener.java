@@ -50,7 +50,7 @@ public class SignListener implements Listener {
             Player player = event.getPlayer();
             Warp warp = Core.warpManager.getWarp(lines[2]);
             if (warp != null) {
-                PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dihc zum Warp '" + warp.getName() + "'.");
+                PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zum Warp '" + warp.getName() + "'.");
                 event.setLine(2, warp.getName());
             } else {
                 PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + lines[2] + "' existiert nicht!");
