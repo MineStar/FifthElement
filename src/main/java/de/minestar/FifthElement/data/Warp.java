@@ -265,10 +265,10 @@ public class Warp {
     private final static Pattern P = Pattern.compile(";");
 
     private void parseGuestList(String guestList) {
+        this.guests = new HashSet<String>();
+
         if (guestList.isEmpty())
             return;
-
-        this.guests = new HashSet<String>();
         String[] split = P.split(guestList);
         for (String string : split)
             guests.add(string);
