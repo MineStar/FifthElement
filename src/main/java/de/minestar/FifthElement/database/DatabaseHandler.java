@@ -35,28 +35,14 @@ import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
 import de.minestar.FifthElement.data.Home;
 import de.minestar.FifthElement.data.Warp;
-import de.minestar.minestarlibrary.config.MinestarConfig;
-import de.minestar.minestarlibrary.database.AbstractDatabaseHandler;
-import de.minestar.minestarlibrary.database.DatabaseConnection;
-import de.minestar.minestarlibrary.database.DatabaseType;
+import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
-public class DatabaseHandler extends AbstractDatabaseHandler {
+public class DatabaseHandler extends AbstractMySQLHandler {
 
-    public DatabaseHandler(File dataFolder) {
-        super(Core.NAME, dataFolder);
-    }
-
-    @Override
-    protected DatabaseConnection createConnection(String pluginName, File dataFolder) throws Exception {
-        File configFile = new File(dataFolder, "sqlconfig.yml");
-        if (!configFile.exists())
-            DatabaseUtils.createDatabaseConfig(DatabaseType.MySQL, configFile, pluginName);
-        else
-            return new DatabaseConnection(pluginName, DatabaseType.MySQL, new MinestarConfig(configFile));
-
-        return null;
+    public DatabaseHandler(File SQLConfigFile) {
+        super(Core.NAME, SQLConfigFile);
     }
 
     @Override

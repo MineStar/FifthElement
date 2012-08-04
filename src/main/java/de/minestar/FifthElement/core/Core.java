@@ -107,7 +107,7 @@ public class Core extends AbstractCore {
 
     @Override
     protected boolean createManager() {
-        dbHandler = new DatabaseHandler(getDataFolder());
+        dbHandler = new DatabaseHandler(new File(getDataFolder(), "sqlconfig.yml"));
         if (!dbHandler.hasConnection())
             return false;
 
