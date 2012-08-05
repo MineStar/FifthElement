@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import de.minestar.FifthElement.core.Core;
@@ -116,6 +117,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 name = rs.getString(2);
                 owner = rs.getString(3);
                 worldName = rs.getString(4);
+                if (Bukkit.getWorld(worldName) == null) {
+                    ConsoleUtils.printWarning(Core.NAME, "Can't load warp '" + name + "' because world '" + worldName + "' is not loaded!");
+                    continue;
+                }
                 x = rs.getDouble(5);
                 y = rs.getDouble(6);
                 z = rs.getDouble(7);
@@ -274,6 +279,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 id = rs.getInt(1);
                 player = rs.getString(2);
                 worldName = rs.getString(3);
+                if (Bukkit.getWorld(worldName) == null) {
+                    ConsoleUtils.printWarning(Core.NAME, "Can't load home of player '" + player + "' because world '" + worldName + "' is not loaded!");
+                    continue;
+                }
                 x = rs.getDouble(4);
                 y = rs.getDouble(5);
                 z = rs.getDouble(6);
@@ -373,6 +382,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 id = rs.getInt(1);
                 player = rs.getString(2);
                 worldName = rs.getString(3);
+                if (Bukkit.getWorld(worldName) == null) {
+                    ConsoleUtils.printWarning(Core.NAME, "Can't load bank of player '" + player + "' because world '" + worldName + "' is not loaded!");
+                    continue;
+                }
                 x = rs.getDouble(4);
                 y = rs.getDouble(5);
                 z = rs.getDouble(6);
