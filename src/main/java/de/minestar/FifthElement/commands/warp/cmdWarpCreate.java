@@ -37,6 +37,12 @@ public class cmdWarpCreate extends AbstractCommand {
     @Override
     public void execute(String[] args, Player player) {
 
+        // CHECK IF WARP CAN PLACED IN THIS WORLD
+        if (!Core.warpManager.isWarpAllowedIn(player.getWorld())) {
+            PlayerUtils.sendError(player, pluginName, "Du kannst auf dieser Welt keine Warps erstellen!");
+            return;
+        }
+
         if (!isValidName(args[0])) {
             PlayerUtils.sendError(player, pluginName, "Der Warpname ist ungültig!");
             PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");

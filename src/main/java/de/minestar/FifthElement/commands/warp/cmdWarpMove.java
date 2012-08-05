@@ -38,6 +38,13 @@ public class cmdWarpMove extends AbstractCommand {
 
     @Override
     public void execute(String[] args, Player player) {
+
+        // CHECK IF WARP CAN PLACED IN THIS WORLD
+        if (!Core.warpManager.isWarpAllowedIn(player.getWorld())) {
+            PlayerUtils.sendError(player, pluginName, "Du kannst in diese Welt keine Warps verschieben!");
+            return;
+        }
+
         Warp warp = Core.warpManager.getWarp(args[0]);
         if (warp == null) {
             PlayerUtils.sendError(player, pluginName, "Warp '" + args[0] + "' existiert nicht!");

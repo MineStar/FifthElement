@@ -19,8 +19,11 @@
 package de.minestar.FifthElement.core;
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,6 +53,7 @@ public class Settings {
     private static int backPositionLimit;
 
     private static World resourceWorld;
+    private static Set<String> forbiddenWarpWorlds;
 
     /* USED FOR SETTING */
     private static MinestarConfig config;
@@ -93,15 +97,32 @@ public class Settings {
 
         backPositionLimit = config.getInt("back.limit");
 
-        String resurceWorldName = config.getString("common.resourceWorld");
-        resourceWorld = Bukkit.getWorld(resurceWorldName);
-        if (resourceWorld == null)
-            ConsoleUtils.printWarning(Core.NAME, "Can't find the world '" + resurceWorldName + "'. Player cannot create or use their mines");
-        else
-            ConsoleUtils.printInfo(Core.NAME, "Resource world is: " + resurceWorldName);
+        loadResourceWorldSettings();
 
     }
+    private static void loadResourceWorldSettings() {
+        String resurceWorldName = config.getString("resourceWorld.world");
+        if (resurceWorldName == null)
+            ConsoleUtils.printInfo(Core.NAME, "No Ressource World found. Warps can created everywhere, Mines are disabled!");
+        else {
+            resourceWorld = Bukkit.getWorld(resurceWorldName);
+            if (resourceWorld == null)
+                ConsoleUtils.printWarning(Core.NAME, "Can't find the resource world '" + resurceWorldName + "'. Player cannot create or use their mines");
+            else
+                ConsoleUtils.printInfo(Core.NAME, "Resource world is: " + resurceWorldName);
+        }
 
+        List<?> list = config.getList("resourceWorld.noWarpsWorlds");
+        if (list != null) {
+            forbiddenWarpWorlds = new HashSet<String>(list.size());
+            for (Object o : list)
+                forbiddenWarpWorlds.add(o.toString().toLowerCase());
+
+            ConsoleUtils.printInfo(Core.NAME, "Worlds disallowing warps: " + forbiddenWarpWorlds.toString());
+        } else
+            ConsoleUtils.printInfo(Core.NAME, "All worlds allow warps");
+
+    }
     private static void loadMaxWarps() {
         // GET THE SUB SECTION
         ConfigurationSection section = config.getConfigurationSection("warpCounter.private");
@@ -172,5 +193,9 @@ public class Settings {
 
     public static World getResourceWorld() {
         return resourceWorld;
+    }
+
+    public static Set<String> getForbiddenWarpWorlds() {
+        return forbiddenWarpWorlds;
     }
 }

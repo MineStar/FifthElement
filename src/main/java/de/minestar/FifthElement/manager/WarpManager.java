@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
@@ -261,5 +262,15 @@ public class WarpManager {
 
         // PERSIST
         Core.dbHandler.updateUseMode(warp);
+    }
+
+    public boolean isWarpAllowedIn(World world) {
+        return isWarpAllowedIn(world.getName());
+    }
+
+    public boolean isWarpAllowedIn(String worldName) {
+        System.out.println(worldName);
+        System.out.println(Settings.getForbiddenWarpWorlds().contains(worldName.toLowerCase()));
+        return !Settings.getForbiddenWarpWorlds().contains(worldName.toLowerCase());
     }
 }
