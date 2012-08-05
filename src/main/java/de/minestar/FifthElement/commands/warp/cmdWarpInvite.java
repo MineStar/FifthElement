@@ -60,7 +60,7 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
                 PlayerUtils.sendError(player, "Der Spieler '" + args[i] + "' wurde nicht gefunden!");
                 continue;
             }
-            // TODO: Some bug here :(
+
             // PLAYER IS NEW GUEST
             if (warp.addGuest(targetName)) {
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
