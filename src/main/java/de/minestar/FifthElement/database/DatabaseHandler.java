@@ -35,6 +35,7 @@ import org.bukkit.Location;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
 import de.minestar.FifthElement.data.Home;
+import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
@@ -54,6 +55,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     @Override
     protected void createStatements(String pluginName, Connection con) throws Exception {
 
+        /* WARPS */
         addWarp = con.prepareStatement("INSERT INTO warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         deleteWarp = con.prepareStatement("DELETE FROM warp WHERE id = ?");
@@ -66,15 +68,22 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
         updateAccess = con.prepareStatement("UPDATE warp SET isPublic = ? WHERE id = ?");
 
+        updateUseMode = con.prepareStatement("UPDATE warp SET useMode = ? WHERE id = ?");
+
+        /* HOME */
         addHome = con.prepareStatement("INSERT INTO home (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateHomeLocation = con.prepareStatement("UPDATE home SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
+        /* BANK */
         addBank = con.prepareStatement("INSERT INTO bank (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateBankLocation = con.prepareStatement("UPDATE bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
-        updateUseMode = con.prepareStatement("UPDATE warp SET useMode = ? WHERE id = ?");
+        /* MINE */
+        addMine = con.prepareStatement("INSERT INTO mine (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+
+        updateMineLocation = con.prepareStatement("UPDATE mine SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
     }
 
     // *****************
@@ -245,6 +254,21 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             return updateAccess.executeUpdate() == 1;
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't update the access modifier of warp = " + warp);
+            return false;
+        }
+    }
+
+    public boolean updateUseMode(Warp warp) {
+
+        try {
+            // SET NEW USEMODE
+            updateUseMode.setByte(1, warp.getUseMode());
+            updateUseMode.setInt(2, warp.getId());
+
+            // EXECUTE
+            return updateUseMode.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't save useMode update for the warp = " + warp);
             return false;
         }
     }
@@ -455,18 +479,106 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     }
 
-    public boolean updateUseMode(Warp warp) {
+    // *****************
+    // ***** MINES *****
+    // *****************
 
+    /* STATEMENTS */
+    private PreparedStatement addMine;
+    private PreparedStatement updateMineLocation;
+
+    public Map<String, Mine> loadMines() {
+
+        Map<String, Mine> mineMap = new HashMap<String, Mine>();
         try {
-            // SET NEW USEMODE
-            updateUseMode.setByte(1, warp.getUseMode());
-            updateUseMode.setInt(2, warp.getId());
+            Statement stat = dbConnection.getConnection().createStatement();
+            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM mine");
+            // TEMP VARIABLEN
+            int id;
+            String player;
+            String worldName;
+            double x;
+            double y;
+            double z;
+            float yaw;
+            float pitch;
 
-            // EXECUTE
-            return updateUseMode.executeUpdate() == 1;
+            // CREATE WARPS
+            while (rs.next()) {
+                // LOAD VARIABLEN
+                id = rs.getInt(1);
+                player = rs.getString(2);
+                worldName = rs.getString(3);
+                if (Bukkit.getWorld(worldName) == null) {
+                    ConsoleUtils.printWarning(Core.NAME, "Can't load mine of player '" + player + "' because world '" + worldName + "' is not loaded!");
+                    continue;
+                }
+                x = rs.getDouble(4);
+                y = rs.getDouble(5);
+                z = rs.getDouble(6);
+                yaw = rs.getFloat(7);
+                pitch = rs.getFloat(8);
+
+                // CREATE WARP AND PUT IT TO MAP
+                mineMap.put(player.toLowerCase(), new Mine(id, player, x, y, z, yaw, pitch, worldName));
+            }
         } catch (Exception e) {
-            ConsoleUtils.printException(e, Core.NAME, "Can't save useMode update for the warp = " + warp);
+            ConsoleUtils.printException(e, Core.NAME, "Can't load homes from table!");
+            // RETURN AN EMPTY MAP WHEN THERE IS AN ERROR
+            mineMap.clear();
+        }
+        return mineMap;
+    }
+
+    public boolean addMine(Mine mine) {
+        try {
+            // INSERT NEW HOME
+            addMine.setString(1, mine.getOwner());
+            addMine.setString(2, mine.getLocation().getWorld().getName());
+            addMine.setDouble(3, mine.getLocation().getX());
+            addMine.setDouble(4, mine.getLocation().getY());
+            addMine.setDouble(5, mine.getLocation().getZ());
+            addMine.setFloat(6, mine.getLocation().getYaw());
+            addMine.setFloat(7, mine.getLocation().getPitch());
+
+            addMine.executeUpdate();
+
+            // GET THE GENERATED ID
+            ResultSet rs = addMine.getGeneratedKeys();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt(1);
+                mine.setId(id);
+                return true;
+            } else {
+                ConsoleUtils.printError(Core.NAME, "Can't get the id for the mine = " + mine);
+                return false;
+            }
+
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't add mine to database! Mine = " + mine);
             return false;
         }
+    }
+
+    public boolean updateMineLocation(Mine mine) {
+
+        try {
+            // SET NEW LOCATION VALUES
+            updateMineLocation.setString(1, mine.getLocation().getWorld().getName());
+            updateMineLocation.setDouble(2, mine.getLocation().getX());
+            updateMineLocation.setDouble(3, mine.getLocation().getY());
+            updateMineLocation.setDouble(4, mine.getLocation().getZ());
+            updateMineLocation.setFloat(5, mine.getLocation().getYaw());
+            updateMineLocation.setFloat(6, mine.getLocation().getPitch());
+            updateMineLocation.setInt(7, mine.getId());
+
+            // EXECUTE
+            return updateMineLocation.executeUpdate() == 1;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't store location change of mine to database! Mine = " + mine);
+            return false;
+        }
+
     }
 }

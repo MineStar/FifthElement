@@ -11,7 +11,21 @@ CREATE  TABLE IF NOT EXISTS `home` (
   `yaw` FLOAT NOT NULL ,
   `pitch` FLOAT NOT NULL ,
   PRIMARY KEY (`id`) );
-
+  
+-- -----------------------------------------------------
+-- Table `mine`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `mine` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `player` VARCHAR(32) NOT NULL ,
+  `world` VARCHAR(32) NOT NULL ,
+  `x` DOUBLE NOT NULL ,
+  `y` DOUBLE NOT NULL ,
+  `z` DOUBLE NOT NULL ,
+  `yaw` FLOAT NOT NULL ,
+  `pitch` FLOAT NOT NULL ,
+  PRIMARY KEY (`id`) );
+  
 -- -----------------------------------------------------
 -- Table `bank`
 -- -----------------------------------------------------

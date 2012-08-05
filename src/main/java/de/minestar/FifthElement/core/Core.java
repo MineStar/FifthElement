@@ -30,6 +30,9 @@ import de.minestar.FifthElement.commands.bank.cmdSetBank;
 import de.minestar.FifthElement.commands.home.cmdHome;
 import de.minestar.FifthElement.commands.home.cmdHomeInfo;
 import de.minestar.FifthElement.commands.home.cmdSetHome;
+import de.minestar.FifthElement.commands.mine.cmdMine;
+import de.minestar.FifthElement.commands.mine.cmdMineInfo;
+import de.minestar.FifthElement.commands.mine.cmdSetMine;
 import de.minestar.FifthElement.commands.teleport.cmdTeleport;
 import de.minestar.FifthElement.commands.teleport.cmdTeleportHere;
 import de.minestar.FifthElement.commands.warp.cmdWarp;
@@ -50,6 +53,7 @@ import de.minestar.FifthElement.listener.SignListener;
 import de.minestar.FifthElement.manager.BackManager;
 import de.minestar.FifthElement.manager.BankManager;
 import de.minestar.FifthElement.manager.HomeManager;
+import de.minestar.FifthElement.manager.MineManager;
 import de.minestar.FifthElement.manager.WarpManager;
 import de.minestar.FifthElement.statistics.bank.BankInfoStat;
 import de.minestar.FifthElement.statistics.bank.BankSignStat;
@@ -59,6 +63,10 @@ import de.minestar.FifthElement.statistics.home.HomeInfoStat;
 import de.minestar.FifthElement.statistics.home.HomeSignStat;
 import de.minestar.FifthElement.statistics.home.HomeStat;
 import de.minestar.FifthElement.statistics.home.SetHomeStat;
+import de.minestar.FifthElement.statistics.mine.MineInfoStat;
+import de.minestar.FifthElement.statistics.mine.MineSignStat;
+import de.minestar.FifthElement.statistics.mine.MineStat;
+import de.minestar.FifthElement.statistics.mine.SetMineStat;
 import de.minestar.FifthElement.statistics.teleport.TeleportHereStat;
 import de.minestar.FifthElement.statistics.teleport.TeleportPlayerToStat;
 import de.minestar.FifthElement.statistics.teleport.TeleportToStat;
@@ -92,6 +100,7 @@ public class Core extends AbstractCore {
     public static HomeManager homeManager;
     public static BankManager bankManager;
     public static BackManager backManager;
+    public static MineManager mineManager;
 
     /* LISTENER */
     private Listener warpSignListener;
@@ -115,6 +124,7 @@ public class Core extends AbstractCore {
         homeManager = new HomeManager();
         bankManager = new BankManager();
         backManager = new BackManager();
+        mineManager = new MineManager();
 
         return true;
     }
@@ -148,9 +158,14 @@ public class Core extends AbstractCore {
         IlluminatiCore.registerStatistic(HomeStat.class);
         IlluminatiCore.registerStatistic(SetHomeStat.class);
 
+        IlluminatiCore.registerStatistic(MineInfoStat.class);
+        IlluminatiCore.registerStatistic(MineStat.class);
+        IlluminatiCore.registerStatistic(SetMineStat.class);
+
         IlluminatiCore.registerStatistic(BankSignStat.class);
         IlluminatiCore.registerStatistic(HomeSignStat.class);
         IlluminatiCore.registerStatistic(WarpSignStat.class);
+        IlluminatiCore.registerStatistic(MineSignStat.class);
 
         return true;
     }
@@ -165,6 +180,11 @@ public class Core extends AbstractCore {
                 new cmdHome(        "/home",        "[HomeOwner]",          "fifthelement.command.home"),
                 new cmdSetHome(     "/sethome",     "",                     "fifthelement.command.sethome"),
                 new cmdHomeInfo(    "/homeinfo",    "[HomeOwner]",          "fifthelement.command.homeinfo"),
+
+                // MINE COMMANDS
+                new cmdMine(        "/mine",        "[mineOwner]",          "fifthelement.command.mine"),
+                new cmdSetMine(     "/setmine",     "",                     "fifthelement.command.setmine"),
+                new cmdMineInfo(    "/mineinfo",    "[mineOwner]",          "fifthelement.command.mineinfo"),
 
                 // BANK COMMANDS
                 new cmdBank(        "/bank",        "[BankOwner]",         "fifthelement.command.bank"),

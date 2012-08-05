@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import de.minestar.core.MinestarCore;
@@ -46,6 +48,8 @@ public class Settings {
     private static ChatColor warpListOwned;
 
     private static int backPositionLimit;
+
+    private static World resourceWorld;
 
     /* USED FOR SETTING */
     private static MinestarConfig config;
@@ -88,6 +92,13 @@ public class Settings {
         warpListPrivate = ChatColor.getByChar(config.getString("warpList.privateWarp"));
 
         backPositionLimit = config.getInt("back.limit");
+
+        String resurceWorldName = config.getString("common.resourceWorld");
+        resourceWorld = Bukkit.getWorld(resurceWorldName);
+        if (resourceWorld == null)
+            ConsoleUtils.printWarning(Core.NAME, "Can't find the world '" + resurceWorldName + "'. Player cannot create or use their mines");
+        else
+            ConsoleUtils.printInfo(Core.NAME, "Resource world is: " + resurceWorldName);
 
     }
 
@@ -157,5 +168,9 @@ public class Settings {
 
     public static int getBackPositionLimit() {
         return backPositionLimit;
+    }
+
+    public static World getResourceWorld() {
+        return resourceWorld;
     }
 }

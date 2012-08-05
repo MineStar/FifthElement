@@ -1,6 +1,7 @@
 VERSION: ${pom.version}
 common:
     pageSize: 15
+    resourceWorld: ''
 warp:
     minNameLength: 3
     maxNameLength: 25

@@ -22,6 +22,15 @@ commands:
   bankinfo:
     description: Gibt Informationen ueber die Bank aus
     usage: /homeInfo
+  mine:
+    description: Teleportiert Spieler zur Mine
+    usage: /mine
+  setmine:
+    description: Erstellt oder versetzt die Mine
+    usage: /setMine
+  mineinfo:
+    description: Gibt Informationen ueber die Mine aus
+    usage: /mineInfo
   tp:
     description: Teleport den Spieler
     usage: /tp

@@ -33,9 +33,11 @@ import com.bukkit.gemo.utils.UtilPermissions;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
 import de.minestar.FifthElement.data.Home;
+import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.bank.BankSignStat;
 import de.minestar.FifthElement.statistics.home.HomeSignStat;
+import de.minestar.FifthElement.statistics.mine.MineSignStat;
 import de.minestar.FifthElement.statistics.warp.WarpSignStat;
 import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -47,6 +49,7 @@ public class SignListener implements Listener {
     private final static String WARP_SIGN = "[warp]";
     private final static String HOME_SIGN = "[home]";
     private final static String BANK_SIGN = "[bank]";
+    private final static String MINE_SIGN = "[mine]";
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
@@ -90,6 +93,16 @@ public class SignListener implements Listener {
                 event.getBlock().breakNaturally();
             }
         }
+        // MINE SIGN
+        else if (lines[1].equals(MINE_SIGN)) {
+            if (Core.mineManager.getMine(player.getName()) != null)
+                PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zu deiner Mine.");
+            else {
+                PlayerUtils.sendError(player, Core.NAME, "Du hast im Moment keine Mine!");
+                event.setCancelled(true);
+                event.getBlock().breakNaturally();
+            }
+        }
     }
 
     @EventHandler
@@ -114,6 +127,10 @@ public class SignListener implements Listener {
             // BANK SIGN
             else if (lines[1].equalsIgnoreCase(BANK_SIGN))
                 handleBank(player, sign);
+            // MINE SIGN
+            else if (lines[1].equalsIgnoreCase(MINE_SIGN))
+                handleMine(player, sign);
+            // OTHER SIGNS
             else
                 return;
 
@@ -122,10 +139,26 @@ public class SignListener implements Listener {
         }
     }
 
+    private void handleMine(Player player, Sign sign) {
+        Mine mine = Core.mineManager.getMine(player.getName());
+        if (mine == null)
+            PlayerUtils.sendError(player, Core.NAME, "Du hast keine Mine erstellt!");
+        else {
+            // STORE EVENTUALLY LAST POSITION
+            Core.backManager.handleTeleport(player);
+
+            player.teleport(mine.getLocation());
+            PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen in deiner Mine.");
+
+            // FIRE STATISTIC
+            IlluminatiCore.handleStatistic(new MineSignStat(player.getName(), sign.getLocation()));
+        }
+    }
+
     private void handleBank(Player player, Sign sign) {
         Bank bank = Core.bankManager.getBank(player.getName());
         if (bank == null)
-            PlayerUtils.sendError(player, Core.NAME, "Du hast kein Zuhause erstellt!");
+            PlayerUtils.sendError(player, Core.NAME, "Du hast keine Bank!");
         else {
             // STORE EVENTUALLY LAST POSITION
             Core.backManager.handleTeleport(player);
