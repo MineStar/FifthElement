@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.PublicWarpStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -67,7 +67,7 @@ public class cmdWarpPublic extends AbstractCommand {
         Bukkit.broadcastMessage(ChatColor.RED + "Der Warp '" + warp.getName() + "' ist nun öffentlich.");
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new PublicWarpStat(player.getName(), warp.getName()));
+        StatisticHandler.handleStatistic(new PublicWarpStat(player.getName(), warp.getName()));
     }
 
 }

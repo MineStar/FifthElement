@@ -35,7 +35,7 @@ import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.FifthElement.data.filter.UseFilter;
 import de.minestar.FifthElement.data.filter.WarpFilter;
 import de.minestar.FifthElement.statistics.warp.WarpListStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -140,7 +140,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         displayList(results, player, pageNumber, maxNumber, filterList);
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
+        StatisticHandler.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
     }
 
     // USED FOR SORTING PUBLIC AND PRIVATE WARPS

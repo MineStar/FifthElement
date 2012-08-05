@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpRenameStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -89,6 +89,6 @@ public class cmdWarpRename extends AbstractCommand {
         }
 
         // FIRE STATISTC
-        IlluminatiCore.handleStatistic(new WarpRenameStat(player.getName(), oldName, newName));
+        StatisticHandler.handleStatistic(new WarpRenameStat(player.getName(), oldName, newName));
     }
 }

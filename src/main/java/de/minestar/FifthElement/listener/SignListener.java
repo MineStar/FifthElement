@@ -39,7 +39,7 @@ import de.minestar.FifthElement.statistics.bank.BankSignStat;
 import de.minestar.FifthElement.statistics.home.HomeSignStat;
 import de.minestar.FifthElement.statistics.mine.MineSignStat;
 import de.minestar.FifthElement.statistics.warp.WarpSignStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class SignListener implements Listener {
@@ -151,7 +151,7 @@ public class SignListener implements Listener {
             PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen in deiner Mine.");
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new MineSignStat(player.getName(), sign.getLocation()));
+            StatisticHandler.handleStatistic(new MineSignStat(player.getName(), sign.getLocation()));
         }
     }
 
@@ -167,7 +167,7 @@ public class SignListener implements Listener {
             PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen in deiner Bank.");
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new BankSignStat(player.getName(), sign.getLocation()));
+            StatisticHandler.handleStatistic(new BankSignStat(player.getName(), sign.getLocation()));
         }
     }
 
@@ -183,7 +183,7 @@ public class SignListener implements Listener {
             PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen zu Hause.");
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new HomeSignStat(player.getName(), sign.getLocation()));
+            StatisticHandler.handleStatistic(new HomeSignStat(player.getName(), sign.getLocation()));
         }
     }
 
@@ -205,7 +205,7 @@ public class SignListener implements Listener {
         PlayerUtils.sendSuccess(player, Core.NAME, "Willkommen beim Warp '" + warp.getName() + "'.");
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new WarpSignStat(player.getName(), warp.getName(), sign.getLocation()));
+        StatisticHandler.handleStatistic(new WarpSignStat(player.getName(), warp.getName(), sign.getLocation()));
     }
 
     private boolean canUse(Warp warp, Player player) {

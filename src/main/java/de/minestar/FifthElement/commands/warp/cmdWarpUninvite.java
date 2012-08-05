@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpUninviteStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -64,7 +64,7 @@ public class cmdWarpUninvite extends AbstractExtendedCommand {
             if (warp.removeGuest(targetName)) {
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");
                 // FIRE STATISTIC
-                IlluminatiCore.handleStatistic(new WarpUninviteStat(warp.getName(), player.getName(), targetName));
+                StatisticHandler.handleStatistic(new WarpUninviteStat(warp.getName(), player.getName(), targetName));
             }
             // PLAYER WAS NO GUEST
             else

@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.statistics.mine.MineStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -83,6 +83,6 @@ public class cmdMine extends AbstractExtendedCommand {
         }
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new MineStat(player.getName(), mine.getOwner()));
+        StatisticHandler.handleStatistic(new MineStat(player.getName(), mine.getOwner()));
     }
 }

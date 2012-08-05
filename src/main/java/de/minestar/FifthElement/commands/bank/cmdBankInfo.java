@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
 import de.minestar.FifthElement.statistics.bank.BankInfoStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -77,7 +77,7 @@ public class cmdBankInfo extends AbstractExtendedCommand {
         displayBankInformation(player, bank);
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new BankInfoStat(player.getName(), bank.getOwner()));
+        StatisticHandler.handleStatistic(new BankInfoStat(player.getName(), bank.getOwner()));
     }
 
     private final static String SEPERATOR = "----------------------------------------";

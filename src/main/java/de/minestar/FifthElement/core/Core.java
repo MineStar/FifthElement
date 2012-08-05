@@ -84,10 +84,11 @@ import de.minestar.FifthElement.statistics.warp.WarpRenameStat;
 import de.minestar.FifthElement.statistics.warp.WarpSignStat;
 import de.minestar.FifthElement.statistics.warp.WarpToStat;
 import de.minestar.FifthElement.statistics.warp.WarpUninviteStat;
-import de.minestar.illuminati.IlluminatiCore;
 import de.minestar.minestarlibrary.AbstractCore;
 import de.minestar.minestarlibrary.annotations.UseStatistic;
 import de.minestar.minestarlibrary.commands.CommandList;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
+;
 
 @UseStatistic
 public class Core extends AbstractCore {
@@ -132,40 +133,40 @@ public class Core extends AbstractCore {
     @Override
     protected boolean registerStatistics() {
 
-        IlluminatiCore.registerStatistic(TeleportHereStat.class);
-        IlluminatiCore.registerStatistic(TeleportToStat.class);
-        IlluminatiCore.registerStatistic(TeleportPlayerToStat.class);
+        StatisticHandler.registerStatistic(TeleportHereStat.class);
+        StatisticHandler.registerStatistic(TeleportToStat.class);
+        StatisticHandler.registerStatistic(TeleportPlayerToStat.class);
 
-        IlluminatiCore.registerStatistic(PrivateWarpStat.class);
-        IlluminatiCore.registerStatistic(PublicWarpStat.class);
-        IlluminatiCore.registerStatistic(WarpCreateStat.class);
-        IlluminatiCore.registerStatistic(WarpDeleteStat.class);
-        IlluminatiCore.registerStatistic(WarpInfoStat.class);
-        IlluminatiCore.registerStatistic(WarpInviteStat.class);
-        IlluminatiCore.registerStatistic(WarpListStat.class);
-        IlluminatiCore.registerStatistic(WarpModeStat.class);
-        IlluminatiCore.registerStatistic(WarpMoveStat.class);
-        IlluminatiCore.registerStatistic(WarpRandomStat.class);
-        IlluminatiCore.registerStatistic(WarpRenameStat.class);
-        IlluminatiCore.registerStatistic(WarpToStat.class);
-        IlluminatiCore.registerStatistic(WarpUninviteStat.class);
+        StatisticHandler.registerStatistic(PrivateWarpStat.class);
+        StatisticHandler.registerStatistic(PublicWarpStat.class);
+        StatisticHandler.registerStatistic(WarpCreateStat.class);
+        StatisticHandler.registerStatistic(WarpDeleteStat.class);
+        StatisticHandler.registerStatistic(WarpInfoStat.class);
+        StatisticHandler.registerStatistic(WarpInviteStat.class);
+        StatisticHandler.registerStatistic(WarpListStat.class);
+        StatisticHandler.registerStatistic(WarpModeStat.class);
+        StatisticHandler.registerStatistic(WarpMoveStat.class);
+        StatisticHandler.registerStatistic(WarpRandomStat.class);
+        StatisticHandler.registerStatistic(WarpRenameStat.class);
+        StatisticHandler.registerStatistic(WarpToStat.class);
+        StatisticHandler.registerStatistic(WarpUninviteStat.class);
 
-        IlluminatiCore.registerStatistic(BankInfoStat.class);
-        IlluminatiCore.registerStatistic(BankStat.class);
-        IlluminatiCore.registerStatistic(SetBankStat.class);
+        StatisticHandler.registerStatistic(BankInfoStat.class);
+        StatisticHandler.registerStatistic(BankStat.class);
+        StatisticHandler.registerStatistic(SetBankStat.class);
 
-        IlluminatiCore.registerStatistic(HomeInfoStat.class);
-        IlluminatiCore.registerStatistic(HomeStat.class);
-        IlluminatiCore.registerStatistic(SetHomeStat.class);
+        StatisticHandler.registerStatistic(HomeInfoStat.class);
+        StatisticHandler.registerStatistic(HomeStat.class);
+        StatisticHandler.registerStatistic(SetHomeStat.class);
 
-        IlluminatiCore.registerStatistic(MineInfoStat.class);
-        IlluminatiCore.registerStatistic(MineStat.class);
-        IlluminatiCore.registerStatistic(SetMineStat.class);
+        StatisticHandler.registerStatistic(MineInfoStat.class);
+        StatisticHandler.registerStatistic(MineStat.class);
+        StatisticHandler.registerStatistic(SetMineStat.class);
 
-        IlluminatiCore.registerStatistic(BankSignStat.class);
-        IlluminatiCore.registerStatistic(HomeSignStat.class);
-        IlluminatiCore.registerStatistic(WarpSignStat.class);
-        IlluminatiCore.registerStatistic(MineSignStat.class);
+        StatisticHandler.registerStatistic(BankSignStat.class);
+        StatisticHandler.registerStatistic(HomeSignStat.class);
+        StatisticHandler.registerStatistic(WarpSignStat.class);
+        StatisticHandler.registerStatistic(MineSignStat.class);
 
         return true;
     }

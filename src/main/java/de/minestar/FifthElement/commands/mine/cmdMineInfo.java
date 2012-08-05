@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.statistics.mine.MineInfoStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -77,7 +77,7 @@ public class cmdMineInfo extends AbstractExtendedCommand {
         displayMineInformation(player, mine);
 
         // FIRE STATISTICS
-        IlluminatiCore.handleStatistic(new MineInfoStat(player.getName(), mine.getOwner()));
+        StatisticHandler.handleStatistic(new MineInfoStat(player.getName(), mine.getOwner()));
     }
 
     private final static String SEPERATOR = "----------------------------------------";

@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpInviteStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -65,7 +65,7 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
             if (warp.addGuest(targetName)) {
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
                 // FIRE STATISTIC
-                IlluminatiCore.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));
+                StatisticHandler.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));
             }
             // PLAYER WAS ALREADY INVITED
             else

@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Bank;
 import de.minestar.FifthElement.statistics.bank.SetBankStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -58,7 +58,7 @@ public class cmdSetBank extends AbstractCommand {
             }
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new SetBankStat(player.getName(), targetName, false));
+            StatisticHandler.handleStatistic(new SetBankStat(player.getName(), targetName, false));
         }
         // PLAYER HAS A BANK -> UPDATE POSITION
         else {
@@ -72,7 +72,7 @@ public class cmdSetBank extends AbstractCommand {
                 PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat deine Bankposition verändert!");
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new SetBankStat(player.getName(), targetName, true));
+            StatisticHandler.handleStatistic(new SetBankStat(player.getName(), targetName, true));
         }
 
     }

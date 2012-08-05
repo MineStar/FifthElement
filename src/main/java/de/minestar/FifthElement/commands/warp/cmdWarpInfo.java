@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpInfoStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.ChatUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -68,7 +68,7 @@ public class cmdWarpInfo extends AbstractCommand {
         displayInformation(warp, sender);
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new WarpInfoStat(warp.getName(), sender.getName()));
+        StatisticHandler.handleStatistic(new WarpInfoStat(warp.getName(), sender.getName()));
     }
 
     private final static SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm 'am' d.M.Y");

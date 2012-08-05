@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpModeStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -80,6 +80,6 @@ public class cmdWarpMode extends AbstractCommand {
         Core.warpManager.setUseMode(warp, useMode);
 
         // FIRE STATISTIC
-        IlluminatiCore.handleStatistic(new WarpModeStat(player.getName(), oldUseMode, warp));
+        StatisticHandler.handleStatistic(new WarpModeStat(player.getName(), oldUseMode, warp));
     }
 }

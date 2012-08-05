@@ -25,7 +25,7 @@ import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.statistics.mine.SetMineStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -58,7 +58,7 @@ public class cmdSetMine extends AbstractCommand {
             PlayerUtils.sendInfo(player, "Mit '/mine' kommst du zu deiner Mine.");
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new SetMineStat(player.getName(), false));
+            StatisticHandler.handleStatistic(new SetMineStat(player.getName(), false));
         }
         // UPDATE MINE POSITION
         else {
@@ -66,7 +66,7 @@ public class cmdSetMine extends AbstractCommand {
             PlayerUtils.sendSuccess(player, pluginName, "Deine Mine ist nun hier.");
 
             // FIRE STATISTIC
-            IlluminatiCore.handleStatistic(new SetMineStat(player.getName(), true));
+            StatisticHandler.handleStatistic(new SetMineStat(player.getName(), true));
         }
     }
 }

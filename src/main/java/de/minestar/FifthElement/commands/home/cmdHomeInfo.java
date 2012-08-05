@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Home;
 import de.minestar.FifthElement.statistics.home.HomeInfoStat;
-import de.minestar.illuminati.IlluminatiCore;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -77,7 +77,7 @@ public class cmdHomeInfo extends AbstractExtendedCommand {
         displayHomeInformation(player, home);
 
         // FIRE STATISTICS
-        IlluminatiCore.handleStatistic(new HomeInfoStat(player.getName(), home.getOwner()));
+        StatisticHandler.handleStatistic(new HomeInfoStat(player.getName(), home.getOwner()));
     }
 
     private final static String SEPERATOR = "----------------------------------------";
