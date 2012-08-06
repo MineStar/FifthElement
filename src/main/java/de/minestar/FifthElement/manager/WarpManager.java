@@ -269,8 +269,6 @@ public class WarpManager {
     }
 
     public boolean isWarpAllowedIn(String worldName) {
-        System.out.println(worldName);
-        System.out.println(Settings.getForbiddenWarpWorlds().contains(worldName.toLowerCase()));
         return !Settings.getForbiddenWarpWorlds().contains(worldName.toLowerCase());
     }
 }

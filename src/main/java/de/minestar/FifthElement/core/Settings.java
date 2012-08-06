@@ -112,9 +112,10 @@ public class Settings {
                 ConsoleUtils.printInfo(Core.NAME, "Resource world is: " + resurceWorldName);
         }
 
+        forbiddenWarpWorlds = new HashSet<String>();
         List<?> list = config.getList("resourceWorld.noWarpsWorlds");
+
         if (list != null) {
-            forbiddenWarpWorlds = new HashSet<String>(list.size());
             for (Object o : list)
                 forbiddenWarpWorlds.add(o.toString().toLowerCase());
 
