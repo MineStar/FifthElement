@@ -18,6 +18,8 @@
 
 package de.minestar.FifthElement.commands.warp;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -61,7 +63,8 @@ public class cmdWarpMove extends AbstractCommand {
         }
         Location oldLocation = warp.getLocation();
         Core.warpManager.moveWarp(warp, player);
-        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde an diese Position verschoben.");
+
+        Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der Warp öffentliche '" + warp.getName() + "' wurde verschoben.");
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new WarpMoveStat(player.getName(), warp.getName(), oldLocation, warp.getLocation()));

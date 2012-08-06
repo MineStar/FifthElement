@@ -64,7 +64,7 @@ public class cmdWarpPublic extends AbstractCommand {
         Core.warpManager.changeAccess(warp, true);
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' ist nun öffentlich!");
 
-        Bukkit.broadcastMessage(ChatColor.RED + "Der Warp '" + warp.getName() + "' ist nun öffentlich.");
+        Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der Warp '" + warp.getName() + "' ist nun öffentlich.");
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new PublicWarpStat(player.getName(), warp.getName()));
