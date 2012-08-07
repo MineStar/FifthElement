@@ -63,12 +63,16 @@ public class SignListener implements Listener {
         Player player = event.getPlayer();
         // WARP SIGN
         if (lines[1].equalsIgnoreCase(WARP_SIGN) && lines[2] != null) {
-            Warp warp = Core.warpManager.getWarp(lines[2]);
+            String warpName = lines[2];
+            // USE LAST LINE FOR LONG WARPNAMES
+            if (lines[3] != null && !lines[3].isEmpty())
+                warpName += lines[3];
+            Warp warp = Core.warpManager.getWarp(warpName);
             if (warp != null) {
                 PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zum Warp '" + warp.getName() + "'.");
                 event.setLine(2, warp.getName());
             } else {
-                PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + lines[2] + "' existiert nicht!");
+                PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + warpName + "' existiert nicht!");
                 event.setCancelled(true);
                 event.getBlock().breakNaturally();
             }
@@ -120,7 +124,7 @@ public class SignListener implements Listener {
             Player player = event.getPlayer();
             // WARP SIGN
             if (lines[1].equalsIgnoreCase(WARP_SIGN) && lines[2] != null && lines[2].length() >= 1)
-                handleWarp(lines[2], player, sign);
+                handleWarp(player, sign);
             // HOME SIGN
             else if (lines[1].equalsIgnoreCase(HOME_SIGN))
                 handleHome(player, sign);
@@ -187,7 +191,12 @@ public class SignListener implements Listener {
         }
     }
 
-    private void handleWarp(String warpName, Player player, Sign sign) {
+    private void handleWarp(Player player, Sign sign) {
+        String warpName = sign.getLine(2);
+        // FOR LONG WARP NAMES USE LAST LINE
+        if (sign.getLine(3) != null && !sign.getLine(3).isEmpty())
+            warpName += sign.getLine(3);
+
         Warp warp = Core.warpManager.getWarp(warpName);
         if (warp == null) {
             PlayerUtils.sendError(player, Core.NAME, "Der Warp '" + warpName + "' existiert nicht mehr! Das Schild wurde abgerissen.");
