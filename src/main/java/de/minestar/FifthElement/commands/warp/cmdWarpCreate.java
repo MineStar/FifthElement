@@ -42,10 +42,17 @@ public class cmdWarpCreate extends AbstractCommand {
             PlayerUtils.sendError(player, pluginName, "Du kannst auf dieser Welt keine Warps erstellen!");
             return;
         }
+        String warpName = args[0];
 
-        if (!isValidName(args[0])) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname ist ungültig!");
+        if (!Core.warpManager.isValidName(warpName)) {
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ungültig!");
             PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");
+            return;
+        }
+
+        // IS KEY WORD ( SUB COMMAND OF WARP)
+        if (Core.warpManager.isKeyWord(warpName)) {
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
             return;
         }
 
@@ -54,7 +61,6 @@ public class cmdWarpCreate extends AbstractCommand {
             PlayerUtils.sendError(player, pluginName, "Du kannst keinen weiteren privaten Warp erstellen!");
             return;
         }
-        String warpName = args[0];
         // NO DUPLICATE WARPS
         if (Core.warpManager.isWarpExisting(warpName)) {
             PlayerUtils.sendError(player, pluginName, "Es existiert bereits ein Warp names '" + warpName + "' !");
@@ -71,9 +77,5 @@ public class cmdWarpCreate extends AbstractCommand {
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new WarpCreateStat(player.getName(), warpName));
-    }
-
-    private boolean isValidName(String warpName) {
-        return warpName.length() >= Settings.getMinWarpnameSize() && warpName.length() <= Settings.getMaxWarpnameSize();
     }
 }

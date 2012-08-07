@@ -20,10 +20,12 @@ package de.minestar.FifthElement.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.bukkit.World;
@@ -270,5 +272,34 @@ public class WarpManager {
 
     public boolean isWarpAllowedIn(String worldName) {
         return !Settings.getForbiddenWarpWorlds().contains(worldName.toLowerCase());
+    }
+
+    /* KEY WORD HANDELING */
+
+    private static Set<String> keyWords;
+
+    static {
+        keyWords = new HashSet<String>();
+        keyWords.add("create");
+        keyWords.add("delete");
+        keyWords.add("help");
+        keyWords.add("invite");
+        keyWords.add("uninvite");
+        keyWords.add("move");
+        keyWords.add("rename");
+        keyWords.add("random");
+        keyWords.add("public");
+        keyWords.add("private");
+        keyWords.add("info");
+        keyWords.add("list");
+        keyWords.add("mode");
+    }
+
+    public boolean isKeyWord(String warpName) {
+        return keyWords.contains(warpName.toLowerCase());
+    }
+
+    public boolean isValidName(String warpName) {
+        return warpName.length() >= Settings.getMinWarpnameSize() && warpName.length() <= Settings.getMaxWarpnameSize();
     }
 }

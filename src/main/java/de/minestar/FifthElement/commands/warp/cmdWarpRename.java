@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpRenameStat;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
@@ -54,6 +55,20 @@ public class cmdWarpRename extends AbstractCommand {
             PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps umbenennen!");
             return;
         }
+        // NEW NAME IS VALID NAME
+        if (!Core.warpManager.isValidName(newName)) {
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ungültig!");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");
+            return;
+        }
+
+        // IS KEY WORD ( SUB COMMAND OF WARP)
+        if (Core.warpManager.isKeyWord(newName)) {
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
+            return;
+        }
+        
+        
         // NEW WARP NAME ALREADY EXISTS
         if (Core.warpManager.isWarpExisting(newName)) {
             PlayerUtils.sendError(player, pluginName, "Der Warp '" + newName + "' existiert bereits!");
