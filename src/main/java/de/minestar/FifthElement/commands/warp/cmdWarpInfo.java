@@ -107,7 +107,8 @@ public class cmdWarpInfo extends AbstractCommand {
         ChatUtils.writeMessage(sender, String.format(NAME_COLOR + "X:" + VALUE_COLOR + " %d " + NAME_COLOR + "Y:" + VALUE_COLOR + " %d " + NAME_COLOR + "Z: " + VALUE_COLOR + "%d " + NAME_COLOR + "Welt:" + VALUE_COLOR + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), loc.getWorld().getName()));
         if (sender instanceof Player) {
             Location loc2 = ((Player) sender).getLocation();
-            ChatUtils.writeMessage(sender, String.format("%s %s m", NAME_COLOR + "Entfernung:", VALUE_COLOR + ("" + (int) (loc.distance(loc2)))));
+            if (loc2.getWorld().equals(warp.getLocation().getWorld()))
+                ChatUtils.writeMessage(sender, String.format("%s %s m", NAME_COLOR + "Entfernung:", VALUE_COLOR + ("" + (int) (loc.distance(loc2)))));
         }
         // END OF INFORMATION
 
