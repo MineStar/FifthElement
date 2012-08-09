@@ -133,7 +133,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         if (toIndex > results.size())
             toIndex = results.size();
 
-        int maxNumber = (results.size() / Settings.getPageSize()) + 1;
+        int maxNumber = (int) Math.ceil((double) results.size() / (double) Settings.getPageSize());
 
         results = results.subList(fromIndex, toIndex);
         Collections.sort(results, PUBLIC_PRIVATE_SORT);
