@@ -207,6 +207,7 @@ public class WarpManager {
         warp.setAccessMode(toPublic);
         Core.dbHandler.updateAccess(warp);
     }
+
     public void addGuest(Warp warp, String guestName) {
         warp.addGuest(guestName);
         Core.dbHandler.updateGuests(warp);

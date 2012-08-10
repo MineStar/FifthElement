@@ -62,7 +62,8 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
             }
 
             // PLAYER IS NEW GUEST
-            if (warp.addGuest(targetName)) {
+            if (!warp.isGuest(targetName)) {
+                Core.warpManager.addGuest(warp, targetName);
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
                 // FIRE STATISTIC
                 StatisticHandler.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));

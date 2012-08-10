@@ -148,7 +148,6 @@ public class Warp {
     public boolean addGuest(String guestName) {
         guestName = guestName.toLowerCase();
         // RETURN TRUE WHEN GUEST WASN'T INVITED YET
-        System.out.println(guests);
         if (guests != null)
             return guests.add(guestName);
 

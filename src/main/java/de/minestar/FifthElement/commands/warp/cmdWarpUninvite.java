@@ -61,7 +61,8 @@ public class cmdWarpUninvite extends AbstractExtendedCommand {
                 continue;
             }
             // PLAYER WAS GUEST
-            if (warp.removeGuest(targetName)) {
+            if (warp.isGuest(targetName)) {
+                Core.warpManager.removeGuest(warp, targetName);
                 PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");
                 // FIRE STATISTIC
                 StatisticHandler.handleStatistic(new WarpUninviteStat(warp.getName(), player.getName(), targetName));
