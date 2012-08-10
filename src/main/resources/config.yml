@@ -43,7 +43,7 @@ warpCounter:
         x: 0
         default: 0
         probe: 0
-        vips: 1
+        vip: 1
         pay: 3
         mods: 2147483647
         admins: 2147483647
