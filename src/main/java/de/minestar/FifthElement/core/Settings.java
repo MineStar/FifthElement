@@ -153,7 +153,12 @@ public class Settings {
     }
 
     public static Integer getMaxPrivateWarps(MinestarGroup group) {
-        return maxPrivateWarps.get(group);
+        if (maxPrivateWarps.containsKey(group))
+            return maxPrivateWarps.get(group);
+        else {
+            ConsoleUtils.printError(Core.NAME, "Can't find the group " + group + "!");
+            return 0;
+        }
     }
 
     public static Integer getMaxPublicWarps(String playerName) {
@@ -161,7 +166,12 @@ public class Settings {
     }
 
     public static Integer getMaxPublicWarps(MinestarGroup group) {
-        return maxPublicWarps.get(group);
+        if (maxPublicWarps.containsKey(group))
+            return maxPublicWarps.get(group);
+        else {
+            ConsoleUtils.printError(Core.NAME, "Can't find the group " + group + "!");
+            return 0;
+        }
     }
 
     public static int getPageSize() {
