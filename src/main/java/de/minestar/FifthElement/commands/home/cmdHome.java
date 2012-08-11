@@ -82,7 +82,9 @@ public class cmdHome extends AbstractExtendedCommand {
             return;
         }
 
-        // FIRE STATISTIC
-        StatisticHandler.handleStatistic(new HomeStat(player.getName(), home.getOwner()));
+        if (home != null) {
+            // FIRE STATISTIC
+            StatisticHandler.handleStatistic(new HomeStat(player.getName(), home.getOwner()));
+        }
     }
 }
