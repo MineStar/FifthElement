@@ -119,6 +119,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
             PlayerUtils.sendError(player, pluginName, filterList.toString());
             return;
         }
+        Collections.sort(results, PUBLIC_PRIVATE_SORT);
 
         int resultSize = results.size();
 
@@ -136,7 +137,6 @@ public class cmdWarpList extends AbstractExtendedCommand {
         int maxNumber = (int) Math.ceil((double) results.size() / (double) Settings.getPageSize());
 
         results = results.subList(fromIndex, toIndex);
-        Collections.sort(results, PUBLIC_PRIVATE_SORT);
         displayList(results, player, pageNumber, maxNumber, filterList);
 
         // FIRE STATISTIC
@@ -149,15 +149,15 @@ public class cmdWarpList extends AbstractExtendedCommand {
         @Override
         public int compare(Warp o1, Warp o2) {
             if (!o1.isPublic() && !o2.isPublic()) {
-                if (o1.getOwner().equals(o2.getOwner())) {
+                if (o1.getOwner().equals(o2.getOwner()))
                     return o1.getName().compareTo(o2.getName());
-                } else
+                else
                     return o1.getOwner().compareTo(o2.getOwner());
             }
 
-            if (!o1.isPublic() && o2.isPublic()) {
+            if (!o1.isPublic() && o2.isPublic())
                 return -1;
-            } else
+            else
                 return 1;
         }
     };
