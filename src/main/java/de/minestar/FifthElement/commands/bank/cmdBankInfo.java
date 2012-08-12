@@ -66,7 +66,8 @@ public class cmdBankInfo extends AbstractExtendedCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Bank!");
                     return;
                 }
-            }
+            } else
+                return;
         }
         // WRONG SYNTAX
         else {

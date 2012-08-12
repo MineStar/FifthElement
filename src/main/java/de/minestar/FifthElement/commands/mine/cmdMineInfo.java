@@ -66,7 +66,8 @@ public class cmdMineInfo extends AbstractExtendedCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Mine!");
                     return;
                 }
-            }
+            } else
+                return;
         }
         // WRONG SYNTAX
         else {

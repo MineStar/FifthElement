@@ -74,7 +74,8 @@ public class cmdHome extends AbstractExtendedCommand {
 
                 player.teleport(home.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Haus von '" + home.getOwner() + "'.");
-            }
+            } else
+                return;
         }
         // WRONG COMMAND SYNTAX
         else {
@@ -82,9 +83,7 @@ public class cmdHome extends AbstractExtendedCommand {
             return;
         }
 
-        if (home != null) {
-            // FIRE STATISTIC
-            StatisticHandler.handleStatistic(new HomeStat(player.getName(), home.getOwner()));
-        }
+        // FIRE STATISTIC
+        StatisticHandler.handleStatistic(new HomeStat(player.getName(), home.getOwner()));
     }
 }

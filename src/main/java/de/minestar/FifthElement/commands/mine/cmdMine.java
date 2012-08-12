@@ -74,7 +74,9 @@ public class cmdMine extends AbstractExtendedCommand {
 
                 player.teleport(mine.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Mine von '" + mine.getOwner() + "'.");
-            }
+            } else
+                return;
+
         }
         // WRONG COMMAND SYNTAX
         else {

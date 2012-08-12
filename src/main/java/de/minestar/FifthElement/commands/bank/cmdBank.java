@@ -73,7 +73,8 @@ public class cmdBank extends AbstractCommand {
 
                 player.teleport(bank.getLocation());
                 PlayerUtils.sendSuccess(player, pluginName, "Bank von '" + bank.getOwner() + "'.");
-            }
+            } else
+                return;
         }
         // WRONG COMMAND SYNTAX
         else {

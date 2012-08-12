@@ -66,7 +66,8 @@ public class cmdHomeInfo extends AbstractExtendedCommand {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat kein Zuhause!");
                     return;
                 }
-            }
+            } else
+                return;
         }
         // WRONG SYNTAX
         else {
