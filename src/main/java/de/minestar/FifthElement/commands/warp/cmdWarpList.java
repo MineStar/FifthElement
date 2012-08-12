@@ -29,14 +29,15 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.filter.NameFilter;
 import de.minestar.FifthElement.data.filter.OwnerFilter;
 import de.minestar.FifthElement.data.filter.PrivateFilter;
 import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.FifthElement.data.filter.UseFilter;
 import de.minestar.FifthElement.data.filter.WarpFilter;
 import de.minestar.FifthElement.statistics.warp.WarpListStat;
-import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpList extends AbstractExtendedCommand {
@@ -105,6 +106,15 @@ public class cmdWarpList extends AbstractExtendedCommand {
                         filterList.add(new OwnerFilter(targetName));
                     } else {
                         PlayerUtils.sendError(player, pluginName, "Es fehlt bei '-player' der Name des Spielers!");
+                        return;
+                    }
+                }
+                // DISPLAY WARPS CONTAINING A NAME
+                else if (arg.equalsIgnoreCase("-name")) {
+                    if (i < args.length - 1)
+                        filterList.add(new NameFilter(args[++i]));
+                    else {
+                        PlayerUtils.sendError(player, pluginName, "Es fehlt bei '-name' der Name des Warps!");
                         return;
                     }
                 }
