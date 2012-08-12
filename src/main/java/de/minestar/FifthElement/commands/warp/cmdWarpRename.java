@@ -67,8 +67,7 @@ public class cmdWarpRename extends AbstractCommand {
             PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
             return;
         }
-        
-        
+
         // NEW WARP NAME ALREADY EXISTS
         if (Core.warpManager.isWarpExisting(newName)) {
             PlayerUtils.sendError(player, pluginName, "Der Warp '" + newName + "' existiert bereits!");
