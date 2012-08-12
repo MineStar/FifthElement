@@ -67,7 +67,7 @@ public class cmdWarpMove extends AbstractCommand {
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde verschoben.");
 
         if (warp.isPublic())
-            Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der Warp öffentliche '" + warp.getName() + "' wurde verschoben.");
+            Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der öffentliche Warp '" + warp.getName() + "' wurde verschoben.");
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new WarpMoveStat(player.getName(), warp.getName(), oldLocation, warp.getLocation()));
