@@ -158,17 +158,22 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
         @Override
         public int compare(Warp o1, Warp o2) {
-            if (!o1.isPublic() && !o2.isPublic()) {
-                if (o1.getOwner().equals(o2.getOwner()))
-                    return o1.getName().compareTo(o2.getName());
-                else
-                    return o1.getOwner().compareTo(o2.getOwner());
-            }
-
+            // PRIVATE WARPS FIRST
             if (!o1.isPublic() && o2.isPublic())
                 return -1;
-            else
+            if (o1.isPublic() && !o2.isPublic())
                 return 1;
+            // WHEN BOTH ARE PRIVATE OR PUBLIC
+            // SORT BY OWNER AND THEN BY NAME
+            if (o1.isPublic() == o2.isPublic()) {
+                // SAME OWNER? SORT BY NAME
+                if (o1.getOwner().equals(o2.getOwner()))
+                    return o1.getName().compareTo(o2.getName());
+                // DIFFERENT OWNER? SORT BY OWNER
+                else
+                    return o1.getOwner().compareTo(o2.getOwner());
+            } else
+                return 0;
         }
     };
 
