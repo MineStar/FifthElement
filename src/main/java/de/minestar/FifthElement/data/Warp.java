@@ -124,7 +124,7 @@ public class Warp {
     // CHECK IF PLAYER CAN MOVE/RENAME/DELETE OR EDIT THE WARP
     // ONLY THE OWNER AND ADMINS/MODS ARE ALLOWED TO DO IT
     public boolean canEdit(Player player) {
-        return isOwner(player) || UtilPermissions.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
+        return isOwner(player) || UtilPermissions.playerCanUseCommand(player, PERMISSION_EDIT_ALL_WARPS);
     }
 
     public void setAccessMode(boolean isPublic) {
@@ -177,7 +177,7 @@ public class Warp {
     }
 
     public boolean canUse(Player player) {
-        return canUse(player.getName()) || UtilPermissions.playerCanUseCommand(player, PERMISSION_EDIT_ALL_WARPS);
+        return canUse(player.getName()) || UtilPermissions.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
     }
 
     public void setId(int id) {
