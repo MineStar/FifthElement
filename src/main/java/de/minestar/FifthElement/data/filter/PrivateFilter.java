@@ -34,7 +34,7 @@ public class PrivateFilter implements WarpFilter {
 
     @Override
     public boolean accept(Warp warp) {
-        return !warp.isPublic();
+        return warp.isPrivate();
     }
 
     @Override

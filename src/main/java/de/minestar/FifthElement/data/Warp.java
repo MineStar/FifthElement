@@ -141,6 +141,10 @@ public class Warp {
         return isPublic;
     }
 
+    public boolean isPrivate() {
+        return !isPublic;
+    }
+
     public String getName() {
         return name;
     }

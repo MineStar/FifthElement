@@ -44,7 +44,7 @@ public class cmdWarpPrivate extends AbstractCommand {
             return;
         }
         // WARP IS ALREADY PRIVATE
-        if (!warp.isPublic()) {
+        if (warp.isPrivate()) {
             PlayerUtils.sendError(player, pluginName, "Der Warp '" + warp.getName() + "' ist bereits privat!");
             return;
         }
