@@ -32,4 +32,9 @@ public class NameFilter implements WarpFilter {
     public boolean accept(Warp warp) {
         return warp.getName().toLowerCase().contains(name);
     }
+
+    @Override
+    public String toString() {
+        return "Suchwort: " + name;
+    }
 }
