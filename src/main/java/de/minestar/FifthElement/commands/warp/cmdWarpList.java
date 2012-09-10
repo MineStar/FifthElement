@@ -79,7 +79,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                     }
                 }
                 // DISPLAY OWN CREATED WARPS
-                else if (arg.equalsIgnoreCase("-created")) {
+                else if (arg.equalsIgnoreCase("-created") || arg.equalsIgnoreCase("-my")) {
                     filterList.add(new OwnerFilter(player.getName()));
                 }
                 // DISPLAY USEABLE PRIVATE WARPS
