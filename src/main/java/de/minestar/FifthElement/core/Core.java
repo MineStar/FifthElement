@@ -47,6 +47,7 @@ import de.minestar.FifthElement.commands.warp.cmdWarpPrivate;
 import de.minestar.FifthElement.commands.warp.cmdWarpPublic;
 import de.minestar.FifthElement.commands.warp.cmdWarpRandom;
 import de.minestar.FifthElement.commands.warp.cmdWarpRename;
+import de.minestar.FifthElement.commands.warp.cmdWarpSearch;
 import de.minestar.FifthElement.commands.warp.cmdWarpUninvite;
 import de.minestar.FifthElement.database.DatabaseHandler;
 import de.minestar.FifthElement.listener.SignListener;
@@ -212,6 +213,7 @@ public class Core extends AbstractCore {
                         new cmdWarpPrivate( "private",      "<Warp>",                       "fifthelement.command.warpprivate"),
                         new cmdWarpInfo(    "info",         "<Warp>",                       "fifthelement.command.warpinfo"),
                         new cmdWarpList(    "list",         "",                             "fifthelement.command.warplist"),
+                        new cmdWarpSearch(  "search",       "<Suchwort>",                   "fifthelement.command.warplist"),
                         new cmdWarpMode(    "mode",         "<Warp> <ALL | SIGN | COMMAND>","fifthelement.command.warpmode")
                 )
         );
