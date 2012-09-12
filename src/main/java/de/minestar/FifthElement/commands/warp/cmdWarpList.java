@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.WarpCounter;
 import de.minestar.FifthElement.data.filter.NameFilter;
 import de.minestar.FifthElement.data.filter.OwnerFilter;
 import de.minestar.FifthElement.data.filter.PrivateFilter;
@@ -129,7 +130,8 @@ public class cmdWarpList extends AbstractExtendedCommand {
             PlayerUtils.sendError(player, pluginName, filterList.toString());
             return;
         }
-        Collections.sort(results, PUBLIC_PRIVATE_SORT);
+
+        results = sort(results, player);
 
         int resultSize = results.size();
 
@@ -144,6 +146,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         if (toIndex > results.size())
             toIndex = results.size();
 
+        // MAXNUMBER IS ALWAYS A FULL NUMBER
         int maxNumber = (int) Math.ceil((double) results.size() / (double) Settings.getPageSize());
 
         results = results.subList(fromIndex, toIndex);
@@ -153,29 +156,72 @@ public class cmdWarpList extends AbstractExtendedCommand {
         StatisticHandler.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
     }
 
-    // USED FOR SORTING PUBLIC AND PRIVATE WARPS
-    private final static Comparator<Warp> PUBLIC_PRIVATE_SORT = new Comparator<Warp>() {
+    private final static Comparator<Warp> NAME_COMPARATOR = new Comparator<Warp>() {
 
         @Override
         public int compare(Warp o1, Warp o2) {
-            // PRIVATE WARPS FIRST
-            if (!o1.isPublic() && o2.isPublic())
-                return -1;
-            if (o1.isPublic() && !o2.isPublic())
-                return 1;
-            // WHEN BOTH ARE PRIVATE OR PUBLIC
-            // SORT BY OWNER AND THEN BY NAME
-            if (o1.isPublic() == o2.isPublic()) {
-                // SAME OWNER? SORT BY NAME
-                if (o1.getOwner().equals(o2.getOwner()))
-                    return o1.getName().compareTo(o2.getName());
-                // DIFFERENT OWNER? SORT BY OWNER
-                else
-                    return o1.getOwner().compareTo(o2.getOwner());
-            } else
-                return 0;
+            return o1.getName().compareTo(o2.getName());
         }
     };
+
+    // SORT THE WARP LIST THE FOLLOWNING:
+    // 1. DISPLAY OWN PRIVATE WARPS
+    // 2. DISPLAY OWN PUBLIC WARPS
+    // 3. DISPLAY INVITED WARPS
+    // 4. DISPLAY PUBLIC WARPS
+    // ALL ARE ALPHABETICALLY SORTED
+
+    private List<Warp> sort(List<Warp> warpList, Player player) {
+
+        // SORT THEM ALPHABETICALLY
+        Collections.sort(warpList, NAME_COMPARATOR);
+
+        List<Warp> result = new ArrayList<Warp>(warpList.size());
+
+        // FIRST THE OWN PRIVATE
+        Warp warp = null;
+        for (int i = 0; i < warpList.size(); ++i) {
+            warp = warpList.get(i);
+            if (warp.isPrivate() && warp.isOwner(player)) {
+                result.add(warp);
+                warpList.set(i, null);
+            }
+
+        }
+
+        // THEN THE OWN PUBLICS
+        for (int i = 0; i < warpList.size(); ++i) {
+            warp = warpList.get(i);
+            if (warp == null)
+                continue;
+
+            if (warp.isPublic() && warp.isOwner(player)) {
+                result.add(warp);
+                warpList.set(i, null);
+            }
+        }
+
+        // THEN THE INVITED PRIVATES
+        for (int i = 0; i < warpList.size(); ++i) {
+            warp = warpList.get(i);
+            if (warp == null)
+                continue;
+
+            if (warp.isPrivate() && !warp.isOwner(player)) {
+                result.add(warp);
+                warpList.set(i, null);
+            }
+        }
+
+        // THEN THE OTHER(REMAINING PUBLICS)
+        for (int i = 0; i < warpList.size(); ++i) {
+            warp = warpList.get(i);
+            if (warp == null)
+                continue;
+            result.add(warp);
+        }
+        return result;
+    }
 
     private final static String SEPERATOR = ChatColor.WHITE + "----------------------------------------";
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
@@ -187,6 +233,12 @@ public class cmdWarpList extends AbstractExtendedCommand {
         PlayerUtils.sendInfo(player, SEPERATOR);
         PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Seite:", VALUE_COLOR + Integer.toString(pageNumber)) + "/" + Integer.toString(maxNumber));
         PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Filter:", VALUE_COLOR + filter.toString()));
+
+        // INFORMATION OF REMAINING FREE WARPS
+        WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
+        String temp = String.format("%s %s", NAME_COLOR + "Eigene öffentliche Warps:", VALUE_COLOR + Integer.toString(counter.getPrivateWarps()) + "/" + Settings.getMaxPrivateWarps(player.getName()));
+        String temp2 = String.format("%s %s", NAME_COLOR + "Eigene öffentliche Warps:", VALUE_COLOR + Integer.toString(counter.getPublicWarps()) + "/" + Settings.getMaxPublicWarps(player.getName()));
+        PlayerUtils.sendInfo(player, temp + " " + temp2);
         PlayerUtils.sendInfo(player, SEPERATOR);
 
         // GET WARP INDEX TO START WITH
@@ -198,16 +250,27 @@ public class cmdWarpList extends AbstractExtendedCommand {
         if (!list.get(0).isPublic())
             PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Private Warps", ""));
 
-        boolean priv = false;
+        boolean ownWarps = false;
+        boolean invitedWarps = false;
+        boolean publicWarps = false;
+
         ChatColor color = null;
         // DISPLAY WARPS
         for (Warp warp : list) {
 
-            // SEPERATE PUBLIC AND PRIVATE WARPS
-            if (!priv && warp.isPublic()) {
-                priv = true;
-                PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Öffentliche Warps", ""));
+            if (!ownWarps && warp.isOwner(player)) {
+                ownWarps = true;
+                PlayerUtils.sendInfo(player, NAME_COLOR + "----" + VALUE_COLOR + "Eigene Warps" + NAME_COLOR + "----");
             }
+            if (!invitedWarps && warp.isPrivate() && warp.isGuest(player) && !warp.isOwner(player)) {
+                invitedWarps = true;
+                PlayerUtils.sendInfo(player, NAME_COLOR + "----" + VALUE_COLOR + "Eingeladene Warps" + NAME_COLOR + "----");
+            }
+            if (!publicWarps && warp.isPublic() && !warp.isOwner(player)) {
+                publicWarps = true;
+                PlayerUtils.sendInfo(player, NAME_COLOR + "----" + VALUE_COLOR + "Öffentliche Warps" + NAME_COLOR + "----");
+            }
+
             // COLORS FOR WARPS
 
             // PUBLIC WARPS

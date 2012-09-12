@@ -1,6 +1,6 @@
 VERSION: ${pom.version}
 common:
-    pageSize: 15
+    pageSize: 12
 resourceWorld:
     world:
     noWarpsWorlds:
