@@ -49,6 +49,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     @Override
     protected void createStructure(String pluginName, Connection con) throws Exception {
+        this.test(pluginName, con);
+    }
+
+    private void test(String pluginName, Connection con) throws Exception {
         DatabaseUtils.createStructure(getClass().getResourceAsStream("/structure.sql"), con, pluginName);
     }
 
