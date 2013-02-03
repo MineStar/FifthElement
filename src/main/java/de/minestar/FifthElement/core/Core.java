@@ -19,6 +19,7 @@
 package de.minestar.FifthElement.core;
 
 import java.io.File;
+import java.util.List;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -49,6 +50,8 @@ import de.minestar.FifthElement.commands.warp.cmdWarpRandom;
 import de.minestar.FifthElement.commands.warp.cmdWarpRename;
 import de.minestar.FifthElement.commands.warp.cmdWarpSearch;
 import de.minestar.FifthElement.commands.warp.cmdWarpUninvite;
+import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.FifthElement.database.DatabaseHandler;
 import de.minestar.FifthElement.listener.SignListener;
 import de.minestar.FifthElement.manager.BackManager;
@@ -235,6 +238,10 @@ public class Core extends AbstractCore {
 
         pm.registerEvents(warpSignListener, this);
         return true;
+    }
+
+    public static List<Warp> getPublicWarps() {
+        return warpManager.filterWarps(PublicFilter.getInstance());
     }
 
     @Override

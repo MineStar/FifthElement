@@ -199,10 +199,13 @@ public class WarpManager {
 
     public void changeAccess(Warp warp, boolean toPublic) {
         WarpCounter counter = getWarpCounter(warp.getOwner());
-        if (toPublic)
+        if (toPublic) {
+            counter.decrementPrivateWarps();
             counter.incrementPublicWarps();
-        else
+        } else {
             counter.decrementPublicWarps();
+            counter.incrementPrivateWarps();
+        }
 
         warp.setAccessMode(toPublic);
         Core.dbHandler.updateAccess(warp);
