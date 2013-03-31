@@ -56,8 +56,10 @@ public class cmdWarpPublic extends AbstractCommand {
             return;
         }
         if (!Core.warpManager.canCreatePublic(warp.getOwner())) {
-            PlayerUtils.sendError(player, pluginName, "Der Warp Besitzer '" + warp.getOwner() + "' kann keine öffentlichen Warps mehr besitzen!");
-            return;
+            if (!warp.canEdit(player)) {
+                PlayerUtils.sendError(player, pluginName, "Der Warp Besitzer '" + warp.getOwner() + "' kann keine öffentlichen Warps mehr besitzen!");
+                return;
+            }
         }
 
         // CONVERT TO PUBLIC WARP
