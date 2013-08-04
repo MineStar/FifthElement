@@ -21,6 +21,9 @@ package de.minestar.FifthElement.commands.warp;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.bukkit.gemo.utils.UtilPermissions;
@@ -28,9 +31,10 @@ import com.bukkit.gemo.utils.UtilPermissions;
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpToStat;
-import de.minestar.minestarlibrary.stats.StatisticHandler;
+import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.commands.AbstractSuperCommand;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarp extends AbstractSuperCommand {
@@ -78,10 +82,30 @@ public class cmdWarp extends AbstractSuperCommand {
             }
         }
         // STORE EVENTUALLY LAST POSITION
-        Core.backManager.handleTeleport(player);
 
         // TELEPORT PLAYER THE TO WARP
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle() instanceof Animals) {
+                // get the animal
+                Entity entity = player.getVehicle();
+
+                // leave it
+                player.leaveVehicle();
+
+                // teleport the animal
+                entity.teleport(bestMatch.getLocation());
+
+                // create a Thread
+                EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 3L);
+            } else {
+                PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                return;
+            }
+        }
+
         player.teleport(bestMatch.getLocation());
+        Core.backManager.handleTeleport(player);
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim Warp '" + bestMatch.getName() + "'.");
 
         // FIRE STATISTIC

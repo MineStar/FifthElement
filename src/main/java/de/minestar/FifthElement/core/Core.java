@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.List;
 
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import de.minestar.FifthElement.commands.back.cmdBack;
@@ -98,6 +99,7 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 public class Core extends AbstractCore {
 
     public static final String NAME = "FifthElement";
+    private static Plugin INSTANCE = null;
 
     /* MANAGER */
     public static DatabaseHandler dbHandler;
@@ -112,6 +114,7 @@ public class Core extends AbstractCore {
 
     public Core() {
         super(NAME);
+        Core.INSTANCE = this;
     }
 
     @Override
@@ -235,7 +238,6 @@ public class Core extends AbstractCore {
 
     @Override
     protected boolean registerEvents(PluginManager pm) {
-
         pm.registerEvents(warpSignListener, this);
         return true;
     }
@@ -249,5 +251,9 @@ public class Core extends AbstractCore {
         dbHandler.closeConnection();
 
         return !dbHandler.hasConnection();
+    }
+
+    public static Plugin getPlugin() {
+        return Core.INSTANCE;
     }
 }
