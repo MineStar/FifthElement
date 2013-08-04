@@ -21,9 +21,13 @@ package de.minestar.FifthElement.commands.teleport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -46,6 +50,35 @@ public class cmdTeleportHere extends AbstractExtendedCommand {
                 PlayerUtils.sendError(player, pluginName, "Spieler '" + args[0] + "' ist entweder offline oder kann nicht gefunden werden!");
             else {
                 // TELEPORT TARGET TO PLAYER
+
+                // handle vehicles
+                if (target.isInsideVehicle()) {
+                    if (target.getVehicle() instanceof Animals) {
+                        if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                            PlayerUtils.sendError(player, pluginName, "Spieler '" + args[0] + "' reitet in einer anderen Welt!");
+                            continue;
+                        }
+                        // get the animal
+                        Entity entity = target.getVehicle();
+
+                        // leave it
+                        target.leaveVehicle();
+
+                        // load the chunk
+                        target.getLocation().getChunk().load(true);
+
+                        // teleport the animal
+                        entity.teleport(player.getLocation());
+
+                        // create a Thread
+                        EntityTeleportThread thread = new EntityTeleportThread(target.getName(), entity);
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+                    } else {
+                        PlayerUtils.sendError(player, pluginName, "Spieler '" + args[0] + "' ist in einem Fahrzeug!");
+                        continue;
+                    }
+                }
+
                 target.teleport(player);
                 PlayerUtils.sendInfo(target, pluginName, message);
 

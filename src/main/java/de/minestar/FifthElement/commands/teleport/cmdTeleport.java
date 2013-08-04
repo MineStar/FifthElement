@@ -18,11 +18,15 @@
 
 package de.minestar.FifthElement.commands.teleport;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -65,6 +69,35 @@ public class cmdTeleport extends AbstractExtendedCommand {
             return;
         }
 
+        // handle vehicles
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle() instanceof Animals) {
+
+                if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    return;
+                }
+                // get the animal
+                Entity entity = player.getVehicle();
+
+                // leave it
+                player.leaveVehicle();
+
+                // load the chunk
+                player.getLocation().getChunk().load(true);
+
+                // teleport the animal
+                entity.teleport(target.getLocation());
+
+                // create a Thread
+                EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+            } else {
+                PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                return;
+            }
+        }
+
         // STORE EVENTUALLY LAST POSITION
         Core.backManager.handleTeleport(player);
 
@@ -89,6 +122,35 @@ public class cmdTeleport extends AbstractExtendedCommand {
         if (target == null) {
             PlayerUtils.sendError(player, pluginName, "Spieler '" + args[1] + "' ist entweder offline oder kann nicht gefunden werden!");
             return;
+        }
+
+        // handle vehicles
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle() instanceof Animals) {
+
+                if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    return;
+                }
+                // get the animal
+                Entity entity = player.getVehicle();
+
+                // leave it
+                player.leaveVehicle();
+
+                // load the chunk
+                target.getLocation().getChunk().load(true);
+
+                // teleport the animal
+                entity.teleport(target.getLocation());
+
+                // create a Thread
+                EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+            } else {
+                PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                return;
+            }
         }
 
         // STORE EVENTUALLY LAST POSITION
@@ -134,11 +196,41 @@ public class cmdTeleport extends AbstractExtendedCommand {
         } else
             targetWorld = player.getWorld();
 
+        Location target = new Location(targetWorld, x, y, z);
+
+        // handle vehicles
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle() instanceof Animals) {
+                if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    return;
+                }
+                // get the animal
+                Entity entity = player.getVehicle();
+
+                // leave it
+                player.leaveVehicle();
+
+                // load the chunk
+                target.getChunk().load(true);
+
+                // teleport the animal
+                entity.teleport(target);
+
+                // create a Thread
+                EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+            } else {
+                PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                return;
+            }
+        }
+
         // STORE EVENTUALLY LAST POSITION
         Core.backManager.handleTeleport(player);
 
         // TELEPORT TO COORDINATES
-        player.teleport(new Location(targetWorld, x, y, z));
+        player.teleport(target);
         PlayerUtils.sendSuccess(player, pluginName, "Du wurdest erfolgreich zur der Position X=" + x + " Y=" + y + " Z=" + z + " in der Welt " + targetWorld.getName());
 
     }

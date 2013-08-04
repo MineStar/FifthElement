@@ -18,11 +18,15 @@
 
 package de.minestar.FifthElement.commands.mine;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.statistics.mine.MineStat;
+import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -47,6 +51,31 @@ public class cmdMine extends AbstractExtendedCommand {
                 PlayerUtils.sendInfo(player, "Mit '/setMine' erstellst du dir eine Mine.");
                 return;
             }
+
+            // handle vehicles
+            if (player.isInsideVehicle()) {
+                if (player.getVehicle() instanceof Animals) {
+                    // get the animal
+                    Entity entity = player.getVehicle();
+
+                    // leave it
+                    player.leaveVehicle();
+
+                    // load the chunk
+                    mine.getLocation().getChunk().load(true);
+
+                    // teleport the animal
+                    entity.teleport(mine.getLocation());
+
+                    // create a Thread
+                    EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+                } else {
+                    PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                    return;
+                }
+            }
+
             // STORE EVENTUALLY LAST POSITION
             Core.backManager.handleTeleport(player);
 
@@ -67,6 +96,35 @@ public class cmdMine extends AbstractExtendedCommand {
                 if (mine == null) {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Mine erstellt!");
                     return;
+                }
+
+                // handle vehicles
+                if (player.isInsideVehicle()) {
+                    if (player.getVehicle() instanceof Animals) {
+                        if (!mine.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                            PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                            return;
+                        }
+
+                        // get the animal
+                        Entity entity = player.getVehicle();
+
+                        // leave it
+                        player.leaveVehicle();
+
+                        // load the chunk
+                        mine.getLocation().getChunk().load(true);
+
+                        // teleport the animal
+                        entity.teleport(mine.getLocation());
+
+                        // create a Thread
+                        EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+                    } else {
+                        PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                        return;
+                    }
                 }
 
                 // STORE EVENTUALLY LAST POSITION

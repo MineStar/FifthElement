@@ -21,12 +21,16 @@ package de.minestar.FifthElement.commands.warp;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.FifthElement.statistics.warp.WarpRandomStat;
+import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -51,6 +55,34 @@ public class cmdWarpRandom extends AbstractCommand {
         // GET RANDOM WARP
         int index = rand.nextInt(publicWarps.size());
         Warp warp = publicWarps.get(index);
+
+        // handle vehicles
+        if (player.isInsideVehicle()) {
+            if (player.getVehicle() instanceof Animals) {
+                if (!warp.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    return;
+                }
+                // get the animal
+                Entity entity = player.getVehicle();
+
+                // leave it
+                player.leaveVehicle();
+
+                // load the chunk
+                warp.getLocation().getChunk().load(true);
+
+                // teleport the animal
+                entity.teleport(warp.getLocation());
+
+                // create a Thread
+                EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+            } else {
+                PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                return;
+            }
+        }
 
         player.teleport(warp.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim zufälligen Warp '" + warp.getName() + "'.");

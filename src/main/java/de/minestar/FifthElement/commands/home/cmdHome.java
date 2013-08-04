@@ -18,11 +18,15 @@
 
 package de.minestar.FifthElement.commands.home;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Home;
 import de.minestar.FifthElement.statistics.home.HomeStat;
+import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -47,6 +51,32 @@ public class cmdHome extends AbstractExtendedCommand {
                 PlayerUtils.sendInfo(player, "Mit '/setHome' erstellst du dir ein Zuhause.");
                 return;
             }
+            // TELEPORT PLAYER THE TO WARP
+
+            // handle vehicles
+            if (player.isInsideVehicle()) {
+                if (player.getVehicle() instanceof Animals) {
+                    // get the animal
+                    Entity entity = player.getVehicle();
+
+                    // leave it
+                    player.leaveVehicle();
+
+                    // load the chunk
+                    home.getLocation().getChunk().load(true);
+
+                    // teleport the animal
+                    entity.teleport(home.getLocation());
+
+                    // create a Thread
+                    EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+                } else {
+                    PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                    return;
+                }
+            }
+
             // STORE EVENTUALLY LAST POSITION
             Core.backManager.handleTeleport(player);
 
@@ -67,6 +97,34 @@ public class cmdHome extends AbstractExtendedCommand {
                 if (home == null) {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat kein Zuhause erstellt!");
                     return;
+                }
+
+                // handle vehicles
+                if (player.isInsideVehicle()) {
+                    if (player.getVehicle() instanceof Animals) {
+                        if (!home.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                            PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                            return;
+                        }
+                        // get the animal
+                        Entity entity = player.getVehicle();
+
+                        // leave it
+                        player.leaveVehicle();
+
+                        // load the chunk
+                        home.getLocation().getChunk().load(true);
+
+                        // teleport the animal
+                        entity.teleport(home.getLocation());
+
+                        // create a Thread
+                        EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
+                    } else {
+                        PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
+                        return;
+                    }
                 }
 
                 // STORE EVENTUALLY LAST POSITION

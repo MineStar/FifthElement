@@ -84,20 +84,29 @@ public class cmdWarp extends AbstractSuperCommand {
         // STORE EVENTUALLY LAST POSITION
 
         // TELEPORT PLAYER THE TO WARP
+
+        // handle vehicles
         if (player.isInsideVehicle()) {
             if (player.getVehicle() instanceof Animals) {
+                if (!bestMatch.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    return;
+                }
                 // get the animal
                 Entity entity = player.getVehicle();
 
                 // leave it
                 player.leaveVehicle();
 
+                // load the chunk
+                bestMatch.getLocation().getChunk().load(true);
+
                 // teleport the animal
                 entity.teleport(bestMatch.getLocation());
 
                 // create a Thread
                 EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 3L);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
             } else {
                 PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
                 return;
