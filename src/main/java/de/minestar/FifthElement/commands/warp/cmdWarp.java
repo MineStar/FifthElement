@@ -82,6 +82,7 @@ public class cmdWarp extends AbstractSuperCommand {
             }
         }
         // STORE EVENTUALLY LAST POSITION
+        Core.backManager.handleTeleport(player);
 
         // TELEPORT PLAYER THE TO WARP
 
