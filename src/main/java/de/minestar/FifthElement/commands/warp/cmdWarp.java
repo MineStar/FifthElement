@@ -81,9 +81,6 @@ public class cmdWarp extends AbstractSuperCommand {
                 delta = curDelta;
             }
         }
-        // STORE EVENTUALLY LAST POSITION
-        Core.backManager.handleTeleport(player);
-
         // TELEPORT PLAYER THE TO WARP
 
         // handle vehicles
@@ -114,8 +111,10 @@ public class cmdWarp extends AbstractSuperCommand {
             }
         }
 
-        player.teleport(bestMatch.getLocation());
         Core.backManager.handleTeleport(player);
+
+        player.teleport(bestMatch.getLocation());
+
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim Warp '" + bestMatch.getName() + "'.");
 
         // FIRE STATISTIC

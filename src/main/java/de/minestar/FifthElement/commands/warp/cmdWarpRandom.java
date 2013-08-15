@@ -83,7 +83,6 @@ public class cmdWarpRandom extends AbstractCommand {
                 return;
             }
         }
-
         player.teleport(warp.getLocation());
         PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim zufälligen Warp '" + warp.getName() + "'.");
 
