@@ -236,7 +236,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
         // INFORMATION OF REMAINING FREE WARPS
         WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
-        String temp = String.format("%s %s", NAME_COLOR + "Eigene öffentliche Warps:", VALUE_COLOR + Integer.toString(counter.getPrivateWarps()) + "/" + Settings.getMaxPrivateWarps(player.getName()));
+        String temp = String.format("%s %s", NAME_COLOR + "Eigene private Warps:", VALUE_COLOR + Integer.toString(counter.getPrivateWarps()) + "/" + Settings.getMaxPrivateWarps(player.getName()));
         String temp2 = String.format("%s %s", NAME_COLOR + "Eigene öffentliche Warps:", VALUE_COLOR + Integer.toString(counter.getPublicWarps()) + "/" + Settings.getMaxPublicWarps(player.getName()));
         PlayerUtils.sendInfo(player, temp + " " + temp2);
         PlayerUtils.sendInfo(player, SEPERATOR);
