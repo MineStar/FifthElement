@@ -19,7 +19,6 @@
 package de.minestar.FifthElement.commands.warp;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,7 +36,15 @@ import de.minestar.FifthElement.data.filter.PublicFilter;
 import de.minestar.FifthElement.data.filter.UseFilter;
 import de.minestar.FifthElement.data.filter.WarpFilter;
 import de.minestar.FifthElement.statistics.warp.WarpListStat;
+import de.minestar.minestarlibrary.chat.ChatMessage;
+import de.minestar.minestarlibrary.chat.ChatMessage.ChatMessageBuilder;
+import de.minestar.minestarlibrary.chat.ClickEvent;
+import de.minestar.minestarlibrary.chat.HoverEvent;
+import de.minestar.minestarlibrary.chat.HoverEvent.HoverEventBuilder;
+import de.minestar.minestarlibrary.chat.TextPart;
+import de.minestar.minestarlibrary.chat.TextPart.TextPartBuilder;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
+import de.minestar.minestarlibrary.datastructure.SortedList;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -66,12 +73,12 @@ public class cmdWarpList extends AbstractExtendedCommand {
                             pageNumber = Integer.valueOf(args[++i]);
                             // NEGATIVE PAGE NUMBER
                             if (pageNumber <= 0) {
-                                PlayerUtils.sendError(player, pluginName, "Die Seitenzahl muss größer 0 sein!");
+                                PlayerUtils.sendError(player, pluginName, "Die Seitenzahl muss grï¿½ï¿½er 0 sein!");
                                 return;
                             }
                         } catch (Exception e) {
                             // NOT A VALID NUMBER
-                            PlayerUtils.sendError(player, pluginName, args[i] + " ist keine gültige Seitenzahl!");
+                            PlayerUtils.sendError(player, pluginName, args[i] + " ist keine gï¿½ltige Seitenzahl!");
                             return;
                         }
                     } else {
@@ -131,36 +138,38 @@ public class cmdWarpList extends AbstractExtendedCommand {
             return;
         }
 
-        results = sort(results, player);
+        ResultList result = split(results, player);
 
-        int resultSize = results.size();
+        results = null;
+        int resultSize = result.resultSize();
 
         // GET THE SINGLE PAGE
-        int pageSize = Settings.getPageSize();
+        int pageSize = 10;
+//        int pageSize = Settings.getPageSize();
         int fromIndex = pageSize * (pageNumber - 1);
-        if (fromIndex >= results.size()) {
+        if (fromIndex >= resultSize) {
             PlayerUtils.sendError(player, pluginName, "Zu hohe Seitenzahl!");
             return;
         }
         int toIndex = fromIndex + pageSize;
-        if (toIndex > results.size())
-            toIndex = results.size();
+        if (toIndex > resultSize)
+            toIndex = resultSize;
 
         // MAXNUMBER IS ALWAYS A FULL NUMBER
-        int maxNumber = (int) Math.ceil((double) results.size() / (double) Settings.getPageSize());
+        int maxNumber = (int) Math.ceil((double) resultSize / (double) Settings.getPageSize());
 
-        results = results.subList(fromIndex, toIndex);
-        displayList(results, player, pageNumber, maxNumber, filterList);
+        result = result.subList(fromIndex, toIndex);
+        displayList(result, player, pageNumber, maxNumber, filterList);
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
     }
 
-    private final static Comparator<Warp> NAME_COMPARATOR = new Comparator<Warp>() {
+    private final static Comparator<Warp> WARP_COMPARATOR = new Comparator<Warp>() {
 
         @Override
         public int compare(Warp o1, Warp o2) {
-            return o1.getName().compareTo(o2.getName());
+            return o1.getName().compareToIgnoreCase(o2.getName());
         }
     };
 
@@ -171,19 +180,16 @@ public class cmdWarpList extends AbstractExtendedCommand {
     // 4. DISPLAY PUBLIC WARPS
     // ALL ARE ALPHABETICALLY SORTED
 
-    private List<Warp> sort(List<Warp> warpList, Player player) {
+    private ResultList split(List<Warp> warpList, Player player) {
 
-        // SORT THEM ALPHABETICALLY
-        Collections.sort(warpList, NAME_COMPARATOR);
-
-        List<Warp> result = new ArrayList<Warp>(warpList.size());
+        ResultList result = new ResultList();
 
         // FIRST THE OWN PRIVATE
         Warp warp = null;
         for (int i = 0; i < warpList.size(); ++i) {
             warp = warpList.get(i);
             if (warp.isPrivate() && warp.isOwner(player)) {
-                result.add(warp);
+                result.addOwnPrivate(warp);
                 warpList.set(i, null);
             }
 
@@ -196,7 +202,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 continue;
 
             if (warp.isPublic() && warp.isOwner(player)) {
-                result.add(warp);
+                result.addOwnPublic(warp);
                 warpList.set(i, null);
             }
         }
@@ -208,7 +214,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 continue;
 
             if (warp.isPrivate() && !warp.isOwner(player)) {
-                result.add(warp);
+                result.addInvitedToPrivate(warp);
                 warpList.set(i, null);
             }
         }
@@ -218,72 +224,228 @@ public class cmdWarpList extends AbstractExtendedCommand {
             warp = warpList.get(i);
             if (warp == null)
                 continue;
-            result.add(warp);
+            result.addPublic(warp);
         }
+
         return result;
     }
 
-    private final static String SEPERATOR = ChatColor.WHITE + "----------------------------------------";
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
     private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-    private void displayList(List<Warp> list, Player player, int pageNumber, int maxNumber, List<WarpFilter> filter) {
+    private void displayList(ResultList list, Player player, int pageNumber, int maxNumber, List<WarpFilter> filter) {
 
-        // HEAD
-        PlayerUtils.sendInfo(player, SEPERATOR);
-        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Seite:", VALUE_COLOR + Integer.toString(pageNumber)) + "/" + Integer.toString(maxNumber));
-        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Filter:", VALUE_COLOR + filter.toString()));
+        ChatMessage separatorMessage = ChatMessage.create().addTextPart(TextPart.create("----------------------------------------").setColor(ChatColor.WHITE).build()).build();
 
-        // INFORMATION OF REMAINING FREE WARPS
+        // Send head
+        separatorMessage.sendTo(player);
+        // send page number, prev and next buttons
+        buildPageMessage(pageNumber, maxNumber, filter).sendTo(player);
+
+//        // send used filters       
+//        ChatMessage.create().addTextPart(TextPart.create("Filter: "+filter.toString()).setColor(VALUE_COLOR).build()).build().sendTo(player);
+
+        // send information about used counts of warps
         WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
-        String temp = String.format("%s %s", NAME_COLOR + "Eigene private Warps:", VALUE_COLOR + Integer.toString(counter.getPrivateWarps()) + "/" + Settings.getMaxPrivateWarps(player.getName()));
-        String temp2 = String.format("%s %s", NAME_COLOR + "Eigene öffentliche Warps:", VALUE_COLOR + Integer.toString(counter.getPublicWarps()) + "/" + Settings.getMaxPublicWarps(player.getName()));
-        PlayerUtils.sendInfo(player, temp + " " + temp2);
-        PlayerUtils.sendInfo(player, SEPERATOR);
+        buildUsedNumberMessage("Private", counter.getPrivateWarps(), Settings.getMaxPrivateWarps(player.getName())).sendTo(player);
+        buildUsedNumberMessage("Public", counter.getPublicWarps(), Settings.getMaxPublicWarps(player.getName())).sendTo(player);
 
-        // GET WARP INDEX TO START WITH
+        // Finish head
+        separatorMessage.sendTo(player);
+
+        // Calculate warp index
         int index = ((pageNumber - 1) * Settings.getPageSize()) + 1;
         if (index < 0)
             index = 1;
 
-        // HEAD FOR PUBLIC WARPS
-        if (!list.get(0).isPublic())
-            PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Private Warps", ""));
+        index = displayWarpGroup(list.ownPrivates, ChatColor.DARK_GREEN, "Eigene Private", index, player);
+        index = displayWarpGroup(list.ownPublics, Settings.getWarpListPublic(), "Eigene Ã–ffentliche", index, player);
+        index = displayWarpGroup(list.invitedToPrivates, Settings.getWarpListPrivate(), "Eingeladene", index, player);
+        index = displayWarpGroup(list.publics, Settings.getWarpListPublic(), "Ã–ffentliche", index, player);
+    }
 
-        boolean ownWarps = false;
-        boolean invitedWarps = false;
-        boolean publicWarps = false;
-
-        ChatColor color = null;
-        // DISPLAY WARPS
-        for (Warp warp : list) {
-
-            if (!ownWarps && warp.isOwner(player)) {
-                ownWarps = true;
-                PlayerUtils.sendInfo(player, NAME_COLOR + "----" + VALUE_COLOR + "Eigene Warps" + NAME_COLOR + "----");
+    private int displayWarpGroup(List<Warp> warpGroup, ChatColor color, String name, int index, Player player) {
+        if (!warpGroup.isEmpty()) {
+            buildSeparatorMessage(name).sendTo(player);
+            for (Warp warp : warpGroup) {
+                buildWarpMessage(warp, index++, color, player).sendTo(player);
             }
-            if (!invitedWarps && warp.isPrivate() && warp.isGuest(player) && !warp.isOwner(player)) {
-                invitedWarps = true;
-                PlayerUtils.sendInfo(player, NAME_COLOR + "----" + VALUE_COLOR + "Eingeladene Warps" + NAME_COLOR + "----");
+        }
+        return index;
+    }
+
+    private ChatMessage buildPageMessage(int pageNumber, int maxNumber, List<WarpFilter> filter) {
+        ChatMessageBuilder messageBuilder = ChatMessage.create();
+
+        // Create Seite: X/Y
+        messageBuilder.addTextPart(TextPart.create("Seite:  ").setColor(NAME_COLOR).build());
+        messageBuilder.addTextPart(TextPart.create(pageNumber + "/" + maxNumber + "     ").setColor(VALUE_COLOR).build());
+
+        // Build [VOR] as a button to previous page
+        TextPartBuilder prevButtonBuilder = TextPart.create("[ZurÃ¼ck]");
+        if (pageNumber <= 1)
+            prevButtonBuilder.setColor(ChatColor.GRAY);
+        else {
+            prevButtonBuilder.setColor(ChatColor.GREEN).setClickEvent(buildPageClickEvent(pageNumber - 1, filter));
+        }
+        messageBuilder.addTextPart(prevButtonBuilder.build());
+
+        TextPartBuilder nextButtonBuilder = TextPart.create("[Weiter]");
+        if (pageNumber == maxNumber)
+            nextButtonBuilder.setColor(ChatColor.GRAY);
+        else {
+            nextButtonBuilder.setColor(ChatColor.GREEN).setClickEvent(buildPageClickEvent(pageNumber + 1, filter));
+        }
+        messageBuilder.addTextPart(nextButtonBuilder.build());
+
+        return messageBuilder.build();
+    }
+
+    private ClickEvent buildPageClickEvent(int pageNumber, List<WarpFilter> filter) {
+
+        StringBuilder command = new StringBuilder("/warp list ");
+        for (WarpFilter warpFilter : filter) {
+            command.append(warpFilter.getOption()).append(' ');
+            command.append(warpFilter.getArgs()).append(' ');
+        }
+
+        command.append("-page ").append(pageNumber);
+
+        return new ClickEvent.RunCommandClickEvent(command.toString());
+    }
+
+    private ChatMessage buildUsedNumberMessage(String fieldName, int current, int max) {
+        ChatMessageBuilder messageBuilder = ChatMessage.create();
+        messageBuilder.addTextPart(TextPart.create(fieldName + ":  ").setColor(NAME_COLOR).build());
+        messageBuilder.addTextPart(TextPart.create(current + "/" + max).setColor(VALUE_COLOR).build());
+        return messageBuilder.build();
+    }
+
+    private ChatMessage buildSeparatorMessage(String content) {
+
+        ChatMessageBuilder messageBuilder = ChatMessage.create();
+        messageBuilder.addTextPart(TextPart.create("---- ").setColor(NAME_COLOR).build());
+        messageBuilder.addTextPart(TextPart.create(content).setColor(VALUE_COLOR).build());
+        messageBuilder.addTextPart(TextPart.create(" ----").setColor(NAME_COLOR).build());
+        return messageBuilder.build();
+    }
+
+    private ChatMessage buildWarpMessage(Warp warp, int index, ChatColor warpColor, Player player) {
+
+        ChatMessageBuilder messageBuilder = ChatMessage.create();
+        // Build index
+        messageBuilder.addTextPart(TextPart.create("#").setColor(NAME_COLOR).build());
+        messageBuilder.addTextPart(TextPart.create(index + " ").setColor(VALUE_COLOR).build());
+        
+        TextPartBuilder warpToPartBuilder = TextPart.create("@ ").setColor(ChatColor.GOLD).setClickEvent(new ClickEvent.RunCommandClickEvent("/warp "+warp.getName()));
+        warpToPartBuilder.setHoverEvent(HoverEvent.create("Warpen").build());
+        
+        messageBuilder.addTextPart(warpToPartBuilder.build());
+
+        HoverEventBuilder hoverEventBuilder = HoverEvent.create(warp.getOwner());
+
+        hoverEventBuilder.addLine("World = " + warp.getLocation().getWorld().getName());
+        hoverEventBuilder.addLine("x = " + warp.getLocation().getBlockX());
+        hoverEventBuilder.addLine("y = " + warp.getLocation().getBlockY());
+        hoverEventBuilder.addLine("z = " + warp.getLocation().getBlockZ());
+
+        if (warp.getLocation().getWorld().equals(player.getWorld())) {
+            int distance = (int) player.getLocation().distance(warp.getLocation());
+            hoverEventBuilder.addLine("Distanz = " + distance);
+        }
+
+        ClickEvent suggestWarp = new ClickEvent.SuggestTextClickEvent("/warp " + warp.getName());
+
+        messageBuilder.addTextPart(TextPart.create(warp.getName()).setColor(warpColor).setClickEvent(suggestWarp).setHoverEvent(hoverEventBuilder.build()).build());
+
+        return messageBuilder.build();
+    }
+
+    private class ResultList {
+
+        private List<Warp> ownPrivates;
+        private List<Warp> ownPublics;
+        private List<Warp> invitedToPrivates;
+        private List<Warp> publics;
+
+        public ResultList() {
+            this.ownPrivates = new SortedList<Warp>(WARP_COMPARATOR);
+            this.ownPublics = new SortedList<Warp>(WARP_COMPARATOR);
+            this.invitedToPrivates = new SortedList<Warp>(WARP_COMPARATOR);
+            this.publics = new SortedList<Warp>(WARP_COMPARATOR);
+        }
+
+        public void addOwnPrivate(Warp warp) {
+            this.ownPrivates.add(warp);
+        }
+
+        public void addOwnPublic(Warp warp) {
+            this.ownPublics.add(warp);
+        }
+
+        public void addInvitedToPrivate(Warp warp) {
+            this.invitedToPrivates.add(warp);
+        }
+
+        public void addPublic(Warp warp) {
+            this.publics.add(warp);
+        }
+
+        public int resultSize() {
+            return ownPrivates.size() + ownPublics.size() + invitedToPrivates.size() + publics.size();
+        }
+
+        public ResultList subList(int fromIndex, int toIndex) {
+            ResultList subList = new ResultList();
+
+            int i = fromIndex;
+            int total = toIndex - fromIndex;
+            int cur = 0;
+
+            if (i < ownPrivates.size()) {
+                for (; i < ownPrivates.size() && cur < total; ++i, ++cur) {
+                    subList.addOwnPrivate(ownPrivates.get(i));
+                }
+                i = 0;
+                if (cur == total)
+                    return subList;
+            } else {
+                i -= ownPrivates.size();
             }
-            if (!publicWarps && warp.isPublic() && !warp.isOwner(player)) {
-                publicWarps = true;
-                PlayerUtils.sendInfo(player, NAME_COLOR + "----" + VALUE_COLOR + "Öffentliche Warps" + NAME_COLOR + "----");
+
+            if (i < ownPublics.size()) {
+                for (; i < ownPublics.size() && cur < total; ++i, ++cur) {
+                    subList.addOwnPublic(ownPublics.get(i));
+                }
+                i = 0;
+                if (cur == total)
+                    return subList;
+            } else {
+                i -= ownPublics.size();
             }
 
-            // COLORS FOR WARPS
+            if (i < invitedToPrivates.size()) {
+                for (; i < invitedToPrivates.size() && cur < total; ++i, ++cur) {
+                    subList.addInvitedToPrivate(invitedToPrivates.get(i));
+                }
+                i = 0;
+                if (cur == total)
+                    return subList;
+            } else {
+                i -= invitedToPrivates.size();
+            }
 
-            // PUBLIC WARPS
-            if (warp.isPublic())
-                color = Settings.getWarpListPublic();
-            // OWNED WARPS
-            else if (warp.isOwner(player))
-                color = Settings.getWarpListOwned();
-            // INVITED TO PRIVATE WARPS
-            else
-                color = Settings.getWarpListPrivate();
+            if (i < publics.size()) {
+                for (; i < publics.size() && cur < total; ++i, ++cur) {
+                    subList.addPublic(publics.get(i));
+                }
+                i = 0;
+                if (cur == total)
+                    return subList;
+            }
 
-            PlayerUtils.sendInfo(player, String.format("%s%s %s%s %s(%s%s)", NAME_COLOR + "#", VALUE_COLOR + Integer.toString(index++), color, warp.getName(), NAME_COLOR, VALUE_COLOR + warp.getOwner(), NAME_COLOR));
+            return subList;
         }
     }
+
 }

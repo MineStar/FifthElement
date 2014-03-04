@@ -23,5 +23,9 @@ import de.minestar.FifthElement.data.Warp;
 public interface WarpFilter {
 
     public boolean accept(Warp warp);
+    
+    public String getOption();
+    
+    public String getArgs();
 
 }

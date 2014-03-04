@@ -37,9 +37,21 @@ public class PublicFilter implements WarpFilter {
         return warp.isPublic();
     }
 
+    public static final String PUBLIC_FILTER_OPTION = "-public";
+    
+    @Override
+    public String getOption() {
+        return PUBLIC_FILTER_OPTION;
+    }
+
+    @Override
+    public String getArgs() {
+        return "";
+    }
+
     @Override
     public String toString() {
-        return "Öffentlich";
+        return "Ã–ffentlich";
     }
 
 }

@@ -32,6 +32,18 @@ public class OwnerFilter implements WarpFilter {
     public boolean accept(Warp warp) {
         return warp.isOwner(playerName);
     }
+    
+    public static final String OWNER_FILTER_OPTION = "-player";
+    
+    @Override
+    public String getOption() {
+        return OWNER_FILTER_OPTION;
+    }
+    
+    @Override
+    public String getArgs() {
+        return playerName;
+    }
 
     @Override
     public String toString() {

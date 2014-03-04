@@ -34,6 +34,18 @@ public class NameFilter implements WarpFilter {
     }
 
     @Override
+    public String getArgs() {
+        return name;
+    }
+    
+    public static final String NAME_FILTER_OPTION = "-name";
+    
+    @Override
+    public String getOption() {
+        return NAME_FILTER_OPTION;
+    }
+
+    @Override
     public String toString() {
         return "Suchwort: " + name;
     }
