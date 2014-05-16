@@ -38,7 +38,7 @@ public class PublicFilter implements WarpFilter {
     }
 
     public static final String PUBLIC_FILTER_OPTION = "-public";
-    
+
     @Override
     public String getOption() {
         return PUBLIC_FILTER_OPTION;

@@ -36,9 +36,9 @@ public class PrivateFilter implements WarpFilter {
     public boolean accept(Warp warp) {
         return warp.isPrivate();
     }
-    
+
     public static final String PRIVATE_FILTER_OPTION = "-private";
-    
+
     @Override
     public String getOption() {
         return PRIVATE_FILTER_OPTION;
@@ -48,7 +48,7 @@ public class PrivateFilter implements WarpFilter {
     public String getArgs() {
         return "";
     }
-    
+
     @Override
     public String toString() {
         return "Privat";

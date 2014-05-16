@@ -16,8 +16,6 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -35,10 +33,9 @@ public class WarpListTest {
 
     @Test
     public void test() {
-        
-        List<String> exlist = Arrays.asList("ownprivate1","ownprivate2","ownprivate3","ownpublic1","ownpublic2","ownpublic3","ownpublic4","ownpublic5","invitedprivate1","public1","public2","public3");
-        
-        
+
+        List<String> exlist = Arrays.asList("ownprivate1", "ownprivate2", "ownprivate3", "ownpublic1", "ownpublic2", "ownpublic3", "ownpublic4", "ownpublic5", "invitedprivate1", "public1", "public2", "public3");
+
         ResultList list = new ResultList();
         list.addOwnPrivate("ownprivate1"); // 0
         list.addOwnPrivate("ownprivate2"); // 1
@@ -64,11 +61,11 @@ public class WarpListTest {
         for (String string : list) {
             controll.add(string);
         }
-        
+
         assertEquals(exlist, controll);
 
         ResultList subList = list.subList(3, 9);
-        exlist = Arrays.asList("ownpublic1","ownpublic2","ownpublic3","ownpublic4","ownpublic5","invitedprivate1");
+        exlist = Arrays.asList("ownpublic1", "ownpublic2", "ownpublic3", "ownpublic4", "ownpublic5", "invitedprivate1");
         assertTrue(subList.ownPrivates.isEmpty());
         assertTrue(subList.publics.isEmpty());
         controll = new ArrayList<String>();

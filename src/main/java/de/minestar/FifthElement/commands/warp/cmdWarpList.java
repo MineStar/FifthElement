@@ -336,10 +336,10 @@ public class cmdWarpList extends AbstractExtendedCommand {
         // Build index
         messageBuilder.addTextPart(TextPart.create("#").setColor(NAME_COLOR).build());
         messageBuilder.addTextPart(TextPart.create(index + " ").setColor(VALUE_COLOR).build());
-        
-        TextPartBuilder warpToPartBuilder = TextPart.create("@ ").setColor(ChatColor.GOLD).setClickEvent(new ClickEvent.RunCommandClickEvent("/warp "+warp.getName()));
+
+        TextPartBuilder warpToPartBuilder = TextPart.create("@ ").setColor(ChatColor.GOLD).setClickEvent(new ClickEvent.RunCommandClickEvent("/warp " + warp.getName()));
         warpToPartBuilder.setHoverEvent(HoverEvent.create("Warpen").build());
-        
+
         messageBuilder.addTextPart(warpToPartBuilder.build());
 
         HoverEventBuilder hoverEventBuilder = HoverEvent.create(warp.getOwner());
