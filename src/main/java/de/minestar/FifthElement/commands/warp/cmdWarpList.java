@@ -138,14 +138,11 @@ public class cmdWarpList extends AbstractExtendedCommand {
             return;
         }
 
+        int resultSize = results.size();
         ResultList result = split(results, player);
-
-        results = null;
-        int resultSize = result.resultSize();
 
         // GET THE SINGLE PAGE
         int pageSize = 10;
-//        int pageSize = Settings.getPageSize();
         int fromIndex = pageSize * (pageNumber - 1);
         if (fromIndex >= resultSize) {
             PlayerUtils.sendError(player, pluginName, "Zu hohe Seitenzahl!");
@@ -156,7 +153,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
             toIndex = resultSize;
 
         // MAXNUMBER IS ALWAYS A FULL NUMBER
-        int maxNumber = (int) Math.ceil((double) resultSize / (double) Settings.getPageSize());
+        int maxNumber = (int) Math.ceil((double) resultSize / 10.0);
 
         result = result.subList(fromIndex, toIndex);
         displayList(result, player, pageNumber, maxNumber, filterList);
@@ -389,10 +386,6 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
         public void addPublic(Warp warp) {
             this.publics.add(warp);
-        }
-
-        public int resultSize() {
-            return ownPrivates.size() + ownPublics.size() + invitedToPrivates.size() + publics.size();
         }
 
         public ResultList subList(int fromIndex, int toIndex) {
