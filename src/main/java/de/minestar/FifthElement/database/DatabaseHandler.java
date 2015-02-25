@@ -74,20 +74,28 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
         updateUseMode = con.prepareStatement("UPDATE warp SET useMode = ? WHERE id = ?");
 
+        updateWarpOwner = con.prepareStatement("UPDATE warp SET owner = ? WHERE owner = ?");
+
         /* HOME */
         addHome = con.prepareStatement("INSERT INTO home (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateHomeLocation = con.prepareStatement("UPDATE home SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+
+        updateHomeOwner = con.prepareStatement("UPDATE home SET player = ? WHERE player = ?");
 
         /* BANK */
         addBank = con.prepareStatement("INSERT INTO bank (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateBankLocation = con.prepareStatement("UPDATE bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
+        updateBankOwner = con.prepareStatement("UPDATE bank SET player = ? WHERE player = ?");
+
         /* MINE */
         addMine = con.prepareStatement("INSERT INTO mine (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateMineLocation = con.prepareStatement("UPDATE mine SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+
+        updateMineOwner = con.prepareStatement("UPDATE mine SET player = ? WHERE player = ?");
     }
 
     // *****************
@@ -102,6 +110,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     private PreparedStatement updateGuestList;
     private PreparedStatement updateAccess;
     private PreparedStatement updateUseMode;
+    private PreparedStatement updateWarpOwner;
 
     public TreeMap<String, Warp> loadWarps() {
         TreeMap<String, Warp> warpMap = new TreeMap<String, Warp>();
@@ -284,6 +293,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     /* STATEMENTS */
     private PreparedStatement addHome;
     private PreparedStatement updateHomeLocation;
+    private PreparedStatement updateHomeOwner;
 
     public Map<String, Home> loadHomes() {
 
@@ -387,6 +397,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     /* STATEMENTS */
     private PreparedStatement addBank;
     private PreparedStatement updateBankLocation;
+    private PreparedStatement updateBankOwner;
 
     public Map<String, Bank> loadBanks() {
 
@@ -490,6 +501,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     /* STATEMENTS */
     private PreparedStatement addMine;
     private PreparedStatement updateMineLocation;
+    private PreparedStatement updateMineOwner;
 
     public Map<String, Mine> loadMines() {
 
@@ -584,5 +596,57 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             return false;
         }
 
+    }
+
+    public boolean transferWarps(String oldPlayer, String newPlayer) {
+        try {
+            // UPDATE THE WARP NAME
+            updateWarpOwner.setString(1, newPlayer);
+            updateWarpOwner.setString(2, oldPlayer);
+            updateWarpOwner.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update warp owner of warps = " + oldPlayer + " to " + newPlayer);
+            return false;
+        }
+    }
+
+    public boolean transferHome(String oldPlayer, String newPlayer) {
+        try {
+            // UPDATE THE WARP NAME
+            updateHomeOwner.setString(1, newPlayer);
+            updateHomeOwner.setString(2, oldPlayer);
+            updateHomeOwner.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update home owner of warps = " + oldPlayer + " to " + newPlayer);
+            return false;
+        }
+    }
+
+    public boolean transferBank(String oldPlayer, String newPlayer) {
+        try {
+            // UPDATE THE WARP NAME
+            updateBankOwner.setString(1, newPlayer);
+            updateBankOwner.setString(2, oldPlayer);
+            updateBankOwner.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update bank owner of warps = " + oldPlayer + " to " + newPlayer);
+            return false;
+        }
+    }
+
+    public boolean transferMine(String oldPlayer, String newPlayer) {
+        try {
+            // UPDATE THE WARP NAME
+            updateMineOwner.setString(1, newPlayer);
+            updateMineOwner.setString(2, oldPlayer);
+            updateMineOwner.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update min owner of warps = " + oldPlayer + " to " + newPlayer);
+            return false;
+        }
     }
 }

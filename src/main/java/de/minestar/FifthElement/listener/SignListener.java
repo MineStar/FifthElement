@@ -39,6 +39,7 @@ import de.minestar.FifthElement.statistics.bank.BankSignStat;
 import de.minestar.FifthElement.statistics.home.HomeSignStat;
 import de.minestar.FifthElement.statistics.mine.MineSignStat;
 import de.minestar.FifthElement.statistics.warp.WarpSignStat;
+import de.minestar.minestarlibrary.events.PlayerChangedNameEvent;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -50,6 +51,14 @@ public class SignListener implements Listener {
     private final static String HOME_SIGN = "[home]";
     private final static String BANK_SIGN = "[bank]";
     private final static String MINE_SIGN = "[mine]";
+
+    @EventHandler
+    public void onPlayerChangeNick(PlayerChangedNameEvent event) {
+        Core.warpManager.transferWarps(event.getOldName(), event.getNewName());
+        Core.homeManager.transferHome(event.getOldName(), event.getNewName());
+        Core.mineManager.transferMine(event.getOldName(), event.getNewName());
+        Core.bankManager.transferBank(event.getOldName(), event.getNewName());
+    }
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {

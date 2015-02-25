@@ -47,6 +47,11 @@ public class BankManager {
         return bankMap.get(playerName.toLowerCase());
     }
 
+    public void transferBank(String oldPlayer, String newPlayer) {
+        Core.dbHandler.transferBank(oldPlayer, newPlayer);
+        loadBanks();
+    }
+
     // **************************
     // MANIPULATE CURRENT BANKS
     // **************************

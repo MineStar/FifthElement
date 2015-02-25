@@ -47,6 +47,11 @@ public class HomeManager {
         return homeMap.get(playerName.toLowerCase());
     }
 
+    public void transferHome(String oldPlayer, String newPlayer) {
+        Core.dbHandler.transferHome(oldPlayer, newPlayer);
+        loadHomes();
+    }
+
     // **************************
     // MANIPULATE CURRENT HOMES
     // **************************

@@ -47,6 +47,11 @@ public class MineManager {
         return mineMap.get(playerName.toLowerCase());
     }
 
+    public void transferMine(String oldPlayer, String newPlayer) {
+        Core.dbHandler.transferMine(oldPlayer, newPlayer);
+        loadMines();
+    }
+
     // **************************
     // MANIPULATE CURRENT MINES
     // **************************

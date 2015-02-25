@@ -95,6 +95,11 @@ public class WarpManager {
         return warpMap.containsKey(warpName.toLowerCase());
     }
 
+    public void transferWarps(String oldPlayer, String newPlayer) {
+        Core.dbHandler.transferWarps(oldPlayer, newPlayer);
+        loadWarps();
+    }
+
     // EXACT NAME NEEDED
     public Warp getWarp(String warpName) {
         return warpMap.get(warpName.toLowerCase());
