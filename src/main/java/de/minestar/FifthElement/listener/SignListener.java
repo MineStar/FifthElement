@@ -58,6 +58,11 @@ public class SignListener implements Listener {
         Core.homeManager.transferHome(event.getOldName(), event.getNewName());
         Core.mineManager.transferMine(event.getOldName(), event.getNewName());
         Core.bankManager.transferBank(event.getOldName(), event.getNewName());
+
+        Player player = PlayerUtils.getOnlinePlayer(event.getCommandSender());
+        if (player != null) {
+            PlayerUtils.sendInfo(player, Core.NAME, "Transfer complete.");
+        }
     }
 
     @EventHandler
