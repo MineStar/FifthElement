@@ -20,6 +20,8 @@ package de.minestar.FifthElement.commands.warp;
 
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.utils.UtilPermissions;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.WarpCounter;
@@ -38,21 +40,21 @@ public class cmdWarpCreate extends AbstractCommand {
     public void execute(String[] args, Player player) {
 
         // CHECK IF WARP CAN PLACED IN THIS WORLD
-        if (!Core.warpManager.isWarpAllowedIn(player.getWorld()) && !player.getName().equalsIgnoreCase("GeMoschen")) {
+        if (!Core.warpManager.isWarpAllowedIn(player.getWorld()) && !UtilPermissions.playerCanUseCommand(player, "fifthelement.create.warps.goldgrube")) {
             PlayerUtils.sendError(player, pluginName, "Du kannst auf dieser Welt keine Warps erstellen!");
             return;
         }
         String warpName = args[0];
 
         if (!Core.warpManager.isValidName(warpName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ungültig!");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ungï¿½ltig!");
             PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");
             return;
         }
 
         // IS KEY WORD ( SUB COMMAND OF WARP)
         if (Core.warpManager.isKeyWord(warpName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ein Schlï¿½sselwort und kann nicht als Warpname benutzt werden.");
             return;
         }
 

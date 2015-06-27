@@ -23,6 +23,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.utils.UtilPermissions;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpMoveStat;
@@ -42,8 +44,8 @@ public class cmdWarpMove extends AbstractCommand {
     public void execute(String[] args, Player player) {
 
         // CHECK IF WARP CAN PLACED IN THIS WORLD
-        if (!Core.warpManager.isWarpAllowedIn(player.getWorld()) && !player.getName().equalsIgnoreCase("GeMoschen")) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst in diese Welt keine Warps verschieben!");
+        if (!Core.warpManager.isWarpAllowedIn(player.getWorld()) && !UtilPermissions.playerCanUseCommand(player, "fifthelement.create.warps.goldgrube")) {
+            PlayerUtils.sendError(player, pluginName, "Du kannst auf dieser Welt keine Warps verschieben!");
             return;
         }
 
@@ -58,7 +60,7 @@ public class cmdWarpMove extends AbstractCommand {
         }
         // ONLY ADMINS CAN MOVE PUBLIC WARPS
         if (warp.isPublic() && !checkSpecialPermission(player, PUBLIC_MOVE_PERMISSION)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps bewegen!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst keine ï¿½ffentlichen Warps bewegen!");
             return;
         }
         Location oldLocation = warp.getLocation();
@@ -67,7 +69,7 @@ public class cmdWarpMove extends AbstractCommand {
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde verschoben.");
 
         if (warp.isPublic())
-            Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der öffentliche Warp '" + warp.getName() + "' wurde verschoben.");
+            Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der ï¿½ffentliche Warp '" + warp.getName() + "' wurde verschoben.");
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new WarpMoveStat(player.getName(), warp.getName(), oldLocation, warp.getLocation()));
