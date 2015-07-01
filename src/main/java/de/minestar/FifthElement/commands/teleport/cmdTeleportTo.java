@@ -30,14 +30,14 @@ import de.minestar.FifthElement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdTeleport extends AbstractExtendedCommand {
+public class cmdTeleportTo extends AbstractExtendedCommand {
 
     // PERMISSIONS
     private final static String PERMISSION_TELEPORT_TO = "fifthelement.command.teleportto";
     private final static String PERMISSION_TELEPORT_PLAYER_TO_PLAYER = "fifthelement.command.teleportplayertoplayer";
     private final static String PERMISSION_TELEPORT_TO_COORDS = "fifthelement.command.teleporttocoords";
 
-    public cmdTeleport(String syntax, String arguments, String node) {
+    public cmdTeleportTo(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
     }
 
@@ -74,7 +74,7 @@ public class cmdTeleport extends AbstractExtendedCommand {
             if (player.getVehicle() instanceof Animals) {
 
                 if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    PlayerUtils.sendError(player, pluginName, "Tiere kÃ¶nnen die Welt nicht wechseln!");
                     return;
                 }
                 // get the animal
@@ -129,7 +129,7 @@ public class cmdTeleport extends AbstractExtendedCommand {
             if (player.getVehicle() instanceof Animals) {
 
                 if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    PlayerUtils.sendError(player, pluginName, "Tiere kï¿½nnen die Welt nicht wechseln!");
                     return;
                 }
                 // get the animal
@@ -202,7 +202,7 @@ public class cmdTeleport extends AbstractExtendedCommand {
         if (player.isInsideVehicle()) {
             if (player.getVehicle() instanceof Animals) {
                 if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    PlayerUtils.sendError(player, pluginName, "Tiere kÃ¶nnen die Welt nicht wechseln!");
                     return;
                 }
                 // get the animal

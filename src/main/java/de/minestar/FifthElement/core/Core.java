@@ -35,7 +35,7 @@ import de.minestar.FifthElement.commands.home.cmdSetHome;
 import de.minestar.FifthElement.commands.mine.cmdMine;
 import de.minestar.FifthElement.commands.mine.cmdMineInfo;
 import de.minestar.FifthElement.commands.mine.cmdSetMine;
-import de.minestar.FifthElement.commands.teleport.cmdTeleport;
+import de.minestar.FifthElement.commands.teleport.cmdTeleportTo;
 import de.minestar.FifthElement.commands.teleport.cmdTeleportHere;
 import de.minestar.FifthElement.commands.warp.cmdWarp;
 import de.minestar.FifthElement.commands.warp.cmdWarpCreate;
@@ -200,7 +200,7 @@ public class Core extends AbstractCore {
                 new cmdBankInfo(    "/bankinfo",    "[BankOwner]",         "fifthelement.command.bankinfo"),
 
                 // TELEPORT COMMANDS
-                new cmdTeleport(    "/tp",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
+                new cmdTeleportTo(    "/tpto",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
                 new cmdTeleportHere("/tphere",      "<Target> ... [Target n]", "fifthelement.command.tphere"),
                 
                 new cmdBack(        "/back",        "",                     "fifthelement.command.back"),    

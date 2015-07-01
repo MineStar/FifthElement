@@ -31,7 +31,7 @@ commands:
   mineinfo:
     description: Gibt Informationen ueber die Mine aus
     usage: /mineInfo
-  tp:
+  tpto:
     description: Teleport den Spieler
     usage: /tp
   tphere:
