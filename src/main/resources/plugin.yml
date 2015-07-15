@@ -2,7 +2,7 @@ name: FifthElement
 main: de.minestar.FifthElement.core.Core
 version: ${pom.version}
 softdepend: [Illuminati, GreenMile]
-depend: [MineStarLibrary, MinestarCore]
+depend: [MineStarLibrary, MinestarCore, MoneyPit]
 commands:
   home:
     description: Teleportiert Spieler zum Zuhause

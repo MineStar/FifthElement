@@ -22,13 +22,13 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
-import de.minestar.FifthElement.data.guests.Group;
-import de.minestar.FifthElement.data.guests.GroupManager;
-import de.minestar.FifthElement.data.guests.GuestHelper;
 import de.minestar.FifthElement.statistics.warp.WarpInviteStat;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
+import de.minestar.moneypit.data.guests.Group;
+import de.minestar.moneypit.data.guests.GroupManager;
+import de.minestar.moneypit.data.guests.GuestHelper;
 
 public class cmdWarpInvite extends AbstractExtendedCommand {
 

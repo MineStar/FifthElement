@@ -35,8 +35,8 @@ import com.bukkit.gemo.patchworking.Guest;
 import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.data.guests.GuestHelper;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
+import de.minestar.moneypit.data.guests.GuestHelper;
 
 public class Warp {
 

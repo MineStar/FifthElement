@@ -40,7 +40,6 @@ import de.minestar.FifthElement.commands.teleport.cmdTeleportTo;
 import de.minestar.FifthElement.commands.warp.cmdWarp;
 import de.minestar.FifthElement.commands.warp.cmdWarpCreate;
 import de.minestar.FifthElement.commands.warp.cmdWarpDelete;
-import de.minestar.FifthElement.commands.warp.cmdWarpGroup;
 import de.minestar.FifthElement.commands.warp.cmdWarpInfo;
 import de.minestar.FifthElement.commands.warp.cmdWarpInvite;
 import de.minestar.FifthElement.commands.warp.cmdWarpList;
@@ -129,9 +128,6 @@ public class Core extends AbstractCore {
         if (!dbHandler.hasConnection())
             return false;
 
-        // load groups
-        dbHandler.loadGroups();
-
         warpManager = new WarpManager();
         homeManager = new HomeManager();
         bankManager = new BankManager();
@@ -209,8 +205,6 @@ public class Core extends AbstractCore {
                 
                 new cmdBack(        "/back",        "",                     "fifthelement.command.back"),    
                 
-                new cmdWarpGroup(   "/wgroup",      "[Name] [+|-|--] [Players ...]","fifthelement.command.wgroup"),
-
                 // WARP COMMANDS AND SUB COMMANDS
                 new cmdWarp(        "/warp",        "<Warp>",               "fifthelement.command.warp", 
                         
