@@ -26,8 +26,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.patchworking.Guest;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.guests.GuestHelper;
 import de.minestar.FifthElement.statistics.warp.WarpInfoStat;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
@@ -61,7 +64,7 @@ public class cmdWarpInfo extends AbstractCommand {
         }
         // PLAYER IS NOT ALLOWED TO VIEW THE WARP
         if ((sender instanceof Player) && !warp.canUse((Player) sender)) {
-            ChatUtils.writeError(sender, pluginName, "Du kannst keine Information über den Warp '" + warp.getName() + "' abrufen!");
+            ChatUtils.writeError(sender, pluginName, "Du kannst keine Information Ã¼ber den Warp '" + warp.getName() + "' abrufen!");
             return;
         }
 
@@ -80,7 +83,7 @@ public class cmdWarpInfo extends AbstractCommand {
     private void displayInformation(Warp warp, CommandSender sender) {
         // HEAD
         ChatUtils.writeMessage(sender, SEPERATOR);
-        ChatUtils.writeColoredMessage(sender, NAME_COLOR, "Informationen über Warp '" + VALUE_COLOR + warp.getName() + NAME_COLOR + "'");
+        ChatUtils.writeColoredMessage(sender, NAME_COLOR, "Informationen Ã¼ber Warp '" + VALUE_COLOR + warp.getName() + NAME_COLOR + "'");
         ChatUtils.writeMessage(sender, SEPERATOR);
 
         // OWNER
@@ -94,12 +97,27 @@ public class cmdWarpInfo extends AbstractCommand {
 
         // PUBLIC OR PRIVATE
         if (warp.isPublic())
-            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Öffentlich"));
+            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Ã–ffentlich"));
         else {
             ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Privat"));
             // HAS GUESTS
-            if (warp.getGuests().size() > 0)
-                ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Gäste:", VALUE_COLOR + warp.getGuestList()));
+            if (warp.getGuests().size() > 0) {
+                StringBuilder sBuilder = new StringBuilder();
+                for (Guest guest : warp.getGuests()) {
+                    if (guest.getName().length() < 1) {
+                        continue;
+                    }
+                    if (guest.getName().startsWith(GuestHelper.GROUP_PREFIX)) {
+                        sBuilder.append(guest.getName().replaceFirst(GuestHelper.GROUP_PREFIX, "group: "));
+                    } else {
+                        sBuilder.append(guest.getName());
+                    }
+                    sBuilder.append(", ");
+                }
+                sBuilder.deleteCharAt(sBuilder.length() - 1);
+
+                ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "GÃ¤ste:", VALUE_COLOR + sBuilder.toString()));
+            }
         }
 
         // POSITION AND DISTANCE

@@ -27,6 +27,14 @@ CREATE  TABLE IF NOT EXISTS `mine` (
   PRIMARY KEY (`id`) );
   
 -- -----------------------------------------------------
+-- Table `groups`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `groups` (
+  `owner` Text NOT NULL ,
+  `name` Text NOT NULL ,
+  `guestList` Text NOT NULL);    
+  
+-- -----------------------------------------------------
 -- Table `bank`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `bank` (

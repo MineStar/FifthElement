@@ -33,10 +33,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.core.ListHelper;
 import de.minestar.FifthElement.data.Bank;
 import de.minestar.FifthElement.data.Home;
 import de.minestar.FifthElement.data.Mine;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.guests.Group;
+import de.minestar.FifthElement.data.guests.GroupManager;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -96,6 +99,18 @@ public class DatabaseHandler extends AbstractMySQLHandler {
         updateMineLocation = con.prepareStatement("UPDATE mine SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
         updateMineOwner = con.prepareStatement("UPDATE mine SET player = ? WHERE player = ?");
+
+        /* GROUPS */
+        loadAllGroups = con.prepareStatement("SELECT * FROM `groups`");
+
+        addGroup = con.prepareStatement("INSERT INTO `groups` (owner, name, guestList) VALUES (?, ?, ?);");
+
+        removeGroup = con.prepareStatement("DELETE FROM `groups` WHERE owner=? AND name=?;");
+
+        updateGroupOwner = con.prepareStatement("UPDATE `groups` SET owner=? WHERE owner=?");
+
+        updateGroupGuests = con.prepareStatement("UPDATE `groups` SET guestList=? WHERE owner=? AND name=?;");
+
     }
 
     // *****************
@@ -111,6 +126,8 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     private PreparedStatement updateAccess;
     private PreparedStatement updateUseMode;
     private PreparedStatement updateWarpOwner;
+    // used for groups
+    private PreparedStatement loadAllGroups, addGroup, removeGroup, updateGroupGuests, updateGroupOwner;
 
     public TreeMap<String, Warp> loadWarps() {
         TreeMap<String, Warp> warpMap = new TreeMap<String, Warp>();
@@ -249,7 +266,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
         try {
             // UPDATE THE GUEST LIST
-            updateGuestList.setString(1, warp.getGuestList());
+            updateGuestList.setString(1, ListHelper.toString(warp.getGuests()));
             updateGuestList.setInt(2, warp.getId());
             return updateGuestList.executeUpdate() == 1;
         } catch (Exception e) {
@@ -604,6 +621,11 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             updateWarpOwner.setString(1, newPlayer);
             updateWarpOwner.setString(2, oldPlayer);
             updateWarpOwner.executeUpdate();
+
+            // UPDATE THE GROUPS
+            updateGroupOwner.setString(1, newPlayer);
+            updateGroupOwner.setString(2, oldPlayer);
+            updateGroupOwner.executeUpdate();
             return true;
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't update warp owner of warps = " + oldPlayer + " to " + newPlayer);
@@ -646,6 +668,81 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             return true;
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't update min owner of warps = " + oldPlayer + " to " + newPlayer);
+            return false;
+        }
+    }
+
+    /**
+     * Load all groups from the Database
+     */
+    public void loadGroups() {
+        try {
+            ResultSet results = this.loadAllGroups.executeQuery();
+            int loaded = 0;
+            while (results.next()) {
+                try {
+                    String owner = results.getString("owner");
+                    String groupName = results.getString("name");
+                    String guestList = results.getString("guestList");
+                    if (!GroupManager.hasGroup(owner, groupName)) {
+                        Group group = GroupManager.createGroup(owner, groupName);
+                        group.addPlayers(ListHelper.toList(guestList));
+                    }
+                    loaded++;
+                } catch (Exception error) {
+                    ConsoleUtils.printWarning(Core.NAME, "Can't load group: Owner=" + results.getInt("owner") + " -> Name=" + results.getString("name"));
+                    continue;
+                }
+            }
+            ConsoleUtils.printInfo(Core.NAME, loaded + " groups loaded!");
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't load groups!");
+        }
+    }
+
+    /**
+     * Add a group
+     */
+    public boolean addGroup(Group group) {
+        try {
+            this.addGroup.setString(1, group.getOwner());
+            this.addGroup.setString(2, group.getName());
+            this.addGroup.setString(3, ListHelper.fromStringsToString(group.getPlayerList()));
+            this.addGroup.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't create group!");
+            return false;
+        }
+    }
+
+    /**
+     * Remove a group
+     */
+    public boolean deleteGroup(Group group) {
+        try {
+            this.removeGroup.setString(1, group.getOwner());
+            this.removeGroup.setString(2, group.getName());
+            this.removeGroup.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't delete group from database!");
+            return false;
+        }
+    }
+
+    /**
+     * Update the guestlist of a group
+     */
+    public boolean updateGroupGuestList(Group group) {
+        try {
+            this.updateGroupGuests.setString(1, ListHelper.fromStringsToString(group.getPlayerList()));
+            this.updateGroupGuests.setString(2, group.getOwner());
+            this.updateGroupGuests.setString(3, group.getName());
+            this.updateGroupGuests.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            ConsoleUtils.printException(e, Core.NAME, "Can't update guestList of group! Owner=" + group.getOwner() + " , Name=" + group.getName());
             return false;
         }
     }

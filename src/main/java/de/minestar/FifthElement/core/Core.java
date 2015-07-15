@@ -35,11 +35,12 @@ import de.minestar.FifthElement.commands.home.cmdSetHome;
 import de.minestar.FifthElement.commands.mine.cmdMine;
 import de.minestar.FifthElement.commands.mine.cmdMineInfo;
 import de.minestar.FifthElement.commands.mine.cmdSetMine;
-import de.minestar.FifthElement.commands.teleport.cmdTeleportTo;
 import de.minestar.FifthElement.commands.teleport.cmdTeleportHere;
+import de.minestar.FifthElement.commands.teleport.cmdTeleportTo;
 import de.minestar.FifthElement.commands.warp.cmdWarp;
 import de.minestar.FifthElement.commands.warp.cmdWarpCreate;
 import de.minestar.FifthElement.commands.warp.cmdWarpDelete;
+import de.minestar.FifthElement.commands.warp.cmdWarpGroup;
 import de.minestar.FifthElement.commands.warp.cmdWarpInfo;
 import de.minestar.FifthElement.commands.warp.cmdWarpInvite;
 import de.minestar.FifthElement.commands.warp.cmdWarpList;
@@ -128,6 +129,9 @@ public class Core extends AbstractCore {
         if (!dbHandler.hasConnection())
             return false;
 
+        // load groups
+        dbHandler.loadGroups();
+
         warpManager = new WarpManager();
         homeManager = new HomeManager();
         bankManager = new BankManager();
@@ -200,10 +204,12 @@ public class Core extends AbstractCore {
                 new cmdBankInfo(    "/bankinfo",    "[BankOwner]",         "fifthelement.command.bankinfo"),
 
                 // TELEPORT COMMANDS
-                new cmdTeleportTo(    "/tpto",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
+                new cmdTeleportTo(  "/tpto",          "<Target> [OtherTarget] | [x] [y] [z] [[world]]", ""),
                 new cmdTeleportHere("/tphere",      "<Target> ... [Target n]", "fifthelement.command.tphere"),
                 
                 new cmdBack(        "/back",        "",                     "fifthelement.command.back"),    
+                
+                new cmdWarpGroup(   "/wgroup",      "[Name] [+|-|--] [Players ...]","fifthelement.command.wgroup"),
 
                 // WARP COMMANDS AND SUB COMMANDS
                 new cmdWarp(        "/warp",        "<Warp>",               "fifthelement.command.warp", 

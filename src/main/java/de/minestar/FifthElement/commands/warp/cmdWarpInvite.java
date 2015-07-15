@@ -22,9 +22,12 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.guests.Group;
+import de.minestar.FifthElement.data.guests.GroupManager;
+import de.minestar.FifthElement.data.guests.GuestHelper;
 import de.minestar.FifthElement.statistics.warp.WarpInviteStat;
-import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpInvite extends AbstractExtendedCommand {
@@ -54,28 +57,62 @@ public class cmdWarpInvite extends AbstractExtendedCommand {
         String targetName = null;
         Player target = null;
         for (int i = 1; i < args.length; ++i) {
-            targetName = PlayerUtils.getCorrectPlayerName(args[i]);
-            // PLAYER NOT FOUND
-            if (targetName == null) {
-                PlayerUtils.sendError(player, "Der Spieler '" + args[i] + "' wurde nicht gefunden!");
-                continue;
-            }
+            if (args[i].startsWith(GuestHelper.GROUP_PREFIX)) {
+                if (args[i].matches("(" + GuestHelper.GROUP_PREFIX + ")([a-zA-Z0-9_])*")) {
+                    Group group = GroupManager.getGroup(player.getName(), args[i]);
+                    if (group == null) {
+                        PlayerUtils.sendError(player, "Die Gruppe '" + args[i] + "' wurde nicht gefunden!");
+                        continue;
+                    }
 
-            // PLAYER IS NEW GUEST
-            if (!warp.isGuest(targetName)) {
-                Core.warpManager.addGuest(warp, targetName);
-                PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
-                // FIRE STATISTIC
-                StatisticHandler.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));
-            }
-            // PLAYER WAS ALREADY INVITED
-            else
-                PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' kann bereits den Warp '" + warp.getName() + "' benutzen.");
+                    // targetName is the groupName
+                    targetName = group.getName();
+                    String canonicalName = targetName.replaceFirst(GuestHelper.GROUP_PREFIX, "");
 
-            // INFORM PLAYER
-            target = PlayerUtils.getOnlinePlayer(targetName);
-            if (target != null)
-                PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' zum Warp '" + warp.getName() + "' eingeladen.");
+                    // GROUP IS NEW GUEST
+                    if (!warp.isGuest(targetName)) {
+                        Core.warpManager.addGuest(warp, targetName);
+                        PlayerUtils.sendSuccess(player, "Gruppe '" + canonicalName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
+                        // FIRE STATISTIC
+                        StatisticHandler.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));
+                    } else {
+                        // GROUP WAS ALREADY INVITED
+                        PlayerUtils.sendError(player, "Die Gruppe '" + canonicalName + "' kann bereits den Warp '" + warp.getName() + "' benutzen.");
+                    }
+
+                    // INFORM PLAYERS
+                    for (String playerName : group.getPlayerList()) {
+                        target = PlayerUtils.getOnlinePlayer(playerName);
+                        if (target != null) {
+                            PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' zum Warp '" + warp.getName() + "' eingeladen.");
+                        }
+                    }
+                }
+            } else {
+                targetName = PlayerUtils.getCorrectPlayerName(args[i]);
+                // PLAYER NOT FOUND
+                if (targetName == null) {
+                    PlayerUtils.sendError(player, "Der Spieler '" + args[i] + "' wurde nicht gefunden!");
+                    continue;
+                }
+
+                // PLAYER IS NEW GUEST
+                if (!warp.isGuest(targetName)) {
+                    Core.warpManager.addGuest(warp, targetName);
+                    PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");
+                    // FIRE STATISTIC
+                    StatisticHandler.handleStatistic(new WarpInviteStat(warp.getName(), player.getName(), targetName));
+                } else {
+                    // PLAYER WAS ALREADY INVITED
+                    PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' kann bereits den Warp '" + warp.getName() + "' benutzen.");
+                }
+
+                // INFORM PLAYER
+                target = PlayerUtils.getOnlinePlayer(targetName);
+                if (target != null) {
+                    PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' zum Warp '" + warp.getName() + "' eingeladen.");
+                }
+            }
         }
     }
 }

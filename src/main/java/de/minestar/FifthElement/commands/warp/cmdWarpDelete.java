@@ -18,16 +18,18 @@
 
 package de.minestar.FifthElement.commands.warp;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.patchworking.Guest;
+
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpDeleteStat;
-import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpDelete extends AbstractCommand {
@@ -48,27 +50,30 @@ public class cmdWarpDelete extends AbstractCommand {
         }
         // PLAYER NOT ALLOWED TO DELETE THE WARP
         if (!warp.canEdit(player)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht löschen!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht lï¿½schen!");
             return;
         }
         // DELET WARP
         Core.warpManager.deleteWarp(warp);
-        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde gelöscht!");
+        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde gelï¿½scht!");
 
         // PUBLIC WARPS - INFORM EVERYONE
         if (warp.isPublic())
-            Bukkit.broadcastMessage("Der öffentliche Warp '" + warp.getName() + "' wurde gelöscht!");
+            Bukkit.broadcastMessage("Der ï¿½ffentliche Warp '" + warp.getName() + "' wurde gelï¿½scht!");
         // PRIVATE WARPS - INFORM GUESTS
         else {
-            Set<String> guests = warp.getGuests();
+            Collection<Guest> guests = warp.getGuests();
             // NO GUESTS TO INFORM
-            if (guests.size() == 0)
+            if (guests.size() == 0) {
                 return;
+            }
+
             Player guest = null;
-            for (String guestName : guests) {
-                guest = Bukkit.getPlayerExact(guestName);
-                if (guest != null)
-                    PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + warp.getName() + "' gelöscht!");
+            for (Guest guestName : guests) {
+                guest = Bukkit.getPlayerExact(guestName.getName());
+                if (guest != null) {
+                    PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + warp.getName() + "' gelÃ¶scht!");
+                }
             }
         }
 

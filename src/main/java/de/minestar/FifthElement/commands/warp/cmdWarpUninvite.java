@@ -22,9 +22,12 @@ import org.bukkit.entity.Player;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.data.Warp;
+import de.minestar.FifthElement.data.guests.Group;
+import de.minestar.FifthElement.data.guests.GroupManager;
+import de.minestar.FifthElement.data.guests.GuestHelper;
 import de.minestar.FifthElement.statistics.warp.WarpUninviteStat;
-import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpUninvite extends AbstractExtendedCommand {
@@ -54,27 +57,61 @@ public class cmdWarpUninvite extends AbstractExtendedCommand {
         String targetName = null;
         Player target = null;
         for (int i = 1; i < args.length; ++i) {
-            targetName = PlayerUtils.getCorrectPlayerName(args[i]);
-            // PLAYER NOT FOUND
-            if (targetName == null) {
-                PlayerUtils.sendError(player, "Der Spieler '" + args[i] + "' wurde nicht gefunden!");
-                continue;
-            }
-            // PLAYER WAS GUEST
-            if (warp.isGuest(targetName)) {
-                Core.warpManager.removeGuest(warp, targetName);
-                PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");
-                // FIRE STATISTIC
-                StatisticHandler.handleStatistic(new WarpUninviteStat(warp.getName(), player.getName(), targetName));
-            }
-            // PLAYER WAS NO GUEST
-            else
-                PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' konnte den Warp '" + warp.getName() + "' nicht benutzen.");
+            if (args[i].startsWith(GuestHelper.GROUP_PREFIX)) {
+                if (args[i].matches("(" + GuestHelper.GROUP_PREFIX + ")([a-zA-Z0-9_])*")) {
+                    Group group = GroupManager.getGroup(player.getName(), args[i]);
+                    if (group == null) {
+                        PlayerUtils.sendError(player, "Die Gruppe '" + args[i] + "' wurde nicht gefunden!");
+                        continue;
+                    }
 
-            // INFORM PLAYER
-            target = PlayerUtils.getOnlinePlayer(targetName);
-            if (target != null)
-                PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' aus dem Warp '" + warp.getName() + "' ausgeladen.");
+                    // targetName is the groupName
+                    targetName = group.getName();
+                    String canonicalName = targetName.replaceFirst(GuestHelper.GROUP_PREFIX, "");
+
+                    // GROUP WAS GUEST
+                    if (warp.isGuest(targetName)) {
+                        Core.warpManager.removeGuest(warp, targetName);
+                        PlayerUtils.sendSuccess(player, "Gruppe '" + canonicalName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");
+                        // FIRE STATISTIC
+                        StatisticHandler.handleStatistic(new WarpUninviteStat(warp.getName(), player.getName(), targetName));
+                    } else {
+                        // GROUP WAS NO GUEST
+                        PlayerUtils.sendError(player, "Die Gruppe '" + canonicalName + "' konnte den Warp '" + warp.getName() + "' nicht benutzen.");
+                    }
+
+                    // INFORM PLAYERS
+                    for (String playerName : group.getPlayerList()) {
+                        target = PlayerUtils.getOnlinePlayer(playerName);
+                        if (target != null) {
+                            PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' aus dem Warp '" + warp.getName() + "' ausgeladen.");
+                        }
+                    }
+                }
+            } else {
+                targetName = PlayerUtils.getCorrectPlayerName(args[i]);
+                // PLAYER NOT FOUND
+                if (targetName == null) {
+                    PlayerUtils.sendError(player, "Der Spieler '" + args[i] + "' wurde nicht gefunden!");
+                    continue;
+                }
+                // PLAYER WAS GUEST
+                if (warp.isGuest(targetName)) {
+                    Core.warpManager.removeGuest(warp, targetName);
+                    PlayerUtils.sendSuccess(player, "Spieler '" + targetName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");
+                    // FIRE STATISTIC
+                    StatisticHandler.handleStatistic(new WarpUninviteStat(warp.getName(), player.getName(), targetName));
+                } else {
+                    // PLAYER WAS NO GUEST
+                    PlayerUtils.sendError(player, "Der Spieler '" + targetName + "' konnte den Warp '" + warp.getName() + "' nicht benutzen.");
+                }
+
+                // INFORM PLAYER
+                target = PlayerUtils.getOnlinePlayer(targetName);
+                if (target != null) {
+                    PlayerUtils.sendInfo(target, pluginName, "Du wurdest von '" + player.getName() + "' aus dem Warp '" + warp.getName() + "' ausgeladen.");
+                }
+            }
         }
     }
 }

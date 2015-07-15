@@ -18,17 +18,19 @@
 
 package de.minestar.FifthElement.commands.warp;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import com.bukkit.gemo.patchworking.Guest;
 
 import de.minestar.FifthElement.core.Core;
 import de.minestar.FifthElement.core.Settings;
 import de.minestar.FifthElement.data.Warp;
 import de.minestar.FifthElement.statistics.warp.WarpRenameStat;
-import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
+import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdWarpRename extends AbstractCommand {
@@ -52,19 +54,19 @@ public class cmdWarpRename extends AbstractCommand {
             return;
         }
         if (warp.isPublic() && !checkSpecialPermission(player, PUBLIC_RENAME_PERMISSION)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps umbenennen!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst keine ï¿½ffentlichen Warps umbenennen!");
             return;
         }
         // NEW NAME IS VALID NAME
         if (!Core.warpManager.isValidName(newName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ungültig!");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ungï¿½ltig!");
             PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");
             return;
         }
 
         // IS KEY WORD ( SUB COMMAND OF WARP)
         if (Core.warpManager.isKeyWord(newName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ein Schlï¿½sselwort und kann nicht als Warpname benutzt werden.");
             return;
         }
 
@@ -83,22 +85,23 @@ public class cmdWarpRename extends AbstractCommand {
         Core.warpManager.renameWarp(warp, newName);
 
         // INFORM PLAYER
-        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + oldName + "' heißt nun '" + warp.getName() + "'!");
+        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + oldName + "' heiï¿½t nun '" + warp.getName() + "'!");
 
         // PUBLIC WARPS - INFORM EVERYONE
         if (warp.isPublic())
-            Bukkit.broadcastMessage("Der Warp '" + oldName + "' heißt nun '" + warp.getName() + "'!");
+            Bukkit.broadcastMessage("Der Warp '" + oldName + "' heiï¿½t nun '" + warp.getName() + "'!");
         // PRIVATE WARPS - INFORM GUESTS
         else {
-            Set<String> guests = warp.getGuests();
+            Collection<Guest> guests = warp.getGuests();
             // NO GUESTS TO INFORM
             if (guests.size() == 0)
                 return;
-            Player guest = null;
-            for (String guestName : guests) {
-                guest = Bukkit.getPlayerExact(guestName);
-                if (guest != null)
-                    PlayerUtils.sendInfo(guest, "Der Spieler '" + player.getName() + "' hat den Warp '" + oldName + "' in '" + warp.getName() + "' umbenannt!");
+            Player guestPlayer = null;
+            for (Guest guest : guests) {
+                guestPlayer = Bukkit.getPlayerExact(guest.getName());
+                if (guestPlayer != null) {
+                    PlayerUtils.sendInfo(guestPlayer, "Der Spieler '" + player.getName() + "' hat den Warp '" + oldName + "' in '" + warp.getName() + "' umbenannt!");
+                }
             }
         }
 

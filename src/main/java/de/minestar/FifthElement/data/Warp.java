@@ -18,9 +18,12 @@
 
 package de.minestar.FifthElement.data;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
@@ -28,9 +31,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.patchworking.Guest;
 import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.FifthElement.core.Core;
+import de.minestar.FifthElement.data.guests.GuestHelper;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class Warp {
@@ -47,7 +52,7 @@ public class Warp {
     // THE CREATORS NAME
     private String owner;
     // USER WHO CAN ALSO USE THE WARP
-    private Set<String> guests;
+    private Map<String, Guest> guests;
 
     // THE LOCATION OF THE WARP
     private Location location;
@@ -71,7 +76,7 @@ public class Warp {
         this.name = warpName;
         this.owner = player.getName();
         this.isPublic = false;
-        this.guests = new HashSet<String>();
+        this.guests = Collections.synchronizedMap(new HashMap<String, Guest>());
         this.location = player.getLocation();
         this.creationDate = new Date();
 
@@ -85,8 +90,9 @@ public class Warp {
         this.name = name;
         this.owner = owner;
         this.isPublic = isPublic;
-        if (!isPublic)
+        if (!isPublic) {
             parseGuestList(guestList);
+        }
 
         createLocation(worldName, x, y, z, yaw, pitch);
 
@@ -132,7 +138,7 @@ public class Warp {
         if (isPublic)
             this.guests = null;
         else
-            this.guests = new HashSet<String>();
+            this.guests = Collections.synchronizedMap(new HashMap<String, Guest>());
 
         this.isPublic = isPublic;
     }
@@ -150,26 +156,36 @@ public class Warp {
     }
 
     public boolean addGuest(String guestName) {
-        guestName = guestName.toLowerCase();
         // RETURN TRUE WHEN GUEST WASN'T INVITED YET
-        if (guests != null)
-            return guests.add(guestName);
+        if (guests != null) {
+            return (this.guests.put(guestName.toLowerCase(), GuestHelper.create(owner, guestName)) == null);
+        }
 
         return false;
     }
 
     public boolean removeGuest(String guestName) {
-        guestName = guestName.toLowerCase();
         // RETURN TRUE WHEN THE PLAYER WAS A GUEST
-        System.out.println(guests);
-        if (guests != null)
-            return guests.remove(guestName);
+        if (guests != null) {
+            return (guests.remove(guestName.toLowerCase()) != null);
+        }
 
         return false;
     }
 
     public boolean isGuest(String playerName) {
-        return guests != null && guests.contains(playerName.toLowerCase());
+        if (guests != null) {
+            for (Guest guest : this.guests.values()) {
+                if (guest.isValid()) {
+                    if (guest.hasAccess(playerName)) {
+                        return true;
+                    }
+                } else {
+                    this.removeGuest(guest.getName());
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isGuest(Player player) {
@@ -246,35 +262,25 @@ public class Warp {
         return creationDate;
     }
 
-    public Set<String> getGuests() {
+    public Collection<Guest> getGuests() {
         if (guests == null)
-            return new HashSet<String>();
+            return new HashSet<Guest>();
         else
-            return new HashSet<String>(guests);
-    }
-
-    public String getGuestList() {
-        StringBuilder sBuilder = new StringBuilder();
-
-        for (String guest : guests) {
-            sBuilder.append(guest);
-            sBuilder.append(";");
-        }
-        sBuilder.deleteCharAt(sBuilder.length() - 1);
-
-        return sBuilder.toString();
+            return new HashSet<Guest>(guests.values());
     }
 
     private final static Pattern P = Pattern.compile(";");
 
     private void parseGuestList(String guestList) {
-        this.guests = new HashSet<String>();
+        this.guests = Collections.synchronizedMap(new HashMap<String, Guest>());
 
-        if (guestList.isEmpty())
+        if (guestList.isEmpty()) {
             return;
+        }
         String[] split = P.split(guestList);
-        for (String string : split)
-            guests.add(string);
+        for (String guest : split) {
+            this.addGuest(guest);
+        }
     }
     // *************
     // ** USEMODE **

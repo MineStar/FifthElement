@@ -7,6 +7,9 @@ commands:
   home:
     description: Teleportiert Spieler zum Zuhause
     usage: /home
+  wgroup:
+    description: Add/edit/delete a group
+    usage: /wgroup <Name> <+|-|--> [Players ...]       
   sethome:
     description: Erstellt oder versetzt das Zuhause
     usage: /setHome
