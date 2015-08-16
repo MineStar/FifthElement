@@ -142,7 +142,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         ResultList result = split(results, player);
 
         // GET THE SINGLE PAGE
-        int pageSize = 10;
+        int pageSize = Settings.getPageSize();
         int fromIndex = pageSize * (pageNumber - 1);
         if (fromIndex >= resultSize) {
             PlayerUtils.sendError(player, pluginName, "Zu hohe Seitenzahl!");
@@ -153,7 +153,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
             toIndex = resultSize;
 
         // MAXNUMBER IS ALWAYS A FULL NUMBER
-        int maxNumber = (int) Math.ceil((double) resultSize / 10.0);
+        int maxNumber = (int) Math.ceil((double) resultSize / (double) Settings.getPageSize());
 
         result = result.subList(fromIndex, toIndex);
         displayList(result, player, pageNumber, maxNumber, filterList);
@@ -327,7 +327,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         return messageBuilder.build();
     }
 
-    private ChatMessage buildWarpMessage(Warp warp, int index, ChatColor warpColor, Player player) {
+    private ChatMessage buildWarpMessage(Warp warp, final int index, ChatColor warpColor, Player player) {
 
         ChatMessageBuilder messageBuilder = ChatMessage.create();
         // Build index
