@@ -54,7 +54,7 @@ public class cmdWarpCreate extends AbstractCommand {
 
         // IS KEY WORD ( SUB COMMAND OF WARP)
         if (Core.warpManager.isKeyWord(warpName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ein Schl�sselwort und kann nicht als Warpname benutzt werden.");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + warpName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
             return;
         }
 

@@ -73,12 +73,12 @@ public class cmdWarpList extends AbstractExtendedCommand {
                             pageNumber = Integer.valueOf(args[++i]);
                             // NEGATIVE PAGE NUMBER
                             if (pageNumber <= 0) {
-                                PlayerUtils.sendError(player, pluginName, "Die Seitenzahl muss gr��er 0 sein!");
+                                PlayerUtils.sendError(player, pluginName, "Die Seitenzahl muss größer 0 sein!");
                                 return;
                             }
                         } catch (Exception e) {
                             // NOT A VALID NUMBER
-                            PlayerUtils.sendError(player, pluginName, args[i] + " ist keine g�ltige Seitenzahl!");
+                            PlayerUtils.sendError(player, pluginName, args[i] + " ist keine gültige Seitenzahl!");
                             return;
                         }
                     } else {

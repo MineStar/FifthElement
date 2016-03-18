@@ -48,7 +48,7 @@ public class cmdWarpRandom extends AbstractCommand {
         // GET PUBLIC WARPS
         List<Warp> publicWarps = Core.warpManager.filterWarps(PublicFilter.getInstance());
         if (publicWarps.isEmpty()) {
-            PlayerUtils.sendSuccess(player, pluginName, "Es gibt keine öffentlichen Warps.");
+            PlayerUtils.sendSuccess(player, pluginName, "Es gibt keine Ã¶ffentlichen Warps.");
             return;
         }
 
@@ -60,7 +60,7 @@ public class cmdWarpRandom extends AbstractCommand {
         if (player.isInsideVehicle()) {
             if (player.getVehicle() instanceof Animals) {
                 if (!warp.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    PlayerUtils.sendError(player, pluginName, "Tiere kÃ¶nnen die Welt nicht wechseln!");
                     return;
                 }
                 // get the animal
@@ -84,7 +84,7 @@ public class cmdWarpRandom extends AbstractCommand {
             }
         }
         player.teleport(warp.getLocation());
-        PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim zufälligen Warp '" + warp.getName() + "'.");
+        PlayerUtils.sendSuccess(player, pluginName, "Willkommen beim zufÃ¤lligen Warp '" + warp.getName() + "'.");
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new WarpRandomStat(player.getName(), warp.getName()));

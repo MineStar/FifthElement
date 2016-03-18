@@ -129,7 +129,7 @@ public class cmdTeleportTo extends AbstractExtendedCommand {
             if (player.getVehicle() instanceof Animals) {
 
                 if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-                    PlayerUtils.sendError(player, pluginName, "Tiere k�nnen die Welt nicht wechseln!");
+                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
                     return;
                 }
                 // get the animal

@@ -50,16 +50,16 @@ public class cmdWarpDelete extends AbstractCommand {
         }
         // PLAYER NOT ALLOWED TO DELETE THE WARP
         if (!warp.canEdit(player)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht l�schen!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht löschen!");
             return;
         }
         // DELET WARP
         Core.warpManager.deleteWarp(warp);
-        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde gel�scht!");
+        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' wurde gelöscht!");
 
         // PUBLIC WARPS - INFORM EVERYONE
         if (warp.isPublic())
-            Bukkit.broadcastMessage("Der �ffentliche Warp '" + warp.getName() + "' wurde gel�scht!");
+            Bukkit.broadcastMessage("Der öffentliche Warp '" + warp.getName() + "' wurde gelöscht!");
         // PRIVATE WARPS - INFORM GUESTS
         else {
             Collection<Guest> guests = warp.getGuests();

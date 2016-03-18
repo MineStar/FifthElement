@@ -47,26 +47,26 @@ public class cmdWarpPublic extends AbstractCommand {
         }
         // WARP IS ALREADY PUBLIC
         if (warp.isPublic()) {
-            PlayerUtils.sendError(player, pluginName, "Der Warp '" + warp.getName() + "' ist bereits öffentlich!");
+            PlayerUtils.sendError(player, pluginName, "Der Warp '" + warp.getName() + "' ist bereits Ã¶ffentlich!");
             return;
         }
         // PLAYER IS NOT ALLOWED TO PUBLIC A WARP
         if (!warp.canEdit(player)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht öffentlich machen!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst den Warp '" + warp.getName() + "' nicht Ã¶ffentlich machen!");
             return;
         }
         if (!Core.warpManager.canCreatePublic(warp.getOwner())) {
             if (!warp.canEdit(player)) {
-                PlayerUtils.sendError(player, pluginName, "Der Warp Besitzer '" + warp.getOwner() + "' kann keine öffentlichen Warps mehr besitzen!");
+                PlayerUtils.sendError(player, pluginName, "Der Warp Besitzer '" + warp.getOwner() + "' kann keine Ã¶ffentlichen Warps mehr besitzen!");
                 return;
             }
         }
 
         // CONVERT TO PUBLIC WARP
         Core.warpManager.changeAccess(warp, true);
-        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' ist nun öffentlich!");
+        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warp.getName() + "' ist nun Ã¶ffentlich!");
 
-        Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der Warp '" + warp.getName() + "' ist nun öffentlich.");
+        Bukkit.broadcastMessage(ChatColor.AQUA + "[" + Core.NAME + "]: " + ChatColor.WHITE + "Der Warp '" + warp.getName() + "' ist nun Ã¶ffentlich.");
 
         // FIRE STATISTIC
         StatisticHandler.handleStatistic(new PublicWarpStat(player.getName(), warp.getName()));

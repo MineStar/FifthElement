@@ -47,7 +47,7 @@ public class cmdWarpMode extends AbstractCommand {
         }
         // CAN'T EDIT USE MODE
         if (!warp.canEdit(player)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst den Benutzungsmodus des Warp '" + warp.getName() + "' nicht ändern!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst den Benutzungsmodus des Warp '" + warp.getName() + "' nicht Ã¤ndern!");
             return;
         }
         // GET USE MODE
