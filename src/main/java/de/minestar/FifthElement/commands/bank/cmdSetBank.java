@@ -48,12 +48,12 @@ public class cmdSetBank extends AbstractCommand {
         if (bank == null) {
             // CREATE BANK
             Core.bankManager.createBank(player, targetName);
-            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank für den Spieler '" + targetName + "' erstellt.");
+            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank fÃ¼r den Spieler '" + targetName + "' erstellt.");
 
             // INFORM THE BANK OWNER IF ONLINE
             Player target = Bukkit.getPlayerExact(targetName);
             if (target != null) {
-                PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat für dich eine Bank erstellt!");
+                PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat fÃ¼r dich eine Bank erstellt!");
                 PlayerUtils.sendInfo(target, "Verwende den Befehl '/bank' um dich dort hin zu teleportieren!");
             }
 
@@ -64,12 +64,12 @@ public class cmdSetBank extends AbstractCommand {
         else {
             // CHANGE BANK POSITION
             Core.bankManager.moveBank(player, bank);
-            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank für den Spieler '" + targetName + "' erstellt.");
+            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank fÃ¼r den Spieler '" + targetName + "' erstellt.");
 
             // INFORM THE BANK OWNER IF ONLINE
             Player target = Bukkit.getPlayerExact(targetName);
             if (target != null)
-                PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat deine Bankposition verändert!");
+                PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat deine Bankposition verÃ¤ndert!");
 
             // FIRE STATISTIC
             StatisticHandler.handleStatistic(new SetBankStat(player.getName(), targetName, true));

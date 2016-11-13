@@ -86,10 +86,12 @@ public class cmdWarp extends AbstractSuperCommand {
         // handle vehicles
         if (player.isInsideVehicle()) {
             if (player.getVehicle() instanceof Animals) {
+                /*
                 if (!bestMatch.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-                    PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
+                    PlayerUtils.sendError(player, pluginName, "Tiere kÃ¶nnen die Welt nicht wechseln!");
                     return;
                 }
+                */
                 // get the animal
                 Entity entity = player.getVehicle();
 

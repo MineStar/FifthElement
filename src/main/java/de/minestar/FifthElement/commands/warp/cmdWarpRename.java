@@ -54,7 +54,7 @@ public class cmdWarpRename extends AbstractCommand {
             return;
         }
         if (warp.isPublic() && !checkSpecialPermission(player, PUBLIC_RENAME_PERMISSION)) {
-            PlayerUtils.sendError(player, pluginName, "Du kannst keine �ffentlichen Warps umbenennen!");
+            PlayerUtils.sendError(player, pluginName, "Du kannst keine öffentlichen Warps umbenennen!");
             return;
         }
         // NEW NAME IS VALID NAME
@@ -66,7 +66,7 @@ public class cmdWarpRename extends AbstractCommand {
 
         // IS KEY WORD ( SUB COMMAND OF WARP)
         if (Core.warpManager.isKeyWord(newName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ein Schl�sselwort und kann nicht als Warpname benutzt werden.");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ein Schlüsselwort und kann nicht als Warpname benutzt werden.");
             return;
         }
 
@@ -85,11 +85,11 @@ public class cmdWarpRename extends AbstractCommand {
         Core.warpManager.renameWarp(warp, newName);
 
         // INFORM PLAYER
-        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + oldName + "' hei�t nun '" + warp.getName() + "'!");
+        PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + oldName + "' heißt nun '" + warp.getName() + "'!");
 
         // PUBLIC WARPS - INFORM EVERYONE
         if (warp.isPublic())
-            Bukkit.broadcastMessage("Der Warp '" + oldName + "' hei�t nun '" + warp.getName() + "'!");
+            Bukkit.broadcastMessage("Der Warp '" + oldName + "' heißt nun '" + warp.getName() + "'!");
         // PRIVATE WARPS - INFORM GUESTS
         else {
             Collection<Guest> guests = warp.getGuests();
