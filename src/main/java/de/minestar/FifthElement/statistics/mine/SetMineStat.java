@@ -16,14 +16,14 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics.mine;
+package de.minestar.fifthelement.statistics.mine;
 
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import de.minestar.FifthElement.core.Core;
+import de.minestar.fifthelement.Core;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
@@ -56,7 +56,7 @@ public class SetMineStat implements Statistic {
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
 
-        LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+        LinkedHashMap<String, StatisticType> head = new LinkedHashMap<>();
 
         head.put("playerName", StatisticType.STRING);
         head.put("updated", StatisticType.INT);
@@ -68,7 +68,7 @@ public class SetMineStat implements Statistic {
     @Override
     public Queue<Object> getData() {
 
-        Queue<Object> data = new LinkedList<Object>();
+        Queue<Object> data = new LinkedList<>();
 
         data.add(playerName);
         // 1 = Home location updated

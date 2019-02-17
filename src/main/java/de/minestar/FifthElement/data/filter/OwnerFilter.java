@@ -16,9 +16,9 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data.filter;
+package de.minestar.fifthelement.data.filter;
 
-import de.minestar.FifthElement.data.Warp;
+import de.minestar.fifthelement.data.Warp;
 
 public class OwnerFilter implements WarpFilter {
 
@@ -33,7 +33,7 @@ public class OwnerFilter implements WarpFilter {
         return warp.isOwner(playerName);
     }
 
-    public static final String OWNER_FILTER_OPTION = "-player";
+    private static final String OWNER_FILTER_OPTION = "-player";
 
     @Override
     public String getOption() {

@@ -1,37 +1,35 @@
 /*
  * Copyright (C) 2012 MineStar.de 
  * 
- * This file is part of FifthElement.
+ * This file is part of fifthelement.
  * 
- * FifthElement is free software: you can redistribute it and/or modify
+ * fifthelement is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
  * 
- * FifthElement is distributed in the hope that it will be useful,
+ * fifthelement is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
+ * along with fifthelement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.commands.warp;
+package de.minestar.fifthelement.commands.warp;
 
-import java.util.Iterator;
 import java.util.List;
 
+import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.bukkit.gemo.utils.UtilPermissions;
-
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.data.Warp;
-import de.minestar.FifthElement.statistics.warp.WarpToStat;
-import de.minestar.FifthElement.threads.EntityTeleportThread;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.data.Warp;
+import de.minestar.fifthelement.statistics.warp.WarpToStat;
+import de.minestar.fifthelement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.commands.AbstractSuperCommand;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
@@ -56,12 +54,7 @@ public class cmdWarp extends AbstractSuperCommand {
         }
 
         // SORT OUT WARPS THE PLAYER CAN'T USE OR THE WARP CAN ONLY USE BY SIGNS
-        Iterator<Warp> iter = matches.iterator();
-        while (iter.hasNext()) {
-            Warp warp = iter.next();
-            if (!canUse(warp, player))
-                iter.remove();
-        }
+        matches.removeIf(warp -> !canUse(warp, player));
 
         // ALL FOUND WARPS ARE FORBIDDEN FOR THE PLAYER
         if (matches.isEmpty()) {
@@ -73,7 +66,7 @@ public class cmdWarp extends AbstractSuperCommand {
         // LOWEST LENGTH DIFFERENCE BETWEEN SEARCH WORD AND WARP NAME
         Warp bestMatch = matches.get(0);
         int delta = Math.abs(bestMatch.getName().length() - args[0].length());
-        int curDelta = 0;
+        int curDelta;
         for (Warp warp : matches) {
             curDelta = Math.abs(warp.getName().length() - args[0].length());
             if (curDelta < delta) {
@@ -125,7 +118,7 @@ public class cmdWarp extends AbstractSuperCommand {
 
     private boolean canUse(Warp warp, Player player) {
         // OWNER AND GUYS WITH SPECIAL PERMISSION CAN ACCESS ALL WARPS
-        if (warp.isOwner(player) || UtilPermissions.playerCanUseCommand(player, IGNORE_USE_MODE))
+        if (warp.isOwner(player) || PermissionUtils.playerCanUseCommand(player, IGNORE_USE_MODE))
             return true;
 
         // WARP CAN ACCESSED BY COMMAND AND PLAYER CAN USE THE WARP

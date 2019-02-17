@@ -1,30 +1,30 @@
 /*
  * Copyright (C) 2012 MineStar.de 
  * 
- * This file is part of FifthElement.
+ * This file is part of fifthelement.
  * 
- * FifthElement is free software: you can redistribute it and/or modify
+ * fifthelement is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
  * 
- * FifthElement is distributed in the hope that it will be useful,
+ * fifthelement is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
+ * along with fifthelement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.commands.mine;
+package de.minestar.fifthelement.commands.mine;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.data.Mine;
-import de.minestar.FifthElement.statistics.mine.MineInfoStat;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.data.Mine;
+import de.minestar.fifthelement.statistics.mine.MineInfoStat;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -39,7 +39,7 @@ public class cmdMineInfo extends AbstractExtendedCommand {
 
     @Override
     public void execute(String[] args, Player player) {
-        Mine mine = null;
+        Mine mine;
         // INFORMATION ABOUT OWN MINE
         if (args.length == 0) {
             mine = Core.mineManager.getMine(player.getName());

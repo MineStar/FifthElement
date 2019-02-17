@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data;
+package de.minestar.fifthelement.data;
 
 public class WarpCounter {
 
@@ -30,11 +30,10 @@ public class WarpCounter {
     }
 
     // CONSTRUCTOR WHEN WARPS ARE LOADED FROM DATABASE
-    public WarpCounter(String playerName, int privateWarps, int publicWarps) {
+    public  WarpCounter(String playerName, int privateWarps, int publicWarps) {
         this.playerName = playerName;
         this.privateWarps = privateWarps;
         this.publicWarps = publicWarps;
-
     }
 
     public void incrementPrivateWarps() {

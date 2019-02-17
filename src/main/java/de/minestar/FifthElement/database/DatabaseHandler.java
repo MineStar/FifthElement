@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.database;
+package de.minestar.fifthelement.database;
 
 import java.io.File;
 import java.sql.Connection;
@@ -25,19 +25,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import de.minestar.minestarlibrary.protection.Guest;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.core.ListHelper;
-import de.minestar.FifthElement.data.Bank;
-import de.minestar.FifthElement.data.Home;
-import de.minestar.FifthElement.data.Mine;
-import de.minestar.FifthElement.data.Warp;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.data.Bank;
+import de.minestar.fifthelement.data.Home;
+import de.minestar.fifthelement.data.Mine;
+import de.minestar.fifthelement.data.Warp;
 import de.minestar.minestarlibrary.database.AbstractMySQLHandler;
 import de.minestar.minestarlibrary.database.DatabaseUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -61,42 +62,42 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     protected void createStatements(String pluginName, Connection con) throws Exception {
 
         /* WARPS */
-        addWarp = con.prepareStatement("INSERT INTO warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        addWarp = con.prepareStatement("INSERT INTO fifthelement_warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
-        deleteWarp = con.prepareStatement("DELETE FROM warp WHERE id = ?");
+        deleteWarp = con.prepareStatement("DELETE FROM fifthelement_warp WHERE id = ?");
 
-        updateWarpLocation = con.prepareStatement("UPDATE warp SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+        updateWarpLocation = con.prepareStatement("UPDATE fifthelement_warp SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
-        updateWarpName = con.prepareStatement("UPDATE warp SET name = ? WHERE id = ?");
+        updateWarpName = con.prepareStatement("UPDATE fifthelement_warp SET name = ? WHERE id = ?");
 
-        updateGuestList = con.prepareStatement("UPDATE warp SET guests = ? WHERE id = ?");
+        updateGuestList = con.prepareStatement("UPDATE fifthelement_warp SET guests = ? WHERE id = ?");
 
-        updateAccess = con.prepareStatement("UPDATE warp SET isPublic = ? WHERE id = ?");
+        updateAccess = con.prepareStatement("UPDATE fifthelement_warp SET isPublic = ? WHERE id = ?");
 
-        updateUseMode = con.prepareStatement("UPDATE warp SET useMode = ? WHERE id = ?");
+        updateUseMode = con.prepareStatement("UPDATE fifthelement_warp SET useMode = ? WHERE id = ?");
 
-        updateWarpOwner = con.prepareStatement("UPDATE warp SET owner = ? WHERE owner = ?");
+        updateWarpOwner = con.prepareStatement("UPDATE fifthelement_warp SET owner = ? WHERE owner = ?");
 
         /* HOME */
-        addHome = con.prepareStatement("INSERT INTO home (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        addHome = con.prepareStatement("INSERT INTO fifthelement_home (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
-        updateHomeLocation = con.prepareStatement("UPDATE home SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+        updateHomeLocation = con.prepareStatement("UPDATE fifthelement_home SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
-        updateHomeOwner = con.prepareStatement("UPDATE home SET player = ? WHERE player = ?");
+        updateHomeOwner = con.prepareStatement("UPDATE fifthelement_home SET player = ? WHERE player = ?");
 
         /* BANK */
-        addBank = con.prepareStatement("INSERT INTO bank (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        addBank = con.prepareStatement("INSERT INTO fifthelement_bank (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
-        updateBankLocation = con.prepareStatement("UPDATE bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+        updateBankLocation = con.prepareStatement("UPDATE fifthelement_bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
-        updateBankOwner = con.prepareStatement("UPDATE bank SET player = ? WHERE player = ?");
+        updateBankOwner = con.prepareStatement("UPDATE fifthelement_bank SET player = ? WHERE player = ?");
 
         /* MINE */
-        addMine = con.prepareStatement("INSERT INTO mine (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        addMine = con.prepareStatement("INSERT INTO fifthelement_mine (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
-        updateMineLocation = con.prepareStatement("UPDATE mine SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
+        updateMineLocation = con.prepareStatement("UPDATE fifthelement_mine SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
-        updateMineOwner = con.prepareStatement("UPDATE mine SET player = ? WHERE player = ?");
+        updateMineOwner = con.prepareStatement("UPDATE fifthelement_mine SET player = ? WHERE player = ?");
 
     }
 
@@ -115,10 +116,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     private PreparedStatement updateWarpOwner;
 
     public TreeMap<String, Warp> loadWarps() {
-        TreeMap<String, Warp> warpMap = new TreeMap<String, Warp>();
+        TreeMap<String, Warp> warpMap = new TreeMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate FROM warp");
+            ResultSet rs = stat.executeQuery("SELECT id,name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate FROM fifthelement_warp");
             // TEMP VARIABLEN
             int id;
             String name;
@@ -187,7 +188,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
             // GET THE GENERATED ID
             ResultSet rs = addWarp.getGeneratedKeys();
-            int id = 0;
+            int id;
             if (rs.next()) {
                 id = rs.getInt(1);
                 warp.setId(id);
@@ -251,7 +252,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
         try {
             // UPDATE THE GUEST LIST
-            updateGuestList.setString(1, ListHelper.toString(warp.getGuests()));
+            updateGuestList.setString(1, toString(warp.getGuests()));
             updateGuestList.setInt(2, warp.getId());
             return updateGuestList.executeUpdate() == 1;
         } catch (Exception e) {
@@ -299,10 +300,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     public Map<String, Home> loadHomes() {
 
-        Map<String, Home> homeMap = new HashMap<String, Home>();
+        Map<String, Home> homeMap = new HashMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM home");
+            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM fifthelement_home");
             // TEMP VARIABLEN
             int id;
             String player;
@@ -355,7 +356,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
             // GET THE GENERATED ID
             ResultSet rs = addHome.getGeneratedKeys();
-            int id = 0;
+            int id;
             if (rs.next()) {
                 id = rs.getInt(1);
                 home.setId(id);
@@ -403,10 +404,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     public Map<String, Bank> loadBanks() {
 
-        Map<String, Bank> bankMap = new HashMap<String, Bank>();
+        Map<String, Bank> bankMap = new HashMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM bank");
+            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM fifthelement_bank");
             // TEMP VARIABLEN
             int id;
             String player;
@@ -459,7 +460,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
             // GET THE GENERATED ID
             ResultSet rs = addBank.getGeneratedKeys();
-            int id = 0;
+            int id;
             if (rs.next()) {
                 id = rs.getInt(1);
                 bank.setId(id);
@@ -507,10 +508,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     public Map<String, Mine> loadMines() {
 
-        Map<String, Mine> mineMap = new HashMap<String, Mine>();
+        Map<String, Mine> mineMap = new HashMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
-            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM mine");
+            ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM fifthelement_mine");
             // TEMP VARIABLEN
             int id;
             String player;
@@ -563,7 +564,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
             // GET THE GENERATED ID
             ResultSet rs = addMine.getGeneratedKeys();
-            int id = 0;
+            int id;
             if (rs.next()) {
                 id = rs.getInt(1);
                 mine.setId(id);
@@ -651,4 +652,22 @@ public class DatabaseHandler extends AbstractMySQLHandler {
             return false;
         }
     }
+
+    private static String toString(Collection<Guest> list) {
+        StringBuilder result = new StringBuilder();
+        if (list == null || list.size() < 1) {
+            return result.toString();
+        }
+
+        int i = 0;
+        for (Guest guest : list) {
+            result.append(guest.getName());
+            ++i;
+            if (i < list.size()) {
+                result.append(";");
+            }
+        }
+        return result.toString();
+    }
+
 }

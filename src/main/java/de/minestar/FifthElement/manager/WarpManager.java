@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.manager;
+package de.minestar.fifthelement.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,16 +28,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.core.Settings;
-import de.minestar.FifthElement.data.Warp;
-import de.minestar.FifthElement.data.WarpCounter;
-import de.minestar.FifthElement.data.filter.WarpFilter;
-import de.minestar.core.MinestarCore;
-import de.minestar.core.units.MinestarGroup;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.Settings;
+import de.minestar.fifthelement.data.Warp;
+import de.minestar.fifthelement.data.WarpCounter;
+import de.minestar.fifthelement.data.filter.WarpFilter;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class WarpManager {
@@ -63,7 +62,7 @@ public class WarpManager {
         // FIRST ELEMENT = GOBAL COUNTER FOR PUBLIC
         // SECOND ELEMENT = GOBAL COUNTER FOR PRIVATE
         int[] counter = new int[2];
-        warpCounterMap = new HashMap<String, WarpCounter>();
+        warpCounterMap = new HashMap<>();
 
         String owner;
         WarpCounter warpCounter;
@@ -107,7 +106,7 @@ public class WarpManager {
 
     public List<Warp> findWarp(String searchWord) {
 
-        List<Warp> results = new ArrayList<Warp>();
+        List<Warp> results = new ArrayList<>();
         // HAVE FOUND EXACT NAME
         Warp warp = getWarp(searchWord);
         if (warp != null)
@@ -127,7 +126,7 @@ public class WarpManager {
 
     // SEARCH FOR WARP USING CONTAINS
     public List<Warp> searchWarp(String searchWord) {
-        List<Warp> results = new LinkedList<Warp>();
+        List<Warp> results = new LinkedList<>();
 
         searchWord = searchWord.toLowerCase();
 
@@ -141,7 +140,7 @@ public class WarpManager {
 
     public List<Warp> filterWarps(WarpFilter... warpFilter) {
 
-        List<Warp> results = new ArrayList<Warp>();
+        List<Warp> results = new ArrayList<>();
 
         out : for (Warp warp : warpMap.values()) {
             for (WarpFilter filter : warpFilter) {
@@ -154,7 +153,7 @@ public class WarpManager {
     }
 
     public List<Warp> filterWarps(List<WarpFilter> warpFilter) {
-        List<Warp> results = new ArrayList<Warp>();
+        List<Warp> results = new ArrayList<>();
 
         out : for (Warp warp : warpMap.values()) {
             for (WarpFilter filter : warpFilter) {
@@ -239,18 +238,18 @@ public class WarpManager {
         // GET THE CURRENT COUNT
         WarpCounter counter = getWarpCounter(playerName);
         // GET THE GROUP OF THE PLAYER
-        MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
+        //MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
         // CURRENT COUNTER IS LOWER THAN ALLOWED
-        return counter.getPublicWarps() < Settings.getMaxPublicWarps(group);
+        return counter.getPublicWarps() < Integer.parseInt(PermissionUtils.getOption(playerName,"maxpublicwarps"));
     }
 
     public boolean canCreatePrivate(String playerName) {
         // GET THE CURRENT COUNT
         WarpCounter counter = getWarpCounter(playerName);
         // GET THE GROUP OF THE PLAYER
-        MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
+        //MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
         // CURRENT COUNTER IS LOWER THAN ALLOWED
-        return counter.getPrivateWarps() < Settings.getMaxPrivateWarps(group);
+        return counter.getPrivateWarps() < Integer.parseInt(PermissionUtils.getOption(playerName,"maxprivatewarps"));
     }
 
     public void moveWarp(Warp warp, Player player) {
@@ -288,7 +287,7 @@ public class WarpManager {
     private static Set<String> keyWords;
 
     static {
-        keyWords = new HashSet<String>();
+        keyWords = new HashSet<>();
         keyWords.add("create");
         keyWords.add("delete");
         keyWords.add("help");

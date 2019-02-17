@@ -16,13 +16,13 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data;
+package de.minestar.fifthelement.data;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import de.minestar.FifthElement.core.Core;
+import de.minestar.fifthelement.Core;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class Bank {
@@ -77,16 +77,7 @@ public class Bank {
 
     @Override
     public String toString() {
-
-        StringBuilder sBuilder = new StringBuilder("Bank: ");
-
-        sBuilder.append("owner= ");
-        sBuilder.append(owner);
-        sBuilder.append(", location=");
-        sBuilder.append(location);
-        sBuilder.append(", id=");
-        sBuilder.append(id);
-        return sBuilder.toString();
+        return String.format("Bank: owner= %s, location=%s, id=%d", owner, location, id);
     }
 
     @Override

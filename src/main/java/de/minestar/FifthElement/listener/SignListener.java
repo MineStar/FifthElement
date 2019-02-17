@@ -16,8 +16,10 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.listener;
+package de.minestar.fifthelement.listener;
 
+import de.minestar.fifthelement.Core;
+import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -28,17 +30,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.bukkit.gemo.utils.UtilPermissions;
-
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.data.Bank;
-import de.minestar.FifthElement.data.Home;
-import de.minestar.FifthElement.data.Mine;
-import de.minestar.FifthElement.data.Warp;
-import de.minestar.FifthElement.statistics.bank.BankSignStat;
-import de.minestar.FifthElement.statistics.home.HomeSignStat;
-import de.minestar.FifthElement.statistics.mine.MineSignStat;
-import de.minestar.FifthElement.statistics.warp.WarpSignStat;
+import de.minestar.fifthelement.data.Bank;
+import de.minestar.fifthelement.data.Home;
+import de.minestar.fifthelement.data.Mine;
+import de.minestar.fifthelement.data.Warp;
+import de.minestar.fifthelement.statistics.bank.BankSignStat;
+import de.minestar.fifthelement.statistics.home.HomeSignStat;
+import de.minestar.fifthelement.statistics.mine.MineSignStat;
+import de.minestar.fifthelement.statistics.warp.WarpSignStat;
 import de.minestar.minestarlibrary.events.PlayerChangedNameEvent;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -67,7 +66,7 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
-        if (event.isCancelled() || !(event.getBlock().getType().equals(Material.SIGN_POST) || event.getBlock().getType().equals(Material.WALL_SIGN)))
+        if (event.isCancelled() || !(event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN)))
             return;
 
         String[] lines = event.getLines();
@@ -129,7 +128,7 @@ public class SignListener implements Listener {
             return;
 
         Block block = event.getClickedBlock();
-        if (block.getType().equals(Material.SIGN_POST) || block.getType().equals(Material.WALL_SIGN)) {
+        if (block.getType().equals(Material.SIGN) || block.getType().equals(Material.WALL_SIGN)) {
             Sign sign = (Sign) block.getState();
             String[] lines = sign.getLines();
             if (lines[1] == null)
@@ -232,7 +231,7 @@ public class SignListener implements Listener {
     }
 
     private boolean canUse(Warp warp, Player player) {
-        if (warp.isOwner(player) || UtilPermissions.playerCanUseCommand(player, IGNORE_USE_MODE))
+        if (warp.isOwner(player) || PermissionUtils.playerCanUseCommand(player, IGNORE_USE_MODE))
             return true;
         return warp.canUse(player) && warp.canUsedBy(Warp.SIGN_USEMODE);
     }

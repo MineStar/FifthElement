@@ -1,22 +1,22 @@
 /*
  * Copyright (C) 2012 MineStar.de 
  * 
- * This file is part of FifthElement.
+ * This file is part of fifthelement.
  * 
- * FifthElement is free software: you can redistribute it and/or modify
+ * fifthelement is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
  * 
- * FifthElement is distributed in the hope that it will be useful,
+ * fifthelement is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
+ * along with fifthelement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.commands.teleport;
+package de.minestar.fifthelement.commands.teleport;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,8 +25,8 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.threads.EntityTeleportThread;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -173,9 +173,9 @@ public class cmdTeleportTo extends AbstractExtendedCommand {
             return;
 
         // GET THE COORDINATES
-        double x = 0.0;
-        double y = 0.0;
-        double z = 0.0;
+        double x;
+        double y;
+        double z;
         try {
             x = Double.parseDouble(args[0]);
             y = Double.parseDouble(args[1]);
@@ -186,7 +186,7 @@ public class cmdTeleportTo extends AbstractExtendedCommand {
         }
 
         // GET THE WORLD
-        World targetWorld = null;
+        World targetWorld;
         if (args.length == 4) {
             targetWorld = player.getServer().getWorld(args[4]);
             if (targetWorld == null) {

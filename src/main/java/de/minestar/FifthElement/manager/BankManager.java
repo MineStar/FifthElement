@@ -16,14 +16,14 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.manager;
+package de.minestar.fifthelement.manager;
 
 import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.data.Bank;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.data.Bank;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class BankManager {

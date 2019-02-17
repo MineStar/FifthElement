@@ -16,16 +16,16 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data.filter;
+package de.minestar.fifthelement.data.filter;
 
-import de.minestar.FifthElement.data.Warp;
+import de.minestar.fifthelement.data.Warp;
 
 public interface WarpFilter {
 
-    public boolean accept(Warp warp);
+    boolean accept(Warp warp);
 
-    public String getOption();
+    String getOption();
 
-    public String getArgs();
+    String getArgs();
 
 }

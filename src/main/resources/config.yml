@@ -27,23 +27,6 @@ back:
 # e = Yellow
 # f = White
 warpList:
-    ownedWarp: 6
+    ownedWarp: '6'
     publicWarp: 'b'
     privateWarp: 'c'
-warpCounter:
-    private:
-        x: 0
-        default: 0
-        probe: 3
-        vip: 5
-        pay: 9
-        mods: 2147483647
-        admins: 2147483647
-    public:
-        x: 0
-        default: 0
-        probe: 0
-        vip: 1
-        pay: 3
-        mods: 2147483647
-        admins: 2147483647

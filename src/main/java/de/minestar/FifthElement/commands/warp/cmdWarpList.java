@@ -1,41 +1,43 @@
 /*
  * Copyright (C) 2012 MineStar.de 
  * 
- * This file is part of FifthElement.
+ * This file is part of fifthelement.
  * 
- * FifthElement is free software: you can redistribute it and/or modify
+ * fifthelement is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
  * 
- * FifthElement is distributed in the hope that it will be useful,
+ * fifthelement is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
+ * along with fifthelement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.commands.warp;
+package de.minestar.fifthelement.commands.warp;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
+import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.core.Settings;
-import de.minestar.FifthElement.data.Warp;
-import de.minestar.FifthElement.data.WarpCounter;
-import de.minestar.FifthElement.data.filter.NameFilter;
-import de.minestar.FifthElement.data.filter.OwnerFilter;
-import de.minestar.FifthElement.data.filter.PrivateFilter;
-import de.minestar.FifthElement.data.filter.PublicFilter;
-import de.minestar.FifthElement.data.filter.UseFilter;
-import de.minestar.FifthElement.data.filter.WarpFilter;
-import de.minestar.FifthElement.statistics.warp.WarpListStat;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.Settings;
+import de.minestar.fifthelement.data.Warp;
+import de.minestar.fifthelement.data.WarpCounter;
+import de.minestar.fifthelement.data.filter.NameFilter;
+import de.minestar.fifthelement.data.filter.OwnerFilter;
+import de.minestar.fifthelement.data.filter.PrivateFilter;
+import de.minestar.fifthelement.data.filter.PublicFilter;
+import de.minestar.fifthelement.data.filter.UseFilter;
+import de.minestar.fifthelement.data.filter.WarpFilter;
+import de.minestar.fifthelement.statistics.warp.WarpListStat;
 import de.minestar.minestarlibrary.chat.ChatMessage;
 import de.minestar.minestarlibrary.chat.ChatMessage.ChatMessageBuilder;
 import de.minestar.minestarlibrary.chat.ClickEvent;
@@ -56,7 +58,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
     @Override
     public void execute(String[] args, Player player) {
-        List<WarpFilter> filterList = new ArrayList<WarpFilter>();
+        List<WarpFilter> filterList = new ArrayList<>();
 
         int pageNumber = 1;
         filterList.add(new UseFilter(player));
@@ -101,7 +103,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 // DISPLAY WARPS FROM A SPECIFIC PLAYER WHICH THE COMMAND CALLER
                 // CAN USE
                 else if (arg.equalsIgnoreCase("-player")) {
-                    String targetName = null;
+                    String targetName;
                     // AFTER -player THERE MUST BE A PLAYER NAME
                     if (i < args.length - 1) {
                         targetName = PlayerUtils.getCorrectPlayerName(args[++i]);
@@ -162,13 +164,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         StatisticHandler.handleStatistic(new WarpListStat(player.getName(), resultSize, filterList));
     }
 
-    private final static Comparator<Warp> WARP_COMPARATOR = new Comparator<Warp>() {
-
-        @Override
-        public int compare(Warp o1, Warp o2) {
-            return o1.getName().compareToIgnoreCase(o2.getName());
-        }
-    };
+    private final static Comparator<Warp> WARP_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
     // SORT THE WARP LIST THE FOLLOWNING:
     // 1. DISPLAY OWN PRIVATE WARPS
@@ -182,7 +178,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         ResultList result = new ResultList();
 
         // FIRST THE OWN PRIVATE
-        Warp warp = null;
+        Warp warp;
         for (int i = 0; i < warpList.size(); ++i) {
             warp = warpList.get(i);
             if (warp.isPrivate() && warp.isOwner(player)) {
@@ -217,8 +213,8 @@ public class cmdWarpList extends AbstractExtendedCommand {
         }
 
         // THEN THE OTHER(REMAINING PUBLICS)
-        for (int i = 0; i < warpList.size(); ++i) {
-            warp = warpList.get(i);
+        for (Warp warp1 : warpList) {
+            warp = warp1;
             if (warp == null)
                 continue;
             result.addPublic(warp);
@@ -239,13 +235,10 @@ public class cmdWarpList extends AbstractExtendedCommand {
         // send page number, prev and next buttons
         buildPageMessage(pageNumber, maxNumber, filter).sendTo(player);
 
-//        // send used filters       
-//        ChatMessage.create().addTextPart(TextPart.create("Filter: "+filter.toString()).setColor(VALUE_COLOR).build()).build().sendTo(player);
-
         // send information about used counts of warps
         WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
-        buildUsedNumberMessage("Private", counter.getPrivateWarps(), Settings.getMaxPrivateWarps(player.getName())).sendTo(player);
-        buildUsedNumberMessage("Public", counter.getPublicWarps(), Settings.getMaxPublicWarps(player.getName())).sendTo(player);
+        buildUsedNumberMessage("Private", counter.getPrivateWarps(), Integer.parseInt(PermissionUtils.getOption(player,"maxprivatewarps"))).sendTo(player);
+        buildUsedNumberMessage("Public", counter.getPublicWarps(), Integer.parseInt(PermissionUtils.getOption(player,"maxpublicwarps"))).sendTo(player);
 
         // Finish head
         separatorMessage.sendTo(player);
@@ -255,10 +248,10 @@ public class cmdWarpList extends AbstractExtendedCommand {
         if (index < 0)
             index = 1;
 
-        index = displayWarpGroup(list.ownPrivates, ChatColor.DARK_GREEN, "Eigene Private", index, player);
+        index = displayWarpGroup(list.ownPrivates, Settings.getWarpListOwned(), "Eigene Private", index, player);
         index = displayWarpGroup(list.ownPublics, Settings.getWarpListPublic(), "Eigene Öffentliche", index, player);
         index = displayWarpGroup(list.invitedToPrivates, Settings.getWarpListPrivate(), "Eingeladene", index, player);
-        index = displayWarpGroup(list.publics, Settings.getWarpListPublic(), "Öffentliche", index, player);
+        displayWarpGroup(list.publics, Settings.getWarpListPublic(), "Öffentliche", index, player);
     }
 
     private int displayWarpGroup(List<Warp> warpGroup, ChatColor color, String name, int index, Player player) {
@@ -365,30 +358,30 @@ public class cmdWarpList extends AbstractExtendedCommand {
         private List<Warp> invitedToPrivates;
         private List<Warp> publics;
 
-        public ResultList() {
-            this.ownPrivates = new SortedList<Warp>(WARP_COMPARATOR);
-            this.ownPublics = new SortedList<Warp>(WARP_COMPARATOR);
-            this.invitedToPrivates = new SortedList<Warp>(WARP_COMPARATOR);
-            this.publics = new SortedList<Warp>(WARP_COMPARATOR);
+        ResultList() {
+            this.ownPrivates = new SortedList<>(WARP_COMPARATOR);
+            this.ownPublics = new SortedList<>(WARP_COMPARATOR);
+            this.invitedToPrivates = new SortedList<>(WARP_COMPARATOR);
+            this.publics = new SortedList<>(WARP_COMPARATOR);
         }
 
-        public void addOwnPrivate(Warp warp) {
+        void addOwnPrivate(Warp warp) {
             this.ownPrivates.add(warp);
         }
 
-        public void addOwnPublic(Warp warp) {
+        void addOwnPublic(Warp warp) {
             this.ownPublics.add(warp);
         }
 
-        public void addInvitedToPrivate(Warp warp) {
+        void addInvitedToPrivate(Warp warp) {
             this.invitedToPrivates.add(warp);
         }
 
-        public void addPublic(Warp warp) {
+        void addPublic(Warp warp) {
             this.publics.add(warp);
         }
 
-        public ResultList subList(int fromIndex, int toIndex) {
+        ResultList subList(int fromIndex, int toIndex) {
             ResultList subList = new ResultList();
 
             int i = fromIndex;
@@ -432,7 +425,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 for (; i < publics.size() && cur < total; ++i, ++cur) {
                     subList.addPublic(publics.get(i));
                 }
-                i = 0;
+                //i = 0;
                 if (cur == total)
                     return subList;
             }

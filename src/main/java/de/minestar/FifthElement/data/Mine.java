@@ -16,14 +16,14 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data;
+package de.minestar.fifthelement.data;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.core.Core;
+import de.minestar.fifthelement.Core;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class Mine {
@@ -78,16 +78,7 @@ public class Mine {
 
     @Override
     public String toString() {
-
-        StringBuilder sBuilder = new StringBuilder("Mine: ");
-
-        sBuilder.append("owner= ");
-        sBuilder.append(owner);
-        sBuilder.append(", location=");
-        sBuilder.append(location);
-        sBuilder.append(", id=");
-        sBuilder.append(id);
-        return sBuilder.toString();
+        return String.format("Mine: owner= %s, location=%s, id=%d", owner, location, id);
     }
 
     @Override

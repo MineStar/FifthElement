@@ -16,9 +16,9 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data.filter;
+package de.minestar.fifthelement.data.filter;
 
-import de.minestar.FifthElement.data.Warp;
+import de.minestar.fifthelement.data.Warp;
 
 public class NameFilter implements WarpFilter {
 
@@ -38,7 +38,7 @@ public class NameFilter implements WarpFilter {
         return name;
     }
 
-    public static final String NAME_FILTER_OPTION = "-name";
+    private static final String NAME_FILTER_OPTION = "-name";
 
     @Override
     public String getOption() {

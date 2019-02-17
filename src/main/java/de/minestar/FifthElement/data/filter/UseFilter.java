@@ -16,11 +16,11 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data.filter;
+package de.minestar.fifthelement.data.filter;
 
 import org.bukkit.entity.Player;
 
-import de.minestar.FifthElement.data.Warp;
+import de.minestar.fifthelement.data.Warp;
 
 public class UseFilter implements WarpFilter {
 

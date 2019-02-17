@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.statistics.home;
+package de.minestar.fifthelement.statistics.home;
 
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
@@ -25,7 +25,7 @@ import java.util.Queue;
 
 import org.bukkit.Location;
 
-import de.minestar.FifthElement.core.Core;
+import de.minestar.fifthelement.Core;
 import de.minestar.minestarlibrary.stats.Statistic;
 import de.minestar.minestarlibrary.stats.StatisticType;
 
@@ -58,7 +58,7 @@ public class HomeSignStat implements Statistic {
     @Override
     public LinkedHashMap<String, StatisticType> getHead() {
 
-        LinkedHashMap<String, StatisticType> head = new LinkedHashMap<String, StatisticType>();
+        LinkedHashMap<String, StatisticType> head = new LinkedHashMap<>();
 
         head.put("player", StatisticType.STRING);
         head.put("x", StatisticType.INT);
@@ -74,7 +74,7 @@ public class HomeSignStat implements Statistic {
     @Override
     public Queue<Object> getData() {
 
-        Queue<Object> data = new LinkedList<Object>();
+        Queue<Object> data = new LinkedList<>();
 
         data.add(playerName);
         data.add(signLocation.getBlockX());

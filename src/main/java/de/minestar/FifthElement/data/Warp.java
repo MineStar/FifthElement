@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data;
+package de.minestar.fifthelement.data;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,15 +26,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import de.minestar.minestarlibrary.protection.Guest;
+import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.bukkit.gemo.patchworking.Guest;
-import com.bukkit.gemo.utils.UtilPermissions;
-
-import de.minestar.FifthElement.core.Core;
+import de.minestar.fifthelement.Core;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.moneypit.data.guests.GuestHelper;
 
@@ -76,7 +75,7 @@ public class Warp {
         this.name = warpName;
         this.owner = player.getName();
         this.isPublic = false;
-        this.guests = Collections.synchronizedMap(new HashMap<String, Guest>());
+        this.guests = Collections.synchronizedMap(new HashMap<>());
         this.location = player.getLocation();
         this.creationDate = new Date();
 
@@ -130,7 +129,7 @@ public class Warp {
     // CHECK IF PLAYER CAN MOVE/RENAME/DELETE OR EDIT THE WARP
     // ONLY THE OWNER AND ADMINS/MODS ARE ALLOWED TO DO IT
     public boolean canEdit(Player player) {
-        return isOwner(player) || UtilPermissions.playerCanUseCommand(player, PERMISSION_EDIT_ALL_WARPS);
+        return isOwner(player) || PermissionUtils.playerCanUseCommand(player, PERMISSION_EDIT_ALL_WARPS);
     }
 
     public void setAccessMode(boolean isPublic) {
@@ -138,7 +137,7 @@ public class Warp {
         if (isPublic)
             this.guests = null;
         else
-            this.guests = Collections.synchronizedMap(new HashMap<String, Guest>());
+            this.guests = Collections.synchronizedMap(new HashMap<>());
 
         this.isPublic = isPublic;
     }
@@ -160,7 +159,6 @@ public class Warp {
         if (guests != null) {
             return (this.guests.put(guestName.toLowerCase(), GuestHelper.create(owner, guestName)) == null);
         }
-
         return false;
     }
 
@@ -197,7 +195,7 @@ public class Warp {
     }
 
     public boolean canUse(Player player) {
-        return canUse(player.getName()) || UtilPermissions.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
+        return canUse(player.getName()) || PermissionUtils.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
     }
 
     public void setId(int id) {
@@ -209,21 +207,7 @@ public class Warp {
 
     @Override
     public String toString() {
-        StringBuilder sBuilder = new StringBuilder("Warp: ");
-
-        sBuilder.append("name= ");
-        sBuilder.append(name);
-        sBuilder.append(", location=");
-        sBuilder.append(location);
-        sBuilder.append(", id=");
-        sBuilder.append(id);
-        sBuilder.append(", owner=");
-        sBuilder.append(owner);
-        sBuilder.append(", guests=");
-        sBuilder.append(guests);
-        sBuilder.append(" ,date=");
-        sBuilder.append(creationDate);
-        return sBuilder.toString();
+        return String.format("Warp: name= %s, location=%s, id=%d, owner=%s, guests=%s ,date=%s", name, location, id, owner, guests, creationDate);
     }
 
     @Override
@@ -264,15 +248,15 @@ public class Warp {
 
     public Collection<Guest> getGuests() {
         if (guests == null)
-            return new HashSet<Guest>();
+            return new HashSet<>();
         else
-            return new HashSet<Guest>(guests.values());
+            return new HashSet<>(guests.values());
     }
 
     private final static Pattern P = Pattern.compile(";");
 
     private void parseGuestList(String guestList) {
-        this.guests = Collections.synchronizedMap(new HashMap<String, Guest>());
+        this.guests = Collections.synchronizedMap(new HashMap<>());
 
         if (guestList.isEmpty()) {
             return;

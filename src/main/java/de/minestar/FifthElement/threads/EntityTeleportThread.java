@@ -16,7 +16,7 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.threads;
+package de.minestar.fifthelement.threads;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -37,7 +37,7 @@ public class EntityTeleportThread implements Runnable {
         if (playerName != null && entity != null) {
             Player currentPlayer = Bukkit.getServer().getPlayer(this.playerName);
             if (currentPlayer != null) {
-                entity.setPassenger(currentPlayer);
+                entity.addPassenger(currentPlayer);
             }
         }
     }

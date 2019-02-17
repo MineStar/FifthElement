@@ -1,33 +1,32 @@
 /*
  * Copyright (C) 2012 MineStar.de 
  * 
- * This file is part of FifthElement.
+ * This file is part of fifthelement.
  * 
- * FifthElement is free software: you can redistribute it and/or modify
+ * fifthelement is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3 of the License.
  * 
- * FifthElement is distributed in the hope that it will be useful,
+ * fifthelement is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
+ * along with fifthelement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.commands.warp;
+package de.minestar.fifthelement.commands.warp;
 
+import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.bukkit.gemo.utils.UtilPermissions;
-
-import de.minestar.FifthElement.core.Core;
-import de.minestar.FifthElement.data.Warp;
-import de.minestar.FifthElement.statistics.warp.WarpMoveStat;
+import de.minestar.fifthelement.Core;
+import de.minestar.fifthelement.data.Warp;
+import de.minestar.fifthelement.statistics.warp.WarpMoveStat;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
@@ -44,7 +43,7 @@ public class cmdWarpMove extends AbstractCommand {
     public void execute(String[] args, Player player) {
 
         // CHECK IF WARP CAN PLACED IN THIS WORLD
-        if (!Core.warpManager.isWarpAllowedIn(player.getWorld()) && !UtilPermissions.playerCanUseCommand(player, "fifthelement.create.warps.goldgrube")) {
+        if (!Core.warpManager.isWarpAllowedIn(player.getWorld()) && !PermissionUtils.playerCanUseCommand(player, "fifthelement.create.warps.goldgrube")) {
             PlayerUtils.sendError(player, pluginName, "Du kannst auf dieser Welt keine Warps verschieben!");
             return;
         }

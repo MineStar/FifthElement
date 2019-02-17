@@ -16,9 +16,9 @@
  * along with FifthElement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.minestar.FifthElement.data.filter;
+package de.minestar.fifthelement.data.filter;
 
-import de.minestar.FifthElement.data.Warp;
+import de.minestar.fifthelement.data.Warp;
 
 public class PublicFilter implements WarpFilter {
 
@@ -37,7 +37,7 @@ public class PublicFilter implements WarpFilter {
         return warp.isPublic();
     }
 
-    public static final String PUBLIC_FILTER_OPTION = "-public";
+    private static final String PUBLIC_FILTER_OPTION = "-public";
 
     @Override
     public String getOption() {
