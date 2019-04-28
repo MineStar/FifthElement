@@ -66,7 +66,7 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
-        if (event.isCancelled() || !(event.getBlock().getType().equals(Material.SIGN) || event.getBlock().getType().equals(Material.WALL_SIGN)))
+        if (event.isCancelled() ||  !isSign(event.getBlock().getType()))
             return;
 
         String[] lines = event.getLines();
@@ -128,7 +128,8 @@ public class SignListener implements Listener {
             return;
 
         Block block = event.getClickedBlock();
-        if (block.getType().equals(Material.SIGN) || block.getType().equals(Material.WALL_SIGN)) {
+
+        if (isSign(block.getType())) {
             Sign sign = (Sign) block.getState();
             String[] lines = sign.getLines();
             if (lines[1] == null)
@@ -234,5 +235,22 @@ public class SignListener implements Listener {
         if (warp.isOwner(player) || PermissionUtils.playerCanUseCommand(player, IGNORE_USE_MODE))
             return true;
         return warp.canUse(player) && warp.canUsedBy(Warp.SIGN_USEMODE);
+    }
+
+    private boolean isSign(Material material)
+    {
+        if(material ==null) return false;
+        if(material.equals(Material.ACACIA_SIGN)) return true;
+        if(material.equals(Material.ACACIA_WALL_SIGN)) return true;
+        if(material.equals(Material.BIRCH_SIGN)) return true;
+        if(material.equals(Material.BIRCH_WALL_SIGN)) return true;
+        if(material.equals(Material.DARK_OAK_SIGN)) return true;
+        if(material.equals(Material.DARK_OAK_WALL_SIGN)) return true;
+        if(material.equals(Material.JUNGLE_SIGN)) return true;
+        if(material.equals(Material.JUNGLE_WALL_SIGN)) return true;
+        if(material.equals(Material.OAK_SIGN)) return true;
+        if(material.equals(Material.OAK_WALL_SIGN)) return true;
+        if(material.equals(Material.SPRUCE_SIGN)) return true;
+        return material.equals(Material.SPRUCE_WALL_SIGN);
     }
 }
