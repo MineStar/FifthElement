@@ -3,7 +3,7 @@ main: de.minestar.fifthelement.Core
 version: ${pom.version}
 softdepend:
 depend: [MoneyPit]
-api-version: 1.13
+api-version: 1.14.4
 commands:
   home:
     description: Teleportiert Spieler zum Zuhause
@@ -37,7 +37,7 @@ commands:
     usage: /mineInfo
   tpto:
     description: Teleport den Spieler
-    usage: /tp
+    usage: /tpto
   tphere:
     description: Teleportiert die Spieler zum Command caller
     usage: /tpHere

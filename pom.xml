@@ -3,25 +3,25 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.minestar</groupId>
 	<artifactId>FifthElement</artifactId>
-	<version>1.14-R0.1-SNAPSHOT</version>
+	<version>1.14.4-SNAPSHOT</version>
 	<repositories>
 		<repository>
-			<id>MinestarNexus</id>
-			<url>http://nexus.outi-networks.de/content/groups/public/</url>
+			<id>Outi-Nexus</id>
+			<url>http://nexus.outi.network/repository/maven-public/</url>
 		</repository>
-	</repositories>	
+	</repositories>
 	<distributionManagement>
 		<!-- use the following if you're not using a snapshot version. -->
 		<repository>
-			<id>minestarDeployment</id>
+			<id>Outi-Nexus</id>
 			<name>Internal Releases</name>
-			<url>http://nexus.outi-networks.de/content/repositories/releases/</url>
+			<url>http://nexus.outi.network/repository/maven-releases/</url>
 		</repository>
 		<!-- use the following if you ARE using a snapshot version. -->
 		<snapshotRepository>
-			<id>minestarDeployment</id>
+			<id>Outi-Nexus</id>
 			<name>Internal Releases</name>
-			<url>http://nexus.outi-networks.de/content/repositories/snapshots/</url>
+			<url>http://nexus.outi.network/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>MoneyPit</artifactId>
-			<version>1.14-R0.1-SNAPSHOT</version>
+			<version>1.14.4-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<properties>
