@@ -3,7 +3,7 @@ main: de.minestar.fifthelement.Core
 version: ${pom.version}
 softdepend:
 depend: [MoneyPit]
-api-version: 1.14.4
+api-version: 1.13
 commands:
   home:
     description: Teleportiert Spieler zum Zuhause

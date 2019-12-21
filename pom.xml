@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.minestar</groupId>
 	<artifactId>FifthElement</artifactId>
-	<version>1.14.4-SNAPSHOT</version>
+	<version>1.15.1-SNAPSHOT</version>
 	<repositories>
 		<repository>
 			<id>Outi-Nexus</id>
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>de.minestar</groupId>
 			<artifactId>MoneyPit</artifactId>
-			<version>1.14.4-SNAPSHOT</version>
+			<version>1.15.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<properties>
