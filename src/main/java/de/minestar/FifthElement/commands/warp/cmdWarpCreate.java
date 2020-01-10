@@ -58,7 +58,7 @@ public class cmdWarpCreate extends AbstractCommand {
         }
 
         // PLAYER HAS TOO MANY WARPS
-        if (!Core.warpManager.canCreatePrivate(player.getName())) {
+        if (!Core.warpManager.canCreatePrivate(player.getUniqueId())) {
             PlayerUtils.sendError(player, pluginName, "Du kannst keinen weiteren privaten Warp erstellen!");
             return;
         }
@@ -73,7 +73,7 @@ public class cmdWarpCreate extends AbstractCommand {
         PlayerUtils.sendSuccess(player, pluginName, "Der Warp '" + warpName + "' wurde erstellt!");
 
         // PRINT OUT REST PRIVATE WARPS TO CREATE
-        WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
+        WarpCounter counter = Core.warpManager.getWarpCounter(player.getUniqueId());
         PlayerUtils.sendInfo(player, "Du kannst noch " + (Integer.parseInt(PermissionUtils.getOption(player,"maxprivatewarps")) - counter.getPrivateWarps()) + " private Warps erstellen.");
 
         // FIRE STATISTIC

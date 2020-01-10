@@ -25,10 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import de.minestar.minestarlibrary.protection.Guest;
 import org.bukkit.Bukkit;
@@ -157,7 +154,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 date = new Date(rs.getTimestamp(13).getTime());
 
                 // CREATE WARP AND PUT IT TO MAP
-                warpMap.put(name.toLowerCase(), new Warp(id, name, isPublic, owner, guests, worldName, x, y, z, yaw, pitch, useMode, date));
+                warpMap.put(name.toLowerCase(), new Warp(id, name, isPublic, UUID.fromString(owner), guests, worldName, x, y, z, yaw, pitch, useMode, date));
             }
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't load warps from table!");
@@ -172,7 +169,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
         try {
             // INSERT WARP INTO TABLE
             addWarp.setString(1, warp.getName());
-            addWarp.setString(2, warp.getOwner());
+            addWarp.setString(2, warp.getOwner().toString());
             addWarp.setString(3, warp.getLocation().getWorld().getName().toLowerCase());
             addWarp.setDouble(4, warp.getLocation().getX());
             addWarp.setDouble(5, warp.getLocation().getY());

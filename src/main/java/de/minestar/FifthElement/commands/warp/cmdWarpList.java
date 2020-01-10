@@ -90,7 +90,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
                 }
                 // DISPLAY OWN CREATED WARPS
                 else if (arg.equalsIgnoreCase("-created") || arg.equalsIgnoreCase("-my")) {
-                    filterList.add(new OwnerFilter(player.getName()));
+                    filterList.add(new OwnerFilter(player.getUniqueId()));
                 }
                 // DISPLAY USEABLE PRIVATE WARPS
                 else if (arg.equalsIgnoreCase("-private")) {
@@ -236,7 +236,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
         buildPageMessage(pageNumber, maxNumber, filter).sendTo(player);
 
         // send information about used counts of warps
-        WarpCounter counter = Core.warpManager.getWarpCounter(player.getName());
+        WarpCounter counter = Core.warpManager.getWarpCounter(player.getUniqueId());
         buildUsedNumberMessage("Private", counter.getPrivateWarps(), Integer.parseInt(PermissionUtils.getOption(player,"maxprivatewarps"))).sendTo(player);
         buildUsedNumberMessage("Public", counter.getPublicWarps(), Integer.parseInt(PermissionUtils.getOption(player,"maxpublicwarps"))).sendTo(player);
 
@@ -332,7 +332,7 @@ public class cmdWarpList extends AbstractExtendedCommand {
 
         messageBuilder.addTextPart(warpToPartBuilder.build());
 
-        HoverEventBuilder hoverEventBuilder = HoverEvent.create(warp.getOwner());
+        HoverEventBuilder hoverEventBuilder = HoverEvent.create(warp.getOwner().toString());
 
         hoverEventBuilder.addLine("World = " + warp.getLocation().getWorld().getName());
         hoverEventBuilder.addLine("x = " + warp.getLocation().getBlockX());

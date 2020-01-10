@@ -18,12 +18,7 @@
 
 package de.minestar.fifthelement.data;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import de.minestar.minestarlibrary.protection.Guest;
@@ -49,7 +44,7 @@ public class Warp {
     private boolean isPublic;
 
     // THE CREATORS NAME
-    private String owner;
+    private UUID owner;
     // USER WHO CAN ALSO USE THE WARP
     private Map<String, Guest> guests;
 
@@ -73,7 +68,7 @@ public class Warp {
     // CONSTRUCTOR WHEN PLAYER CREATES INGAME A WARP
     public Warp(String warpName, Player player) {
         this.name = warpName;
-        this.owner = player.getName();
+        this.owner = player.getUniqueId();
         this.isPublic = false;
         this.guests = Collections.synchronizedMap(new HashMap<>());
         this.location = player.getLocation();
@@ -84,7 +79,7 @@ public class Warp {
     }
 
     // CONSTRUCTOR WHEN WARP IS LOADED FROM DATABASE
-    public Warp(int id, String name, boolean isPublic, String owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch, byte useMode, Date creationDate) {
+    public Warp(int id, String name, boolean isPublic, UUID owner, String guestList, String worldName, double x, double y, double z, float yaw, float pitch, byte useMode, Date creationDate) {
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -119,11 +114,11 @@ public class Warp {
 
     // CHECK IF PLAYER IS OWNER
     public boolean isOwner(Player player) {
-        return isOwner(player.getName());
+        return isOwner(player.getUniqueId());
     }
 
-    public boolean isOwner(String playerName) {
-        return this.owner.equalsIgnoreCase(playerName);
+    public boolean isOwner(UUID playerUUID) {
+        return this.owner.equals(playerUUID);
     }
 
     // CHECK IF PLAYER CAN MOVE/RENAME/DELETE OR EDIT THE WARP
@@ -190,12 +185,12 @@ public class Warp {
         return isGuest(player.getName());
     }
 
-    public boolean canUse(String playerName) {
-        return isPublic || isOwner(playerName) || isGuest(playerName);
+    public boolean canUse(UUID playerUUID) {
+        return isPublic || isOwner(playerUUID) || isGuest(playerUUID.toString());
     }
 
     public boolean canUse(Player player) {
-        return canUse(player.getName()) || PermissionUtils.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
+        return canUse(player.getUniqueId()) || PermissionUtils.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
     }
 
     public void setId(int id) {
@@ -238,7 +233,7 @@ public class Warp {
         return location;
     }
 
-    public String getOwner() {
+    public UUID getOwner() {
         return owner;
     }
 

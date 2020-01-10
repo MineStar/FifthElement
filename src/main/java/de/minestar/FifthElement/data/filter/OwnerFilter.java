@@ -20,17 +20,19 @@ package de.minestar.fifthelement.data.filter;
 
 import de.minestar.fifthelement.data.Warp;
 
+import java.util.UUID;
+
 public class OwnerFilter implements WarpFilter {
 
-    private final String playerName;
+    private final UUID playerUUID;
 
-    public OwnerFilter(String playerName) {
-        this.playerName = playerName;
+    public OwnerFilter(UUID playerUUID) {
+        this.playerUUID = playerUUID;
     }
 
     @Override
     public boolean accept(Warp warp) {
-        return warp.isOwner(playerName);
+        return warp.isOwner(playerUUID);
     }
 
     private static final String OWNER_FILTER_OPTION = "-player";
@@ -42,7 +44,7 @@ public class OwnerFilter implements WarpFilter {
 
     @Override
     public String getArgs() {
-        return playerName;
+        return playerUUID.toString();
     }
 
     @Override

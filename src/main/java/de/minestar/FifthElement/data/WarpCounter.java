@@ -18,20 +18,22 @@
 
 package de.minestar.fifthelement.data;
 
+import java.util.UUID;
+
 public class WarpCounter {
 
-    private String playerName;
+    private UUID playerUUID;
     private int privateWarps;
     private int publicWarps;
 
     // CONSTRUCTOR FOR A NEW WARP COUNTER
-    public WarpCounter(String playerName) {
-        this(playerName, 0, 0);
+    public WarpCounter(UUID playerUUID) {
+        this(playerUUID, 0, 0);
     }
 
     // CONSTRUCTOR WHEN WARPS ARE LOADED FROM DATABASE
-    public  WarpCounter(String playerName, int privateWarps, int publicWarps) {
-        this.playerName = playerName;
+    public  WarpCounter(UUID playerUUID, int privateWarps, int publicWarps) {
+        this.playerUUID = playerUUID;
         this.privateWarps = privateWarps;
         this.publicWarps = publicWarps;
     }
@@ -62,8 +64,8 @@ public class WarpCounter {
         return publicWarps;
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public UUID getPlayerUUID() {
+        return playerUUID;
     }
 
 }

@@ -86,7 +86,7 @@ public class cmdWarpInfo extends AbstractCommand {
         ChatUtils.writeMessage(sender, SEPERATOR);
 
         // OWNER
-        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwner()));
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwner().toString()));
 
         // CREATION DATE
         ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt:", VALUE_COLOR + FORMAT.format(warp.getCreationDate())));

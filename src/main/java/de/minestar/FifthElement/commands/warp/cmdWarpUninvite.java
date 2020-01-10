@@ -59,7 +59,7 @@ public class cmdWarpUninvite extends AbstractExtendedCommand {
         for (int i = 1; i < args.length; ++i) {
             if (args[i].startsWith(GuestHelper.GROUP_PREFIX)) {
                 if (args[i].matches("(" + GuestHelper.GROUP_PREFIX + ")([a-zA-Z0-9_])*")) {
-                    Group group = GroupManager.getGroup(player.getName(), args[i]);
+                    Group group = GroupManager.getGroup(player.getUniqueId(), args[i]);
                     if (group == null) {
                         PlayerUtils.sendError(player, "Die Gruppe '" + args[i] + "' wurde nicht gefunden!");
                         continue;

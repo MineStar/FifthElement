@@ -18,15 +18,8 @@
 
 package de.minestar.fifthelement.manager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
 import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.World;
@@ -42,7 +35,7 @@ import de.minestar.minestarlibrary.utils.ConsoleUtils;
 public class WarpManager {
 
     private TreeMap<String, Warp> warpMap;
-    private Map<String, WarpCounter> warpCounterMap;
+    private Map<UUID, WarpCounter> warpCounterMap;
 
     public WarpManager() {
         loadWarps();
@@ -64,11 +57,11 @@ public class WarpManager {
         int[] counter = new int[2];
         warpCounterMap = new HashMap<>();
 
-        String owner;
+        UUID owner;
         WarpCounter warpCounter;
 
         for (Warp warp : warpMap.values()) {
-            owner = warp.getOwner().toLowerCase();
+            owner = warp.getOwner();
             // GET COUNTER FOR THE OWNER
             warpCounter = getWarpCounter(owner);
 
@@ -225,31 +218,31 @@ public class WarpManager {
         Core.dbHandler.updateGuests(warp);
     }
 
-    public WarpCounter getWarpCounter(String owner) {
-        WarpCounter counter = warpCounterMap.get(owner.toLowerCase());
+    public WarpCounter getWarpCounter(UUID owner) {
+        WarpCounter counter = warpCounterMap.get(owner);
         if (counter == null) {
             counter = new WarpCounter(owner);
-            warpCounterMap.put(owner.toLowerCase(), counter);
+            warpCounterMap.put(owner, counter);
         }
         return counter;
     }
 
-    public boolean canCreatePublic(String playerName) {
+    public boolean canCreatePublic(UUID playerUUID) {
         // GET THE CURRENT COUNT
-        WarpCounter counter = getWarpCounter(playerName);
+        WarpCounter counter = getWarpCounter(playerUUID);
         // GET THE GROUP OF THE PLAYER
         //MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
         // CURRENT COUNTER IS LOWER THAN ALLOWED
-        return counter.getPublicWarps() < Integer.parseInt(PermissionUtils.getOption(playerName,"maxpublicwarps"));
+        return counter.getPublicWarps() < Integer.parseInt(PermissionUtils.getOption(playerUUID,"maxpublicwarps"));
     }
 
-    public boolean canCreatePrivate(String playerName) {
+    public boolean canCreatePrivate(UUID playerUUID) {
         // GET THE CURRENT COUNT
-        WarpCounter counter = getWarpCounter(playerName);
+        WarpCounter counter = getWarpCounter(playerUUID);
         // GET THE GROUP OF THE PLAYER
         //MinestarGroup group = MinestarCore.getPlayer(playerName).getMinestarGroup();
         // CURRENT COUNTER IS LOWER THAN ALLOWED
-        return counter.getPrivateWarps() < Integer.parseInt(PermissionUtils.getOption(playerName,"maxprivatewarps"));
+        return counter.getPrivateWarps() < Integer.parseInt(PermissionUtils.getOption(playerUUID,"maxprivatewarps"));
     }
 
     public void moveWarp(Warp warp, Player player) {
