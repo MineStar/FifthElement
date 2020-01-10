@@ -45,6 +45,8 @@ public class Warp {
 
     // THE CREATORS NAME
     private UUID owner;
+    private String ownerName;
+
     // USER WHO CAN ALSO USE THE WARP
     private Map<String, Guest> guests;
 
@@ -152,7 +154,7 @@ public class Warp {
     public boolean addGuest(String guestName) {
         // RETURN TRUE WHEN GUEST WASN'T INVITED YET
         if (guests != null) {
-            return (this.guests.put(guestName.toLowerCase(), GuestHelper.create(owner, guestName)) == null);
+            return (this.guests.put(guestName, GuestHelper.create(owner, guestName)) == null);
         }
         return false;
     }
@@ -160,7 +162,7 @@ public class Warp {
     public boolean removeGuest(String guestName) {
         // RETURN TRUE WHEN THE PLAYER WAS A GUEST
         if (guests != null) {
-            return (guests.remove(guestName.toLowerCase()) != null);
+            return (guests.remove(guestName) != null);
         }
 
         return false;
@@ -182,7 +184,7 @@ public class Warp {
     }
 
     public boolean isGuest(Player player) {
-        return isGuest(player.getName());
+        return isGuest(player.getUniqueId().toString());
     }
 
     public boolean canUse(UUID playerUUID) {
