@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -38,7 +39,6 @@ import de.minestar.fifthelement.statistics.bank.BankSignStat;
 import de.minestar.fifthelement.statistics.home.HomeSignStat;
 import de.minestar.fifthelement.statistics.mine.MineSignStat;
 import de.minestar.fifthelement.statistics.warp.WarpSignStat;
-import de.minestar.minestarlibrary.events.PlayerChangedNameEvent;
 import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -50,19 +50,6 @@ public class SignListener implements Listener {
     private final static String HOME_SIGN = "[home]";
     private final static String BANK_SIGN = "[bank]";
     private final static String MINE_SIGN = "[mine]";
-
-    @EventHandler
-    public void onPlayerChangeNick(PlayerChangedNameEvent event) {
-        Core.warpManager.transferWarps(event.getOldName(), event.getNewName());
-        Core.homeManager.transferHome(event.getOldName(), event.getNewName());
-        Core.mineManager.transferMine(event.getOldName(), event.getNewName());
-        Core.bankManager.transferBank(event.getOldName(), event.getNewName());
-
-        Player player = PlayerUtils.getOnlinePlayer(event.getCommandSender());
-        if (player != null) {
-            PlayerUtils.sendInfo(player, Core.NAME, "Transfer complete.");
-        }
-    }
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
@@ -92,7 +79,7 @@ public class SignListener implements Listener {
         }
         // HOME SIGN
         else if (lines[1].equals(HOME_SIGN)) {
-            if (Core.homeManager.getHome(player.getName()) != null)
+            if (Core.homeManager.getHome(player.getUniqueId()) != null)
                 PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zu deinem Zuhause.");
             else {
                 PlayerUtils.sendError(player, Core.NAME, "Du hast im Moment kein Zuhause!");
@@ -102,7 +89,7 @@ public class SignListener implements Listener {
         }
         // BANK SIGN
         else if (lines[1].equals(BANK_SIGN)) {
-            if (Core.homeManager.getHome(player.getName()) != null)
+            if (Core.homeManager.getHome(player.getUniqueId()) != null)
                 PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zu deiner Bank.");
             else {
                 PlayerUtils.sendError(player, Core.NAME, "Du hast im Moment keine Bank!");
@@ -112,7 +99,7 @@ public class SignListener implements Listener {
         }
         // MINE SIGN
         else if (lines[1].equals(MINE_SIGN)) {
-            if (Core.mineManager.getMine(player.getName()) != null)
+            if (Core.mineManager.getMine(player.getUniqueId()) != null)
                 PlayerUtils.sendSuccess(player, Core.NAME, "Ein Rechtsklick auf das Schild teleportiert dich zu deiner Mine.");
             else {
                 PlayerUtils.sendError(player, Core.NAME, "Du hast im Moment keine Mine!");
@@ -124,7 +111,7 @@ public class SignListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.isCancelled() || !event.hasBlock() || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+        if (event.useInteractedBlock().equals(Event.Result.DENY) || !event.hasBlock() || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
             return;
 
         Block block = event.getClickedBlock();
@@ -158,7 +145,7 @@ public class SignListener implements Listener {
     }
 
     private void handleMine(Player player, Sign sign) {
-        Mine mine = Core.mineManager.getMine(player.getName());
+        Mine mine = Core.mineManager.getMine(player.getUniqueId());
         if (mine == null)
             PlayerUtils.sendError(player, Core.NAME, "Du hast keine Mine erstellt!");
         else {
@@ -174,7 +161,7 @@ public class SignListener implements Listener {
     }
 
     private void handleBank(Player player, Sign sign) {
-        Bank bank = Core.bankManager.getBank(player.getName());
+        Bank bank = Core.bankManager.getBank(player.getUniqueId());
         if (bank == null)
             PlayerUtils.sendError(player, Core.NAME, "Du hast keine Bank!");
         else {
@@ -190,7 +177,7 @@ public class SignListener implements Listener {
     }
 
     private void handleHome(Player player, Sign sign) {
-        Home home = Core.homeManager.getHome(player.getName());
+        Home home = Core.homeManager.getHome(player.getUniqueId());
         if (home == null)
             PlayerUtils.sendError(player, Core.NAME, "Du hast kein Zuhause erstellt!");
         else {

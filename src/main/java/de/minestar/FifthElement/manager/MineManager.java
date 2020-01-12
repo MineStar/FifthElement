@@ -19,6 +19,7 @@
 package de.minestar.fifthelement.manager;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -26,11 +27,12 @@ import de.minestar.fifthelement.Core;
 import de.minestar.fifthelement.data.Mine;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
-public class MineManager {
+public class MineManager
+{
+    private Map<UUID, Mine> mineMap;
 
-    private Map<String, Mine> mineMap;
-
-    public MineManager() {
+    public MineManager()
+    {
         loadMines();
     }
 
@@ -38,31 +40,30 @@ public class MineManager {
     // LOADING AND INITIALIZATION
     // **************************
 
-    private void loadMines() {
+    private void loadMines()
+    {
         mineMap = Core.dbHandler.loadMines();
         ConsoleUtils.printInfo(Core.NAME, "Loaded " + mineMap.size() + " Mines.");
     }
 
-    public Mine getMine(String playerName) {
-        return mineMap.get(playerName.toLowerCase());
-    }
-
-    public void transferMine(String oldPlayer, String newPlayer) {
-        Core.dbHandler.transferMine(oldPlayer, newPlayer);
-        loadMines();
+    public Mine getMine(UUID playerUUID)
+    {
+        return mineMap.get(playerUUID);
     }
 
     // **************************
     // MANIPULATE CURRENT MINES
     // **************************
 
-    public void createMine(Player player) {
+    public void createMine(Player player)
+    {
         Mine mine = new Mine(player);
-        mineMap.put(player.getName().toLowerCase(), mine);
+        mineMap.put(player.getUniqueId(), mine);
         Core.dbHandler.addMine(mine);
     }
 
-    public void moveMine(Player player, Mine mine) {
+    public void moveMine(Player player, Mine mine)
+    {
         mine.updateLocation(player.getLocation());
         Core.dbHandler.updateMineLocation(mine);
     }

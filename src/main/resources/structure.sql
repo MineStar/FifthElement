@@ -1,9 +1,9 @@
 -- -----------------------------------------------------
 -- Table `home`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `fifthelement_home` (
+CREATE TABLE IF NOT EXISTS `fifthelement_home` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `player` VARCHAR(32) NOT NULL ,
+  `player` VARCHAR(40) NOT NULL ,
   `world` VARCHAR(32) NOT NULL ,
   `x` DOUBLE NOT NULL ,
   `y` DOUBLE NOT NULL ,
@@ -15,9 +15,9 @@ CREATE  TABLE IF NOT EXISTS `fifthelement_home` (
 -- -----------------------------------------------------
 -- Table `mine`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `fifthelement_mine` (
+CREATE TABLE IF NOT EXISTS `fifthelement_mine` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `player` VARCHAR(32) NOT NULL ,
+  `player` VARCHAR(40) NOT NULL ,
   `world` VARCHAR(32) NOT NULL ,
   `x` DOUBLE NOT NULL ,
   `y` DOUBLE NOT NULL ,
@@ -29,9 +29,9 @@ CREATE  TABLE IF NOT EXISTS `fifthelement_mine` (
 -- -----------------------------------------------------
 -- Table `bank`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `fifthelement_bank` (
+CREATE TABLE IF NOT EXISTS `fifthelement_bank` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `player` VARCHAR(32) NOT NULL ,
+  `player` VARCHAR(40) NOT NULL ,
   `world` VARCHAR(32) NOT NULL ,
   `x` DOUBLE NOT NULL ,
   `y` DOUBLE NOT NULL ,
@@ -43,10 +43,10 @@ CREATE  TABLE IF NOT EXISTS `fifthelement_bank` (
 -- -----------------------------------------------------
 -- Table `warp`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `fifthelement_warp` (
+CREATE TABLE IF NOT EXISTS `fifthelement_warp` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(32) NOT NULL ,
-  `owner` VARCHAR(32) NOT NULL ,
+  `owner` VARCHAR(40) NOT NULL ,
   `world` VARCHAR(32) NOT NULL ,
   `x` DOUBLE NOT NULL ,
   `y` DOUBLE NOT NULL ,

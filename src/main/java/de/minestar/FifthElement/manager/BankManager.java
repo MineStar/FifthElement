@@ -19,6 +19,7 @@
 package de.minestar.fifthelement.manager;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -26,11 +27,13 @@ import de.minestar.fifthelement.Core;
 import de.minestar.fifthelement.data.Bank;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
-public class BankManager {
+public class BankManager
+{
 
-    private Map<String, Bank> bankMap;
+    private Map<UUID, Bank> bankMap;
 
-    public BankManager() {
+    public BankManager()
+    {
         loadBanks();
     }
 
@@ -38,31 +41,30 @@ public class BankManager {
     // LOADING AND INITIALIZATION
     // **************************
 
-    private void loadBanks() {
+    private void loadBanks()
+    {
         bankMap = Core.dbHandler.loadBanks();
         ConsoleUtils.printInfo(Core.NAME, "Loaded " + bankMap.size() + " Banks.");
     }
 
-    public Bank getBank(String playerName) {
-        return bankMap.get(playerName.toLowerCase());
-    }
-
-    public void transferBank(String oldPlayer, String newPlayer) {
-        Core.dbHandler.transferBank(oldPlayer, newPlayer);
-        loadBanks();
+    public Bank getBank(UUID playerUUID)
+    {
+        return bankMap.get(playerUUID);
     }
 
     // **************************
     // MANIPULATE CURRENT BANKS
     // **************************
 
-    public void createBank(Player creator, String bankOwner) {
+    public void createBank(Player creator, UUID bankOwner)
+    {
         Bank bank = new Bank(creator.getLocation(), bankOwner);
-        bankMap.put(bankOwner.toLowerCase(), bank);
+        bankMap.put(bankOwner, bank);
         Core.dbHandler.addBank(bank);
     }
 
-    public void moveBank(Player player, Bank bank) {
+    public void moveBank(Player player, Bank bank)
+    {
         bank.updateLocation(player.getLocation());
         Core.dbHandler.updateBankLocation(bank);
     }

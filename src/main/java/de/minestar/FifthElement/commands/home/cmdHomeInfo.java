@@ -18,6 +18,9 @@
 
 package de.minestar.fifthelement.commands.home;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -29,66 +32,72 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdHomeInfo extends AbstractExtendedCommand {
-
+public class cmdHomeInfo extends AbstractExtendedCommand
+{
     private static final String OTHER_HOME_INFO_PERMISSION = "fifthelement.command.otherhomeinfo";
 
-    public cmdHomeInfo(String syntax, String arguments, String node) {
+    public cmdHomeInfo(String syntax, String arguments, String node)
+    {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
-    public void execute(String[] args, Player player) {
+    public void execute(String[] args, Player player)
+    {
         Home home;
         // INFORMATION ABOUT OWN HOME
-        if (args.length == 0) {
-            home = Core.homeManager.getHome(player.getName());
+        if (args.length == 0)
+        {
+            home = Core.homeManager.getHome(player.getUniqueId());
             // HAS NO HOME YET
-            if (home == null) {
+            if (home == null)
+            {
                 PlayerUtils.sendError(player, pluginName, "Du hast kein Zuhause!");
                 return;
             }
         }
         // INFORMATION ABOUT OTHER HOMES
-        else if (args.length == 1) {
+        else if (args.length == 1)
+        {
             // CAN USE THE COMMAND
-            if (checkSpecialPermission(player, OTHER_HOME_INFO_PERMISSION)) {
-                // GET CORRECT PLAYER NAME
-                String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
+            if (checkSpecialPermission(player, OTHER_HOME_INFO_PERMISSION))
+            {
+                ProfileRepository repository = new HttpProfileRepository("minecraft");
+                Profile target = repository.findProfileByName(args[0]);
                 // PLAYER NOT FOUND
-                if (targetName == null) {
+                if (target == null)
+                {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + args[0] + "' wurde nicht gefunden!");
                     return;
                 }
-                home = Core.homeManager.getHome(targetName);
+                home = Core.homeManager.getHome(target.getUUID());
                 // TARGET HAS NO HOME YET
-                if (home == null) {
-                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat kein Zuhause!");
+                if (home == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + target.getName() + "' hat kein Zuhause!");
                     return;
                 }
-            } else
-                return;
+            }
+            else return;
         }
         // WRONG SYNTAX
         else {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
-
         displayHomeInformation(player, home);
-
         // FIRE STATISTICS
-        StatisticHandler.handleStatistic(new HomeInfoStat(player.getName(), home.getOwner()));
+        StatisticHandler.handleStatistic(new HomeInfoStat(player.getName(), home.getOwnerName()));
     }
 
     private final static String SEPERATOR = "----------------------------------------";
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
     private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-    private void displayHomeInformation(Player player, Home home) {
-
+    private void displayHomeInformation(Player player, Home home)
+    {
         PlayerUtils.sendInfo(player, SEPERATOR);
-        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Home von:", VALUE_COLOR + home.getOwner()));
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Home von:", VALUE_COLOR + home.getOwnerName()));
         PlayerUtils.sendInfo(player, SEPERATOR);
 
         Location loc = home.getLocation();

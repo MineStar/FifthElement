@@ -21,6 +21,8 @@ package de.minestar.fifthelement.data;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.mojang.api.profiles.HttpUuidToNames;
+import com.mojang.api.profiles.PlayerNameRepository;
 import de.minestar.minestarlibrary.protection.Guest;
 import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.Bukkit;
@@ -71,6 +73,7 @@ public class Warp {
     public Warp(String warpName, Player player) {
         this.name = warpName;
         this.owner = player.getUniqueId();
+        this.ownerName = player.getName();
         this.isPublic = false;
         this.guests = Collections.synchronizedMap(new HashMap<>());
         this.location = player.getLocation();
@@ -85,6 +88,7 @@ public class Warp {
         this.id = id;
         this.name = name;
         this.owner = owner;
+        this.ownerName = getPlayerNameByUUID(this.owner);
         this.isPublic = isPublic;
         if (!isPublic) {
             parseGuestList(guestList);
@@ -94,6 +98,12 @@ public class Warp {
 
         this.useMode = useMode;
         this.creationDate = creationDate;
+    }
+
+    private String getPlayerNameByUUID(UUID playerUUID)
+    {
+        PlayerNameRepository repository = new HttpUuidToNames("minecraft");
+        return repository.getCurrentPlayerNameByUUID(playerUUID);
     }
 
     private void createLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
@@ -237,6 +247,11 @@ public class Warp {
 
     public UUID getOwner() {
         return owner;
+    }
+
+    public String getOwnerName()
+    {
+        return this.ownerName;
     }
 
     public Date getCreationDate() {

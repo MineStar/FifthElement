@@ -2,7 +2,7 @@ name: FifthElement
 main: de.minestar.fifthelement.Core
 version: ${pom.version}
 softdepend:
-depend: [MoneyPit]
+depend: [MoneyPit2]
 api-version: 1.13
 commands:
   home:

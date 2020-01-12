@@ -18,6 +18,9 @@
 
 package de.minestar.fifthelement.commands.bank;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.entity.Player;
 
 import de.minestar.fifthelement.Core;
@@ -27,62 +30,68 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdBank extends AbstractCommand {
+public class cmdBank extends AbstractCommand
+{
 
     private static final String OTHER_BANK_PERMISSION = "fifthelement.command.otherbank";
 
-    public cmdBank(String syntax, String arguments, String node) {
+    public cmdBank(String syntax, String arguments, String node)
+    {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
-    public void execute(String[] args, Player player) {
+    public void execute(String[] args, Player player)
+    {
         Bank bank;
         // OWN HOME
-        if (args.length == 0) {
-            bank = Core.bankManager.getBank(player.getName());
-            if (bank == null) {
+        if (args.length == 0)
+        {
+            bank = Core.bankManager.getBank(player.getUniqueId());
+            if (bank == null)
+            {
                 PlayerUtils.sendError(player, pluginName, "Du hast keine Bank!");
                 return;
             }
-
             // STORE EVENTUALLY LAST POSITION
             Core.backManager.handleTeleport(player);
-
             player.teleport(bank.getLocation());
             PlayerUtils.sendSuccess(player, pluginName, "Willkommen in deiner Bank.");
         }
         // HOME OF OTHER PLAYER
-        else if (args.length == 1) {
+        else if (args.length == 1)
+        {
             // CAN PLAYER USE OTHER BANKS
-            if (checkSpecialPermission(player, OTHER_BANK_PERMISSION)) {
-                // FIND THE CORRECT PLAYER NAME
-                String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
-                if (targetName == null) {
-                    PlayerUtils.sendError(player, targetName, "Kann den Spieler '" + args[0] + "' nicht finden!");
-                    return;
-                }
-                bank = Core.bankManager.getBank(targetName);
-                if (bank == null) {
-                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Bank!");
-                    return;
-                }
+            if (checkSpecialPermission(player, OTHER_BANK_PERMISSION))
+            {
+                ProfileRepository repository = new HttpProfileRepository("minecraft");
+                Profile profile = repository.findProfileByName(args[0]);
 
+                // FIND THE CORRECT PLAYER NAME
+                if (profile == null)
+                {
+                    PlayerUtils.sendError(player, pluginName,"Kann den Spieler '" + args[0] + "' nicht finden!");
+                    return;
+                }
+                bank = Core.bankManager.getBank(profile.getUUID());
+                if (bank == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + profile.getName() + "' hat keine Bank!");
+                    return;
+                }
                 // STORE EVENTUALLY LAST POSITION
                 Core.backManager.handleTeleport(player);
-
                 player.teleport(bank.getLocation());
-                PlayerUtils.sendSuccess(player, pluginName, "Bank von '" + bank.getOwner() + "'.");
-            } else
-                return;
+                PlayerUtils.sendSuccess(player, pluginName, "Bank von '" + bank.getOwnerName() + "'.");
+            }
+            else return;
         }
         // WRONG COMMAND SYNTAX
         else {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
-
         // FIRE STATISTIC
-        StatisticHandler.handleStatistic(new BankStat(player.getName(), bank.getOwner()));
+        StatisticHandler.handleStatistic(new BankStat(player.getName(), bank.getOwnerName()));
     }
 }

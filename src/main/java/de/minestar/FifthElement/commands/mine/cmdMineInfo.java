@@ -18,6 +18,9 @@
 
 package de.minestar.fifthelement.commands.mine;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -29,8 +32,8 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdMineInfo extends AbstractExtendedCommand {
-
+public class cmdMineInfo extends AbstractExtendedCommand
+{
     private static final String OTHER_MINE_INFO_PERMISSION = "fifthelement.command.othermineinfo";
 
     public cmdMineInfo(String syntax, String arguments, String node) {
@@ -38,57 +41,61 @@ public class cmdMineInfo extends AbstractExtendedCommand {
     }
 
     @Override
-    public void execute(String[] args, Player player) {
+    public void execute(String[] args, Player player)
+    {
         Mine mine;
         // INFORMATION ABOUT OWN MINE
-        if (args.length == 0) {
-            mine = Core.mineManager.getMine(player.getName());
+        if (args.length == 0)
+        {
+            mine = Core.mineManager.getMine(player.getUniqueId());
             // HAS NO MINE YET
-            if (mine == null) {
+            if (mine == null)
+            {
                 PlayerUtils.sendError(player, pluginName, "Du hast keine Mine!");
                 return;
             }
         }
         // INFORMATION ABOUT OTHER MINES
-        else if (args.length == 1) {
+        else if (args.length == 1)
+        {
             // CAN USE THE COMMAND
-            if (checkSpecialPermission(player, OTHER_MINE_INFO_PERMISSION)) {
-                // GET CORRECT PLAYER NAME
-                String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
+            if (checkSpecialPermission(player, OTHER_MINE_INFO_PERMISSION))
+            {
+                ProfileRepository repository = new HttpProfileRepository("minecraft");
+                Profile target = repository.findProfileByName(args[0]);
                 // PLAYER NOT FOUND
-                if (targetName == null) {
+                if (target == null)
+                {
                     PlayerUtils.sendError(player, pluginName, "Der Spieler '" + args[0] + "' wurde nicht gefunden!");
                     return;
                 }
-                mine = Core.mineManager.getMine(targetName);
+                mine = Core.mineManager.getMine(target.getUUID());
                 // TARGET HAS NO MINE YET
-                if (mine == null) {
-                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Mine!");
+                if (mine == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + target.getName() + "' hat keine Mine!");
                     return;
                 }
-            } else
-                return;
+            } else return;
         }
         // WRONG SYNTAX
         else {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
-
         displayMineInformation(player, mine);
-
         // FIRE STATISTICS
-        StatisticHandler.handleStatistic(new MineInfoStat(player.getName(), mine.getOwner()));
+        StatisticHandler.handleStatistic(new MineInfoStat(player.getName(), mine.getOwnerName()));
     }
 
     private final static String SEPERATOR = "----------------------------------------";
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
     private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-    private void displayMineInformation(Player player, Mine mine) {
-
+    private void displayMineInformation(Player player, Mine mine)
+    {
         PlayerUtils.sendInfo(player, SEPERATOR);
-        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Mine von:", VALUE_COLOR + mine.getOwner()));
+        PlayerUtils.sendInfo(player, String.format("%s %s", NAME_COLOR + "Mine von:", VALUE_COLOR + mine.getOwnerName()));
         PlayerUtils.sendInfo(player, SEPERATOR);
 
         Location loc = mine.getLocation();

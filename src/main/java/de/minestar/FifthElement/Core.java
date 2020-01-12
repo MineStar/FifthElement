@@ -43,7 +43,8 @@ import org.bukkit.plugin.PluginManager;
 import java.io.File;
 
 @UseStatistic
-public class Core extends AbstractCore {
+public class Core extends AbstractCore
+{
 
     public static final String NAME = "FifthElement";
     private static Plugin INSTANCE = null;
@@ -59,34 +60,35 @@ public class Core extends AbstractCore {
     /* LISTENER */
     private Listener warpSignListener;
 
-    public Core() {
+    public Core()
+    {
         super(NAME);
-        de.minestar.fifthelement.Core.INSTANCE = this;
+        INSTANCE = this;
     }
 
     @Override
-    protected boolean loadingConfigs(File dataFolder) {
+    protected boolean loadingConfigs(File dataFolder)
+    {
         return Settings.init(dataFolder, NAME, getDescription().getVersion());
     }
 
     @Override
-    protected boolean createManager() {
+    protected boolean createManager()
+    {
         dbHandler = new DatabaseHandler(new File(getDataFolder(), "sqlconfig.yml"));
-        if (!dbHandler.hasConnection())
-            return false;
+        if (!dbHandler.hasConnection()) return false;
 
         warpManager = new WarpManager();
         homeManager = new HomeManager();
         bankManager = new BankManager();
         backManager = new BackManager();
         mineManager = new MineManager();
-
         return true;
     }
 
     @Override
-    protected boolean registerStatistics() {
-
+    protected boolean registerStatistics()
+    {
         StatisticHandler.registerStatistic(TeleportHereStat.class);
         StatisticHandler.registerStatistic(TeleportToStat.class);
         StatisticHandler.registerStatistic(TeleportPlayerToStat.class);
@@ -121,12 +123,12 @@ public class Core extends AbstractCore {
         StatisticHandler.registerStatistic(HomeSignStat.class);
         StatisticHandler.registerStatistic(WarpSignStat.class);
         StatisticHandler.registerStatistic(MineSignStat.class);
-
         return true;
     }
 
     @Override
-    protected boolean createCommands() {
+    protected boolean createCommands()
+    {
 
         // @formatter:off
         cmdList = new CommandList(NAME,
@@ -176,31 +178,28 @@ public class Core extends AbstractCore {
     }
 
     @Override
-    protected boolean createListener() {
-
+    protected boolean createListener()
+    {
         this.warpSignListener = new SignListener();
-
         return true;
     }
 
     @Override
-    protected boolean registerEvents(PluginManager pm) {
+    protected boolean registerEvents(PluginManager pm)
+    {
         pm.registerEvents(warpSignListener, this);
         return true;
     }
-/*
-    public static List<Warp> getPublicWarps() {
-        return warpManager.filterWarps(PublicFilter.getInstance());
-    }
-*/
-    @Override
-    protected boolean commonDisable() {
-        dbHandler.closeConnection();
 
+    @Override
+    protected boolean commonDisable()
+    {
+        dbHandler.closeConnection();
         return !dbHandler.hasConnection();
     }
 
-    public static Plugin getPlugin() {
+    public static Plugin getPlugin()
+    {
         return de.minestar.fifthelement.Core.INSTANCE;
     }
 }

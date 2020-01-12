@@ -18,6 +18,8 @@
 
 package de.minestar.fifthelement.data;
 
+import com.mojang.api.profiles.HttpUuidToNames;
+import com.mojang.api.profiles.PlayerNameRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -25,23 +27,34 @@ import org.bukkit.World;
 import de.minestar.fifthelement.Core;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
+import java.util.UUID;
+
 public class Bank {
 
     private int id;
-    private String owner;
+    private UUID owner;
+    private String ownerName;
     private Location location;
 
     // CONSTRUCTOR WHEN PLAYER CREATES A HOME
-    public Bank(Location location, String owner) {
+    public Bank(Location location, UUID owner) {
         this.owner = owner;
+        this.ownerName = getPlayerNameByUUID(this.owner);
         this.location = location;
     }
 
     // CONSTUCTOR WHEN HOME IS LOADED FROM DATABASE
-    public Bank(int id, String owner, double x, double y, double z, float yaw, float pitch, String worldName) {
+    public Bank(int id, UUID owner, double x, double y, double z, float yaw, float pitch, String worldName) {
         this.id = id;
         this.owner = owner;
+        this.ownerName = getPlayerNameByUUID(this.owner);
         setLocation(x, y, z, yaw, pitch, worldName);
+    }
+
+    private String getPlayerNameByUUID(UUID playerUUID)
+    {
+        PlayerNameRepository repository = new HttpUuidToNames("minecraft");
+        return repository.getCurrentPlayerNameByUUID(playerUUID);
     }
 
     private void setLocation(double x, double y, double z, float yaw, float pitch, String worldName) {
@@ -56,8 +69,13 @@ public class Bank {
         return location;
     }
 
-    public String getOwner() {
+    public UUID getOwner() {
         return owner;
+    }
+
+    public String getOwnerName()
+    {
+        return this.ownerName;
     }
 
     public int getId() {

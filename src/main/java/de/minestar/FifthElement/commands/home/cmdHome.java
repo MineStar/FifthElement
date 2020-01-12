@@ -18,6 +18,9 @@
 
 package de.minestar.fifthelement.commands.home;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
@@ -40,13 +43,15 @@ public class cmdHome extends AbstractExtendedCommand {
     }
 
     @Override
-    public void execute(String[] args, Player player) {
-
+    public void execute(String[] args, Player player)
+    {
         Home home;
         // OWN HOME
-        if (args.length == 0) {
-            home = Core.homeManager.getHome(player.getName());
-            if (home == null) {
+        if (args.length == 0)
+        {
+            home = Core.homeManager.getHome(player.getUniqueId());
+            if (home == null)
+            {
                 PlayerUtils.sendError(player, pluginName, "Du hast kein Zuhause erstellt!");
                 PlayerUtils.sendInfo(player, "Mit '/setHome' erstellst du dir ein Zuhause.");
                 return;
@@ -54,20 +59,18 @@ public class cmdHome extends AbstractExtendedCommand {
             // TELEPORT PLAYER THE TO WARP
 
             // handle vehicles
-            if (player.isInsideVehicle()) {
-                if (player.getVehicle() instanceof Animals) {
+            if (player.isInsideVehicle())
+            {
+                if (player.getVehicle() instanceof Animals)
+                {
                     // get the animal
                     Entity entity = player.getVehicle();
-
                     // leave it
                     player.leaveVehicle();
-
                     // load the chunk
                     home.getLocation().getChunk().load(true);
-
                     // teleport the animal
                     entity.teleport(home.getLocation());
-
                     // create a Thread
                     EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
@@ -76,72 +79,71 @@ public class cmdHome extends AbstractExtendedCommand {
                     return;
                 }
             }
-
             // STORE EVENTUALLY LAST POSITION
             Core.backManager.handleTeleport(player);
-
             player.teleport(home.getLocation());
             PlayerUtils.sendSuccess(player, pluginName, "Willkommen zu Hause.");
         }
         // HOME OF OTHER PLAYER
-        else if (args.length == 1) {
+        else if (args.length == 1)
+        {
             // CAN PLAYER USE OTHER HOMES
-            if (checkSpecialPermission(player, OTHER_HOME_PERMISSION)) {
-                // FIND THE CORRECT PLAYER NAME
-                String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
-                if (targetName == null) {
-                    PlayerUtils.sendError(player, targetName, "Kann den Spieler '" + args[0] + "' nicht finden!");
+            if (checkSpecialPermission(player, OTHER_HOME_PERMISSION))
+            {
+                ProfileRepository repository = new HttpProfileRepository("minecraft");
+                Profile target = repository.findProfileByName(args[0]);
+
+                if (target == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Kann den Spieler '" + args[0] + "' nicht finden!");
                     return;
                 }
-                home = Core.homeManager.getHome(targetName);
-                if (home == null) {
-                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat kein Zuhause erstellt!");
+                home = Core.homeManager.getHome(target.getUUID());
+                if (home == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + target.getName() + "' hat kein Zuhause erstellt!");
                     return;
                 }
 
                 // handle vehicles
-                if (player.isInsideVehicle()) {
-                    if (player.getVehicle() instanceof Animals) {
-                        if (!home.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                if (player.isInsideVehicle())
+                {
+                    if (player.getVehicle() instanceof Animals)
+                    {
+                        if (!home.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName()))
+                        {
                             PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
                             return;
                         }
                         // get the animal
                         Entity entity = player.getVehicle();
-
                         // leave it
                         player.leaveVehicle();
-
                         // load the chunk
                         home.getLocation().getChunk().load(true);
-
                         // teleport the animal
                         entity.teleport(home.getLocation());
-
                         // create a Thread
                         EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
                         Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
-                    } else {
+                    }
+                    else {
                         PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
                         return;
                     }
                 }
-
                 // STORE EVENTUALLY LAST POSITION
                 Core.backManager.handleTeleport(player);
-
                 player.teleport(home.getLocation());
-                PlayerUtils.sendSuccess(player, pluginName, "Haus von '" + home.getOwner() + "'.");
-            } else
-                return;
+                PlayerUtils.sendSuccess(player, pluginName, "Haus von '" + home.getOwnerName() + "'.");
+            } else return;
         }
         // WRONG COMMAND SYNTAX
         else {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
-
         // FIRE STATISTIC
-        StatisticHandler.handleStatistic(new HomeStat(player.getName(), home.getOwner()));
+        StatisticHandler.handleStatistic(new HomeStat(player.getName(), home.getOwnerName()));
     }
 }

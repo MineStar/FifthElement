@@ -21,6 +21,7 @@ package de.minestar.fifthelement.manager;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.UUID;
 
 import de.outinetworks.permissionshub.PermissionUtils;
 import org.bukkit.Location;
@@ -29,38 +30,34 @@ import org.bukkit.entity.Player;
 
 import de.minestar.fifthelement.Settings;
 
-public class BackManager {
+public class BackManager
+{
+    private Map<UUID, LinkedList<Location>> lastPositionMap;
 
-    private Map<String, LinkedList<Location>> lastPositionMap;
-
-    public BackManager() {
+    public BackManager()
+    {
         lastPositionMap = new HashMap<>();
     }
 
     private static final String BACK_PERMISSION = "fifthelement.command.back";
 
-    public void handleTeleport(Player player) {
-        if (PermissionUtils.playerCanUseCommand(player, BACK_PERMISSION))
-            storeLastPosition(player);
+    public void handleTeleport(Player player)
+    {
+        if (PermissionUtils.playerCanUseCommand(player, BACK_PERMISSION)) storeLastPosition(player);
     }
 
-    private void storeLastPosition(Player player) {
-        String playerName = player.getName().toLowerCase();
-        LinkedList<Location> lastPositions = lastPositionMap.computeIfAbsent(playerName, k -> new LinkedList<>());
-
+    private void storeLastPosition(Player player)
+    {
+        LinkedList<Location> lastPositions = lastPositionMap.computeIfAbsent(player.getUniqueId(), k -> new LinkedList<>());
         // STORE ONLY LAST X POSITION
-        if (lastPositions.size() > Settings.getBackPositionLimit())
-            lastPositions.removeFirst();
-
+        if (lastPositions.size() > Settings.getBackPositionLimit()) lastPositions.removeFirst();
         lastPositions.addLast(player.getLocation());
     }
 
-    public Location getLastPosition(String player) {
-        LinkedList<Location> list = lastPositionMap.get(player.toLowerCase());
-        if (list == null || list.isEmpty())
-            return null;
-        else
-            return list.removeLast();
+    public Location getLastPosition(UUID playerUUID)
+    {
+        LinkedList<Location> list = lastPositionMap.get(playerUUID);
+        if (list == null || list.isEmpty()) return null;
+        else return list.removeLast();
     }
-
 }

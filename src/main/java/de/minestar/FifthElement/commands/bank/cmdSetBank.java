@@ -18,6 +18,9 @@
 
 package de.minestar.fifthelement.commands.bank;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -30,50 +33,50 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public class cmdSetBank extends AbstractCommand {
 
-    public cmdSetBank(String syntax, String arguments, String node) {
+    public cmdSetBank(String syntax, String arguments, String node)
+    {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
-    public void execute(String[] args, Player player) {
-        String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
+    public void execute(String[] args, Player player)
+    {
+        ProfileRepository repository = new HttpProfileRepository("minecraft");
+        Profile target = repository.findProfileByName(args[0]);
         // SEARCH FOR PLAYER NAME
-        if (targetName == null) {
+        if (target == null)
+        {
             PlayerUtils.sendError(player, pluginName, "Der Spieler '" + args[0] + "' wurde nicht gefunden!");
             return;
         }
         // GET THE BANK
-        Bank bank = Core.bankManager.getBank(targetName);
+        Bank bank = Core.bankManager.getBank(target.getUUID());
         // PLAYER HAS NO BANK YET
-        if (bank == null) {
+        if (bank == null)
+        {
             // CREATE BANK
-            Core.bankManager.createBank(player, targetName);
-            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank für den Spieler '" + targetName + "' erstellt.");
-
+            Core.bankManager.createBank(player, target.getUUID());
+            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank für den Spieler '" + target.getName() + "' erstellt.");
             // INFORM THE BANK OWNER IF ONLINE
-            Player target = Bukkit.getPlayerExact(targetName);
-            if (target != null) {
-                PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat für dich eine Bank erstellt!");
-                PlayerUtils.sendInfo(target, "Verwende den Befehl '/bank' um dich dort hin zu teleportieren!");
+            Player targetPlayer = Bukkit.getPlayer(target.getUUID());
+            if (targetPlayer != null)
+            {
+                PlayerUtils.sendInfo(targetPlayer, pluginName, "Der Spieler '" + player.getName() + "' hat für dich eine Bank erstellt!");
+                PlayerUtils.sendInfo(targetPlayer, "Verwende den Befehl '/bank' um dich dort hin zu teleportieren!");
             }
-
             // FIRE STATISTIC
-            StatisticHandler.handleStatistic(new SetBankStat(player.getName(), targetName, false));
+            StatisticHandler.handleStatistic(new SetBankStat(player.getName(), target.getName(), false));
         }
         // PLAYER HAS A BANK -> UPDATE POSITION
         else {
             // CHANGE BANK POSITION
             Core.bankManager.moveBank(player, bank);
-            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank für den Spieler '" + targetName + "' erstellt.");
-
+            PlayerUtils.sendSuccess(player, pluginName, "Es wurde eine Bank für den Spieler '" + target.getName() + "' erstellt.");
             // INFORM THE BANK OWNER IF ONLINE
-            Player target = Bukkit.getPlayerExact(targetName);
-            if (target != null)
-                PlayerUtils.sendInfo(target, pluginName, "Der Spieler '" + player.getName() + "' hat deine Bankposition verändert!");
-
+            Player targetPlayer = Bukkit.getPlayer(target.getUUID());
+            if (targetPlayer != null) PlayerUtils.sendInfo(targetPlayer, pluginName, "Der Spieler '" + player.getName() + "' hat deine Bankposition verändert!");
             // FIRE STATISTIC
-            StatisticHandler.handleStatistic(new SetBankStat(player.getName(), targetName, true));
+            StatisticHandler.handleStatistic(new SetBankStat(player.getName(), target.getName(), true));
         }
-
     }
 }

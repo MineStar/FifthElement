@@ -33,7 +33,7 @@ public class cmdBack extends AbstractCommand {
 
     @Override
     public void execute(String[] args, Player player) {
-        Location loc = Core.backManager.getLastPosition(player.getName());
+        Location loc = Core.backManager.getLastPosition(player.getUniqueId());
         if (loc == null) {
             PlayerUtils.sendError(player, pluginName, "Es existiert keine letzte Position von dir!");
             return;

@@ -41,6 +41,32 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<artifactSet>
+								<includes>
+									<include>com.mojang:accounts-client</include>
+								</includes>
+							</artifactSet>
+							<relocations>
+								<relocation>
+									<pattern>com.mojang</pattern>
+									<shadedPattern>de.minestar.fifthelement.libs.com.mojang</shadedPattern>
+								</relocation>
+							</relocations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -51,8 +77,13 @@
 		</dependency>
 		<dependency>
 			<groupId>de.minestar</groupId>
-			<artifactId>MoneyPit</artifactId>
+			<artifactId>MoneyPit2</artifactId>
 			<version>1.15.1U-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mojang</groupId>
+			<artifactId>accounts-client</artifactId>
+			<version>1.0.3</version>
 		</dependency>
 	</dependencies>
 	<properties>

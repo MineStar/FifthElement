@@ -29,34 +29,37 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdSetMine extends AbstractCommand {
-
-    public cmdSetMine(String syntax, String arguments, String node) {
+public class cmdSetMine extends AbstractCommand
+{
+    public cmdSetMine(String syntax, String arguments, String node)
+    {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
-    public void execute(String[] args, Player player) {
-
+    public void execute(String[] args, Player player)
+    {
         World resourceWorld = Settings.getResourceWorld();
         // CHECK IF RESOURCE WORLD IS EXISTING
-        if (resourceWorld == null) {
+        if (resourceWorld == null)
+        {
             PlayerUtils.sendError(player, pluginName, "Es ist keine Resourcenwelt eingestellt!");
             return;
         }
         // CHECK IF PLAYER IS IN RESOURCE WORLD
-        if (!player.getWorld().equals(resourceWorld)) {
+        if (!player.getWorld().equals(resourceWorld))
+        {
             PlayerUtils.sendError(player, pluginName, "Du kannst die Mine nur in der Resourcenwelt erstellen!");
             return;
         }
 
-        Mine mine = Core.mineManager.getMine(player.getName());
+        Mine mine = Core.mineManager.getMine(player.getUniqueId());
         // CREATE NEW MINE
-        if (mine == null) {
+        if (mine == null)
+        {
             Core.mineManager.createMine(player);
             PlayerUtils.sendSuccess(player, pluginName, "Du hast dir nun eine Mine erstellt!");
             PlayerUtils.sendInfo(player, "Mit '/mine' kommst du zu deiner Mine.");
-
             // FIRE STATISTIC
             StatisticHandler.handleStatistic(new SetMineStat(player.getName(), false));
         }
@@ -64,7 +67,6 @@ public class cmdSetMine extends AbstractCommand {
         else {
             Core.mineManager.moveMine(player, mine);
             PlayerUtils.sendSuccess(player, pluginName, "Deine Mine ist nun hier.");
-
             // FIRE STATISTIC
             StatisticHandler.handleStatistic(new SetMineStat(player.getName(), true));
         }

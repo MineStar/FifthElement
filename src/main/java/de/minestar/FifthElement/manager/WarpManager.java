@@ -32,12 +32,13 @@ import de.minestar.fifthelement.data.WarpCounter;
 import de.minestar.fifthelement.data.filter.WarpFilter;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
-public class WarpManager {
-
+public class WarpManager
+{
     private TreeMap<String, Warp> warpMap;
     private Map<UUID, WarpCounter> warpCounterMap;
 
-    public WarpManager() {
+    public WarpManager()
+    {
         loadWarps();
     }
 
@@ -45,13 +46,15 @@ public class WarpManager {
     // LOADING AND INITIALIZATION
     // **************************
 
-    private void loadWarps() {
+    private void loadWarps()
+    {
         warpMap = Core.dbHandler.loadWarps();
         int[] counter = countWarps();
         ConsoleUtils.printInfo(Core.NAME, "Loaded " + warpMap.size() + " Warps. There were " + counter[0] + " public and " + counter[1] + " private warps");
     }
 
-    private int[] countWarps() {
+    private int[] countWarps()
+    {
         // FIRST ELEMENT = GOBAL COUNTER FOR PUBLIC
         // SECOND ELEMENT = GOBAL COUNTER FOR PRIVATE
         int[] counter = new int[2];
@@ -60,21 +63,23 @@ public class WarpManager {
         UUID owner;
         WarpCounter warpCounter;
 
-        for (Warp warp : warpMap.values()) {
+        for (Warp warp : warpMap.values())
+        {
             owner = warp.getOwner();
             // GET COUNTER FOR THE OWNER
             warpCounter = getWarpCounter(owner);
 
             // INCREMENT THE COUNTER
-            if (warp.isPublic()) {
+            if (warp.isPublic())
+            {
                 warpCounter.incrementPublicWarps();
                 counter[0]++;
-            } else {
+            }
+            else {
                 warpCounter.incrementPrivateWarps();
                 counter[1]++;
             }
         }
-
         return counter;
     }
 
@@ -83,75 +88,54 @@ public class WarpManager {
     // **************************
 
     // EXACT NAME NEEDED
-    public boolean isWarpExisting(String warpName) {
+    public boolean isWarpExisting(String warpName)
+    {
         return warpMap.containsKey(warpName.toLowerCase());
     }
 
-    public void transferWarps(String oldPlayer, String newPlayer) {
-        Core.dbHandler.transferWarps(oldPlayer, newPlayer);
-        loadWarps();
-    }
-
     // EXACT NAME NEEDED
-    public Warp getWarp(String warpName) {
+    public Warp getWarp(String warpName)
+    {
         return warpMap.get(warpName.toLowerCase());
     }
 
-    public List<Warp> findWarp(String searchWord) {
-
-        List<Warp> results = new ArrayList<>();
-        // HAVE FOUND EXACT NAME
-        Warp warp = getWarp(searchWord);
-        if (warp != null)
-            results.add(warp);
-
-        searchWord = searchWord.toLowerCase();
-        warp = warpMap.ceilingEntry(searchWord).getValue();
-        if (warp != null)
-            results.add(warp);
-
-        warp = warpMap.floorEntry(searchWord).getValue();
-        if (warp != null)
-            results.add(warp);
-
-        return results;
-    }
-
     // SEARCH FOR WARP USING CONTAINS
-    public List<Warp> searchWarp(String searchWord) {
+    public List<Warp> searchWarp(String searchWord)
+    {
         List<Warp> results = new LinkedList<>();
-
         searchWord = searchWord.toLowerCase();
 
-        for (Entry<String, Warp> entry : warpMap.entrySet()) {
-            if (entry.getKey().contains(searchWord))
-                results.add(entry.getValue());
+        for (Entry<String, Warp> entry : warpMap.entrySet())
+        {
+            if (entry.getKey().contains(searchWord)) results.add(entry.getValue());
         }
-
         return results;
     }
 
-    public List<Warp> filterWarps(WarpFilter... warpFilter) {
-
+    public List<Warp> filterWarps(WarpFilter... warpFilter)
+    {
         List<Warp> results = new ArrayList<>();
 
-        out : for (Warp warp : warpMap.values()) {
-            for (WarpFilter filter : warpFilter) {
-                if (!filter.accept(warp))
-                    continue out;
+        out : for (Warp warp : warpMap.values())
+        {
+            for (WarpFilter filter : warpFilter)
+            {
+                if (!filter.accept(warp)) continue out;
             }
             results.add(warp);
         }
         return results;
     }
 
-    public List<Warp> filterWarps(List<WarpFilter> warpFilter) {
+    public List<Warp> filterWarps(List<WarpFilter> warpFilter)
+    {
         List<Warp> results = new ArrayList<>();
 
-        out : for (Warp warp : warpMap.values()) {
-            for (WarpFilter filter : warpFilter) {
-                if (!filter.accept(warp))
-                    continue out;
+        out : for (Warp warp : warpMap.values())
+        {
+            for (WarpFilter filter : warpFilter)
+            {
+                if (!filter.accept(warp)) continue out;
             }
             results.add(warp);
         }
@@ -163,43 +147,46 @@ public class WarpManager {
     // **************************
 
     // NAME MUST BE UNIQUE
-    public void createWarp(String warpName, Player creator) {
+    public void createWarp(String warpName, Player creator)
+    {
         Warp warp = new Warp(warpName, creator);
         incrementWarpCount(warp);
         Core.dbHandler.addWarp(warp);
         warpMap.put(warpName.toLowerCase(), warp);
     }
 
-    private void incrementWarpCount(Warp warp) {
+    private void incrementWarpCount(Warp warp)
+    {
         WarpCounter counter = getWarpCounter(warp.getOwner());
 
-        if (warp.isPublic())
-            counter.incrementPublicWarps();
-        else
-            counter.incrementPrivateWarps();
+        if (warp.isPublic()) counter.incrementPublicWarps();
+        else counter.incrementPrivateWarps();
     }
 
-    public void deleteWarp(Warp warp) {
+    public void deleteWarp(Warp warp)
+    {
         decrementWarpCount(warp);
         Core.dbHandler.deleteWarp(warp);
         warpMap.remove(warp.getName().toLowerCase());
     }
 
-    private void decrementWarpCount(Warp warp) {
+    private void decrementWarpCount(Warp warp)
+    {
         WarpCounter counter = getWarpCounter(warp.getOwner());
 
-        if (warp.isPublic())
-            counter.decrementPublicWarps();
-        else
-            counter.decrementPrivateWarps();
+        if (warp.isPublic()) counter.decrementPublicWarps();
+        else counter.decrementPrivateWarps();
     }
 
-    public void changeAccess(Warp warp, boolean toPublic) {
+    public void changeAccess(Warp warp, boolean toPublic)
+    {
         WarpCounter counter = getWarpCounter(warp.getOwner());
-        if (toPublic) {
+        if (toPublic)
+        {
             counter.decrementPrivateWarps();
             counter.incrementPublicWarps();
-        } else {
+        }
+        else {
             counter.decrementPublicWarps();
             counter.incrementPrivateWarps();
         }
@@ -208,26 +195,31 @@ public class WarpManager {
         Core.dbHandler.updateAccess(warp);
     }
 
-    public void addGuest(Warp warp, String guestName) {
+    public void addGuest(Warp warp, String guestName)
+    {
         warp.addGuest(guestName);
         Core.dbHandler.updateGuests(warp);
     }
 
-    public void removeGuest(Warp warp, String guestName) {
+    public void removeGuest(Warp warp, String guestName)
+    {
         warp.removeGuest(guestName);
         Core.dbHandler.updateGuests(warp);
     }
 
-    public WarpCounter getWarpCounter(UUID owner) {
+    public WarpCounter getWarpCounter(UUID owner)
+    {
         WarpCounter counter = warpCounterMap.get(owner);
-        if (counter == null) {
+        if (counter == null)
+        {
             counter = new WarpCounter(owner);
             warpCounterMap.put(owner, counter);
         }
         return counter;
     }
 
-    public boolean canCreatePublic(UUID playerUUID) {
+    public boolean canCreatePublic(UUID playerUUID)
+    {
         // GET THE CURRENT COUNT
         WarpCounter counter = getWarpCounter(playerUUID);
         // GET THE GROUP OF THE PLAYER
@@ -236,7 +228,8 @@ public class WarpManager {
         return counter.getPublicWarps() < Integer.parseInt(PermissionUtils.getOption(playerUUID,"maxpublicwarps"));
     }
 
-    public boolean canCreatePrivate(UUID playerUUID) {
+    public boolean canCreatePrivate(UUID playerUUID)
+    {
         // GET THE CURRENT COUNT
         WarpCounter counter = getWarpCounter(playerUUID);
         // GET THE GROUP OF THE PLAYER
@@ -245,12 +238,14 @@ public class WarpManager {
         return counter.getPrivateWarps() < Integer.parseInt(PermissionUtils.getOption(playerUUID,"maxprivatewarps"));
     }
 
-    public void moveWarp(Warp warp, Player player) {
+    public void moveWarp(Warp warp, Player player)
+    {
         warp.move(player);
         Core.dbHandler.updateWarpLocation(warp);
     }
 
-    public void renameWarp(Warp warp, String newName) {
+    public void renameWarp(Warp warp, String newName)
+    {
         // DELETE OLD ENTRY
         this.warpMap.remove(warp.getName().toLowerCase());
         // RENAME
@@ -260,18 +255,21 @@ public class WarpManager {
         Core.dbHandler.updateWarpName(warp);
     }
 
-    public void setUseMode(Warp warp, byte useMode) {
+    public void setUseMode(Warp warp, byte useMode)
+    {
         warp.setUseMode(useMode);
 
         // PERSIST
         Core.dbHandler.updateUseMode(warp);
     }
 
-    public boolean isWarpAllowedIn(World world) {
+    public boolean isWarpAllowedIn(World world)
+    {
         return isWarpAllowedIn(world.getName());
     }
 
-    public boolean isWarpAllowedIn(String worldName) {
+    public boolean isWarpAllowedIn(String worldName)
+    {
         return !Settings.getForbiddenWarpWorlds().contains(worldName.toLowerCase());
     }
 
@@ -296,11 +294,13 @@ public class WarpManager {
         keyWords.add("mode");
     }
 
-    public boolean isKeyWord(String warpName) {
+    public boolean isKeyWord(String warpName)
+    {
         return keyWords.contains(warpName.toLowerCase());
     }
 
-    public boolean isValidName(String warpName) {
+    public boolean isValidName(String warpName)
+    {
         return warpName.length() >= Settings.getMinWarpnameSize() && warpName.length() <= Settings.getMaxWarpnameSize();
     }
 }

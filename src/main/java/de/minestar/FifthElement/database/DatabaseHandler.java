@@ -56,8 +56,8 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     }
 
     @Override
-    protected void createStatements(String pluginName, Connection con) throws Exception {
-
+    protected void createStatements(String pluginName, Connection con) throws Exception
+    {
         /* WARPS */
         addWarp = con.prepareStatement("INSERT INTO fifthelement_warp (name, owner, world, x, y, z, yaw, pitch, isPublic, guests, useMode, creationDate) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -73,29 +73,20 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
         updateUseMode = con.prepareStatement("UPDATE fifthelement_warp SET useMode = ? WHERE id = ?");
 
-        updateWarpOwner = con.prepareStatement("UPDATE fifthelement_warp SET owner = ? WHERE owner = ?");
-
         /* HOME */
         addHome = con.prepareStatement("INSERT INTO fifthelement_home (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateHomeLocation = con.prepareStatement("UPDATE fifthelement_home SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
-
-        updateHomeOwner = con.prepareStatement("UPDATE fifthelement_home SET player = ? WHERE player = ?");
 
         /* BANK */
         addBank = con.prepareStatement("INSERT INTO fifthelement_bank (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateBankLocation = con.prepareStatement("UPDATE fifthelement_bank SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
 
-        updateBankOwner = con.prepareStatement("UPDATE fifthelement_bank SET player = ? WHERE player = ?");
-
         /* MINE */
         addMine = con.prepareStatement("INSERT INTO fifthelement_mine (player, world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
         updateMineLocation = con.prepareStatement("UPDATE fifthelement_mine SET world = ? , x = ? , y = ? , z = ? , yaw = ? , pitch = ? WHERE id = ?");
-
-        updateMineOwner = con.prepareStatement("UPDATE fifthelement_mine SET player = ? WHERE player = ?");
-
     }
 
     // *****************
@@ -110,7 +101,6 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     private PreparedStatement updateGuestList;
     private PreparedStatement updateAccess;
     private PreparedStatement updateUseMode;
-    private PreparedStatement updateWarpOwner;
 
     public TreeMap<String, Warp> loadWarps() {
         TreeMap<String, Warp> warpMap = new TreeMap<>();
@@ -293,11 +283,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     /* STATEMENTS */
     private PreparedStatement addHome;
     private PreparedStatement updateHomeLocation;
-    private PreparedStatement updateHomeOwner;
 
-    public Map<String, Home> loadHomes() {
+    public Map<UUID, Home> loadHomes() {
 
-        Map<String, Home> homeMap = new HashMap<>();
+        Map<UUID, Home> homeMap = new HashMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
             ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM fifthelement_home");
@@ -328,7 +317,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 pitch = rs.getFloat(8);
 
                 // CREATE WARP AND PUT IT TO MAP
-                homeMap.put(player.toLowerCase(), new Home(id, player, x, y, z, yaw, pitch, worldName));
+                homeMap.put(UUID.fromString(player), new Home(id, UUID.fromString(player), x, y, z, yaw, pitch, worldName));
             }
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't load homes from table!");
@@ -341,7 +330,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     public boolean addHome(Home home) {
         try {
             // INSERT NEW HOME
-            addHome.setString(1, home.getOwner());
+            addHome.setString(1, home.getOwner().toString());
             addHome.setString(2, home.getLocation().getWorld().getName());
             addHome.setDouble(3, home.getLocation().getX());
             addHome.setDouble(4, home.getLocation().getY());
@@ -397,11 +386,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     /* STATEMENTS */
     private PreparedStatement addBank;
     private PreparedStatement updateBankLocation;
-    private PreparedStatement updateBankOwner;
 
-    public Map<String, Bank> loadBanks() {
+    public Map<UUID, Bank> loadBanks() {
 
-        Map<String, Bank> bankMap = new HashMap<>();
+        Map<UUID, Bank> bankMap = new HashMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
             ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM fifthelement_bank");
@@ -432,7 +420,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 pitch = rs.getFloat(8);
 
                 // CREATE WARP AND PUT IT TO MAP
-                bankMap.put(player.toLowerCase(), new Bank(id, player, x, y, z, yaw, pitch, worldName));
+                bankMap.put(UUID.fromString(player), new Bank(id, UUID.fromString(player), x, y, z, yaw, pitch, worldName));
             }
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't load bank from table!");
@@ -445,7 +433,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     public boolean addBank(Bank bank) {
         try {
             // INSERT NEW HOME
-            addBank.setString(1, bank.getOwner());
+            addBank.setString(1, bank.getOwner().toString());
             addBank.setString(2, bank.getLocation().getWorld().getName());
             addBank.setDouble(3, bank.getLocation().getX());
             addBank.setDouble(4, bank.getLocation().getY());
@@ -501,11 +489,10 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     /* STATEMENTS */
     private PreparedStatement addMine;
     private PreparedStatement updateMineLocation;
-    private PreparedStatement updateMineOwner;
 
-    public Map<String, Mine> loadMines() {
+    public Map<UUID, Mine> loadMines() {
 
-        Map<String, Mine> mineMap = new HashMap<>();
+        Map<UUID, Mine> mineMap = new HashMap<>();
         try {
             Statement stat = dbConnection.getConnection().createStatement();
             ResultSet rs = stat.executeQuery("SELECT id, player, world, x, y, z, yaw, pitch FROM fifthelement_mine");
@@ -536,7 +523,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
                 pitch = rs.getFloat(8);
 
                 // CREATE WARP AND PUT IT TO MAP
-                mineMap.put(player.toLowerCase(), new Mine(id, player, x, y, z, yaw, pitch, worldName));
+                mineMap.put(UUID.fromString(player), new Mine(id, UUID.fromString(player), x, y, z, yaw, pitch, worldName));
             }
         } catch (Exception e) {
             ConsoleUtils.printException(e, Core.NAME, "Can't load homes from table!");
@@ -549,7 +536,7 @@ public class DatabaseHandler extends AbstractMySQLHandler {
     public boolean addMine(Mine mine) {
         try {
             // INSERT NEW HOME
-            addMine.setString(1, mine.getOwner());
+            addMine.setString(1, mine.getOwner().toString());
             addMine.setString(2, mine.getLocation().getWorld().getName());
             addMine.setDouble(3, mine.getLocation().getX());
             addMine.setDouble(4, mine.getLocation().getY());
@@ -598,58 +585,6 @@ public class DatabaseHandler extends AbstractMySQLHandler {
 
     }
 
-    public boolean transferWarps(String oldPlayer, String newPlayer) {
-        try {
-            // UPDATE THE WARP NAME
-            updateWarpOwner.setString(1, newPlayer);
-            updateWarpOwner.setString(2, oldPlayer);
-            updateWarpOwner.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            ConsoleUtils.printException(e, Core.NAME, "Can't update warp owner of warps = " + oldPlayer + " to " + newPlayer);
-            return false;
-        }
-    }
-
-    public boolean transferHome(String oldPlayer, String newPlayer) {
-        try {
-            // UPDATE THE WARP NAME
-            updateHomeOwner.setString(1, newPlayer);
-            updateHomeOwner.setString(2, oldPlayer);
-            updateHomeOwner.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            ConsoleUtils.printException(e, Core.NAME, "Can't update home owner of warps = " + oldPlayer + " to " + newPlayer);
-            return false;
-        }
-    }
-
-    public boolean transferBank(String oldPlayer, String newPlayer) {
-        try {
-            // UPDATE THE WARP NAME
-            updateBankOwner.setString(1, newPlayer);
-            updateBankOwner.setString(2, oldPlayer);
-            updateBankOwner.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            ConsoleUtils.printException(e, Core.NAME, "Can't update bank owner of warps = " + oldPlayer + " to " + newPlayer);
-            return false;
-        }
-    }
-
-    public boolean transferMine(String oldPlayer, String newPlayer) {
-        try {
-            // UPDATE THE WARP NAME
-            updateMineOwner.setString(1, newPlayer);
-            updateMineOwner.setString(2, oldPlayer);
-            updateMineOwner.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            ConsoleUtils.printException(e, Core.NAME, "Can't update min owner of warps = " + oldPlayer + " to " + newPlayer);
-            return false;
-        }
-    }
-
     private static String toString(Collection<Guest> list) {
         StringBuilder result = new StringBuilder();
         if (list == null || list.size() < 1) {
@@ -666,5 +601,4 @@ public class DatabaseHandler extends AbstractMySQLHandler {
         }
         return result.toString();
     }
-
 }

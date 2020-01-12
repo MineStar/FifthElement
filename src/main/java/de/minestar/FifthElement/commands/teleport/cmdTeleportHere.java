@@ -31,8 +31,8 @@ import de.minestar.fifthelement.threads.EntityTeleportThread;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdTeleportHere extends AbstractExtendedCommand {
-
+public class cmdTeleportHere extends AbstractExtendedCommand
+{
     public cmdTeleportHere(String syntax, String arguments, String node) {
         super(Core.NAME, syntax, arguments, node);
     }
@@ -43,33 +43,29 @@ public class cmdTeleportHere extends AbstractExtendedCommand {
         List<String> successfulTeleports = new ArrayList<>();
         String message = "Du wurdest zum Spieler '" + player.getName() + "' teleportiert!";
 
-        for (String targetName : args) {
+        for (String targetName : args)
+        {
             // GET THE TARGET
             target = PlayerUtils.getOnlinePlayer(targetName);
-            if (target == null)
-                PlayerUtils.sendError(player, pluginName, "Spieler '" + args[0] + "' ist entweder offline oder kann nicht gefunden werden!");
+            if (target == null) PlayerUtils.sendError(player, pluginName, "Spieler '" + args[0] + "' ist entweder offline oder kann nicht gefunden werden!");
             else {
-                // TELEPORT TARGET TO PLAYER
-
                 // handle vehicles
                 if (target.isInsideVehicle()) {
-                    if (target.getVehicle() instanceof Animals) {
-                        if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    if (target.getVehicle() instanceof Animals)
+                    {
+                        if (!target.getWorld().getName().equalsIgnoreCase(player.getWorld().getName()))
+                        {
                             PlayerUtils.sendError(player, pluginName, "Spieler '" + args[0] + "' reitet in einer anderen Welt!");
                             continue;
                         }
                         // get the animal
                         Entity entity = target.getVehicle();
-
                         // leave it
                         target.leaveVehicle();
-
                         // load the chunk
                         target.getLocation().getChunk().load(true);
-
                         // teleport the animal
                         entity.teleport(player.getLocation());
-
                         // create a Thread
                         EntityTeleportThread thread = new EntityTeleportThread(target.getName(), entity);
                         Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
@@ -78,16 +74,16 @@ public class cmdTeleportHere extends AbstractExtendedCommand {
                         continue;
                     }
                 }
-
+                // TELEPORT TARGET TO PLAYER
                 target.teleport(player);
                 PlayerUtils.sendInfo(target, pluginName, message);
-
                 successfulTeleports.add(target.getName());
             }
         }
 
         // SEND INFORMATION ABOUT TELEPORTED PLAYER
-        if (!successfulTeleports.isEmpty()) {
+        if (!successfulTeleports.isEmpty())
+        {
             PlayerUtils.sendSuccess(player, pluginName, "Folgende Spieler wurden zu dir teleportiert:");
             PlayerUtils.sendInfo(player, successfulTeleports.toString());
         }

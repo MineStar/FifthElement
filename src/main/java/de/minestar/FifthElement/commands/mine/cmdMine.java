@@ -18,6 +18,9 @@
 
 package de.minestar.fifthelement.commands.mine;
 
+import com.mojang.api.profiles.HttpProfileRepository;
+import com.mojang.api.profiles.Profile;
+import com.mojang.api.profiles.ProfileRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
@@ -31,118 +34,114 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractExtendedCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdMine extends AbstractExtendedCommand {
-
+public class cmdMine extends AbstractExtendedCommand
+{
     private static final String OTHER_MINE_PERMISSION = "fifthelement.command.othermine";
 
-    public cmdMine(String syntax, String arguments, String node) {
+    public cmdMine(String syntax, String arguments, String node)
+    {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
-    public void execute(String[] args, Player player) {
-
+    public void execute(String[] args, Player player)
+    {
         Mine mine;
         // OWN MINE
-        if (args.length == 0) {
-            mine = Core.mineManager.getMine(player.getName());
-            if (mine == null) {
+        if (args.length == 0)
+        {
+            mine = Core.mineManager.getMine(player.getUniqueId());
+            if (mine == null)
+            {
                 PlayerUtils.sendError(player, pluginName, "Du hast keine Mine erstellt!");
                 PlayerUtils.sendInfo(player, "Mit '/setMine' erstellst du dir eine Mine.");
                 return;
             }
 
             // handle vehicles
-            if (player.isInsideVehicle()) {
-                if (player.getVehicle() instanceof Animals) {
+            if (player.isInsideVehicle())
+            {
+                if (player.getVehicle() instanceof Animals)
+                {
                     // get the animal
                     Entity entity = player.getVehicle();
-
                     // leave it
                     player.leaveVehicle();
-
                     // load the chunk
                     mine.getLocation().getChunk().load(true);
-
                     // teleport the animal
                     entity.teleport(mine.getLocation());
-
                     // create a Thread
                     EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
-                } else {
+                }
+                else {
                     PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
                     return;
                 }
             }
-
             // STORE EVENTUALLY LAST POSITION
             Core.backManager.handleTeleport(player);
-
             player.teleport(mine.getLocation());
             PlayerUtils.sendSuccess(player, pluginName, "Willkommen in deiner Mine.");
         }
         // MINE OF OTHER PLAYER
-        else if (args.length == 1) {
+        else if (args.length == 1)
+        {
             // CAN PLAYER USE OTHER MINES
-            if (checkSpecialPermission(player, OTHER_MINE_PERMISSION)) {
-                // FIND THE CORRECT PLAYER NAME
-                String targetName = PlayerUtils.getCorrectPlayerName(args[0]);
-                if (targetName == null) {
-                    PlayerUtils.sendError(player, targetName, "Kann den Spieler '" + args[0] + "' nicht finden!");
+            if (checkSpecialPermission(player, OTHER_MINE_PERMISSION))
+            {
+                ProfileRepository repository = new HttpProfileRepository("minecraft");
+                Profile target = repository.findProfileByName(args[0]);
+                if (target == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Kann den Spieler '" + args[0] + "' nicht finden!");
                     return;
                 }
-                mine = Core.mineManager.getMine(targetName);
-                if (mine == null) {
-                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + targetName + "' hat keine Mine erstellt!");
+                mine = Core.mineManager.getMine(target.getUUID());
+                if (mine == null)
+                {
+                    PlayerUtils.sendError(player, pluginName, "Der Spieler '" + target.getName() + "' hat keine Mine erstellt!");
                     return;
                 }
-
                 // handle vehicles
-                if (player.isInsideVehicle()) {
-                    if (player.getVehicle() instanceof Animals) {
+                if (player.isInsideVehicle())
+                {
+                    if (player.getVehicle() instanceof Animals)
+                    {
                         if (!mine.getLocation().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
                             PlayerUtils.sendError(player, pluginName, "Tiere können die Welt nicht wechseln!");
                             return;
                         }
-
                         // get the animal
                         Entity entity = player.getVehicle();
-
                         // leave it
                         player.leaveVehicle();
-
                         // load the chunk
                         mine.getLocation().getChunk().load(true);
-
                         // teleport the animal
                         entity.teleport(mine.getLocation());
-
                         // create a Thread
                         EntityTeleportThread thread = new EntityTeleportThread(player.getName(), entity);
                         Bukkit.getScheduler().scheduleSyncDelayedTask(Core.getPlugin(), thread, 10L);
-                    } else {
+                    }
+                    else {
                         PlayerUtils.sendError(player, pluginName, "Du kannst dich mit Fahrzeug nicht teleportieren!");
                         return;
                     }
                 }
-
                 // STORE EVENTUALLY LAST POSITION
                 Core.backManager.handleTeleport(player);
-
                 player.teleport(mine.getLocation());
-                PlayerUtils.sendSuccess(player, pluginName, "Mine von '" + mine.getOwner() + "'.");
-            } else
-                return;
-
+                PlayerUtils.sendSuccess(player, pluginName, "Mine von '" + mine.getOwnerName() + "'.");
+            } else return;
         }
         // WRONG COMMAND SYNTAX
         else {
             PlayerUtils.sendError(player, pluginName, getHelpMessage());
             return;
         }
-
         // FIRE STATISTIC
-        StatisticHandler.handleStatistic(new MineStat(player.getName(), mine.getOwner()));
+        StatisticHandler.handleStatistic(new MineStat(player.getName(), mine.getOwnerName()));
     }
 }

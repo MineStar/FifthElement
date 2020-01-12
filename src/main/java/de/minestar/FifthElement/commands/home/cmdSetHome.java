@@ -27,21 +27,24 @@ import de.minestar.minestarlibrary.stats.StatisticHandler;
 import de.minestar.minestarlibrary.commands.AbstractCommand;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-public class cmdSetHome extends AbstractCommand {
+public class cmdSetHome extends AbstractCommand
+{
 
-    public cmdSetHome(String syntax, String arguments, String node) {
+    public cmdSetHome(String syntax, String arguments, String node)
+    {
         super(Core.NAME, syntax, arguments, node);
     }
 
     @Override
-    public void execute(String[] args, Player player) {
-        Home home = Core.homeManager.getHome(player.getName());
+    public void execute(String[] args, Player player)
+    {
+        Home home = Core.homeManager.getHome(player.getUniqueId());
         // CREATE NEW HOME
-        if (home == null) {
+        if (home == null)
+        {
             Core.homeManager.createHome(player);
             PlayerUtils.sendSuccess(player, pluginName, "Du hast dir nun ein Zuhause erstellt!");
             PlayerUtils.sendInfo(player, "Mit '/home' kommst du nach Hause.");
-
             // FIRE STATISTIC
             StatisticHandler.handleStatistic(new SetHomeStat(player.getName(), false));
         }
@@ -49,10 +52,8 @@ public class cmdSetHome extends AbstractCommand {
         else {
             Core.homeManager.moveHome(player, home);
             PlayerUtils.sendSuccess(player, pluginName, "Dein Zuhause ist nun hier.");
-
             // FIRE STATISTIC
             StatisticHandler.handleStatistic(new SetHomeStat(player.getName(), true));
-
         }
     }
 }

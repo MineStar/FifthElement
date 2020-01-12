@@ -19,6 +19,7 @@
 package de.minestar.fifthelement.manager;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -26,11 +27,12 @@ import de.minestar.fifthelement.Core;
 import de.minestar.fifthelement.data.Home;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
-public class HomeManager {
+public class HomeManager
+{
+    private Map<UUID, Home> homeMap;
 
-    private Map<String, Home> homeMap;
-
-    public HomeManager() {
+    public HomeManager()
+    {
         loadHomes();
     }
 
@@ -38,31 +40,30 @@ public class HomeManager {
     // LOADING AND INITIALIZATION
     // **************************
 
-    private void loadHomes() {
+    private void loadHomes()
+    {
         homeMap = Core.dbHandler.loadHomes();
         ConsoleUtils.printInfo(Core.NAME, "Loaded " + homeMap.size() + " Homes.");
     }
 
-    public Home getHome(String playerName) {
-        return homeMap.get(playerName.toLowerCase());
-    }
-
-    public void transferHome(String oldPlayer, String newPlayer) {
-        Core.dbHandler.transferHome(oldPlayer, newPlayer);
-        loadHomes();
+    public Home getHome(UUID playerUUID)
+    {
+        return homeMap.get(playerUUID);
     }
 
     // **************************
     // MANIPULATE CURRENT HOMES
     // **************************
 
-    public void createHome(Player player) {
+    public void createHome(Player player)
+    {
         Home home = new Home(player);
-        homeMap.put(player.getName().toLowerCase(), home);
+        homeMap.put(player.getUniqueId(), home);
         Core.dbHandler.addHome(home);
     }
 
-    public void moveHome(Player player, Home home) {
+    public void moveHome(Player player, Home home)
+    {
         home.updateLocation(player.getLocation());
         Core.dbHandler.updateHomeLocation(home);
     }
