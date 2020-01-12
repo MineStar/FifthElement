@@ -58,7 +58,7 @@ public class cmdWarpRename extends AbstractCommand {
         }
         // NEW NAME IS VALID NAME
         if (!Core.warpManager.isValidName(newName)) {
-            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ung�ltig!");
+            PlayerUtils.sendError(player, pluginName, "Der Warpname '" + newName + "' ist ungültig!");
             PlayerUtils.sendError(player, pluginName, "Der Warpname muss min. " + Settings.getMinWarpnameSize() + " Zeichen und maximal " + Settings.getMaxWarpnameSize() + " Zeichen lang sein.");
             return;
         }

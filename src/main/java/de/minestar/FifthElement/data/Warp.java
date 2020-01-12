@@ -163,7 +163,8 @@ public class Warp {
 
     public boolean addGuest(String guestName) {
         // RETURN TRUE WHEN GUEST WASN'T INVITED YET
-        if (guests != null) {
+        if (guests != null)
+        {
             return (this.guests.put(guestName, GuestHelper.create(owner, guestName)) == null);
         }
         return false;
@@ -181,11 +182,14 @@ public class Warp {
     public boolean isGuest(String playerName) {
         if (guests != null) {
             for (Guest guest : this.guests.values()) {
-                if (guest.isValid()) {
-                    if (guest.hasAccess(playerName)) {
+                if (guest.isValid())
+                {
+                    if (guest.hasAccess(playerName))
+                    {
                         return true;
                     }
-                } else {
+                }
+                else {
                     this.removeGuest(guest.getName());
                 }
             }
@@ -205,7 +209,8 @@ public class Warp {
         return canUse(player.getUniqueId()) || PermissionUtils.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         if (this.id == 0)
             this.id = id;
         else

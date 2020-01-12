@@ -19,7 +19,10 @@
 package de.minestar.fifthelement.commands.warp;
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
+import com.mojang.api.profiles.HttpUuidToNames;
+import com.mojang.api.profiles.PlayerNameRepository;
 import de.minestar.minestarlibrary.protection.Guest;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -79,42 +82,41 @@ public class cmdWarpInfo extends AbstractCommand {
     private final static ChatColor NAME_COLOR = ChatColor.GREEN;
     private final static ChatColor VALUE_COLOR = ChatColor.GRAY;
 
-    private void displayInformation(Warp warp, CommandSender sender) {
+    private void displayInformation(Warp warp, CommandSender sender)
+    {
         // HEAD
         ChatUtils.writeMessage(sender, SEPERATOR);
         ChatUtils.writeColoredMessage(sender, NAME_COLOR, "Informationen über Warp '" + VALUE_COLOR + warp.getName() + NAME_COLOR + "'");
         ChatUtils.writeMessage(sender, SEPERATOR);
-
         // OWNER
-        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwner().toString()));
-
+        ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt von:", VALUE_COLOR + warp.getOwnerName()));
         // CREATION DATE
         ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Erstellt:", VALUE_COLOR + FORMAT.format(warp.getCreationDate())));
-
         // USE MODE
         ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Benutzbar von:", VALUE_COLOR + useModeToText(warp.getUseMode())));
-
         // PUBLIC OR PRIVATE
-        if (warp.isPublic())
-            ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Öffentlich"));
+        if (warp.isPublic()) ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Öffentlich"));
         else {
             ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Typ:", VALUE_COLOR + "Privat"));
             // HAS GUESTS
-            if (warp.getGuests().size() > 0) {
+            if (warp.getGuests().size() > 0)
+            {
                 StringBuilder sBuilder = new StringBuilder();
-                for (Guest guest : warp.getGuests()) {
-                    if (guest.getName().length() < 1) {
-                        continue;
-                    }
-                    if (guest.getName().startsWith(GuestHelper.GROUP_PREFIX)) {
+                PlayerNameRepository repository = new HttpUuidToNames("minecraft");
+                for (Guest guest : warp.getGuests())
+                {
+                    if (guest.getName().length() < 1) continue;
+                    if (guest.getName().startsWith(GuestHelper.GROUP_PREFIX))
+                    {
                         sBuilder.append(guest.getName().replaceFirst(GuestHelper.GROUP_PREFIX, "group: "));
-                    } else {
-                        sBuilder.append(guest.getName());
+                    }
+                    else
+                    {
+                        sBuilder.append(repository.getCurrentPlayerNameByUUID(UUID.fromString(guest.getName())));
                     }
                     sBuilder.append(", ");
                 }
                 sBuilder.deleteCharAt(sBuilder.length() - 1);
-
                 ChatUtils.writeMessage(sender, String.format("%s %s", NAME_COLOR + "Gäste:", VALUE_COLOR + sBuilder.toString()));
             }
         }
@@ -122,29 +124,23 @@ public class cmdWarpInfo extends AbstractCommand {
         // POSITION AND DISTANCE
         Location loc = warp.getLocation();
         ChatUtils.writeMessage(sender, String.format(NAME_COLOR + "X:" + VALUE_COLOR + " %d " + NAME_COLOR + "Y:" + VALUE_COLOR + " %d " + NAME_COLOR + "Z: " + VALUE_COLOR + "%d " + NAME_COLOR + "Welt:" + VALUE_COLOR + " %s", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName()));
-        if (sender instanceof Player) {
+        if (sender instanceof Player)
+        {
             Location loc2 = ((Player) sender).getLocation();
             if (loc2.getWorld().equals(warp.getLocation().getWorld()))
                 ChatUtils.writeMessage(sender, String.format("%s %s m", NAME_COLOR + "Entfernung:", VALUE_COLOR + ("" + (int) (loc.distance(loc2)))));
         }
         // END OF INFORMATION
-
         ChatUtils.writeMessage(sender, SEPERATOR);
-
     }
 
-    private String useModeToText(byte useMode) {
+    private String useModeToText(byte useMode)
+    {
         String result = "";
-        if (useMode == Warp.COMMAND_USEMODE)
-            result = "Befehlen";
-        else if (useMode == Warp.SIGN_USEMODE)
-            result = "Schildern";
-        else if (useMode == (Warp.SIGN_USEMODE | Warp.COMMAND_USEMODE))
-            result = "Befehlen und Schilder";
-        else
-            ConsoleUtils.printError(pluginName, "Unknown usemode : " + useMode);
-
+        if (useMode == Warp.COMMAND_USEMODE) result = "Befehlen";
+        else if (useMode == Warp.SIGN_USEMODE) result = "Schildern";
+        else if (useMode == (Warp.SIGN_USEMODE | Warp.COMMAND_USEMODE)) result = "Befehlen und Schilder";
+        else ConsoleUtils.printError(pluginName, "Unknown usemode : " + useMode);
         return result;
-
     }
 }
