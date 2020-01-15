@@ -78,7 +78,7 @@ public class cmdWarpInvite extends AbstractExtendedCommand
                     String canonicalName = targetGroup.replaceFirst(GuestHelper.GROUP_PREFIX, "");
 
                     // GROUP IS NEW GUEST
-                    if (!warp.isGuest(targetGroup))
+                    if (!warp.isGuestGroup(targetGroup))
                     {
                         Core.warpManager.addGuest(warp, targetGroup);
                         PlayerUtils.sendSuccess(player, "Gruppe '" + canonicalName + "' wurde zum Warp '" + warp.getName() + "' eingeladen.");

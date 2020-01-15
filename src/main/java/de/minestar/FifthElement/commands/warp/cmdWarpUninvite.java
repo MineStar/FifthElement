@@ -21,6 +21,7 @@ package de.minestar.fifthelement.commands.warp;
 import com.mojang.api.profiles.HttpProfileRepository;
 import com.mojang.api.profiles.Profile;
 import com.mojang.api.profiles.ProfileRepository;
+import de.minestar.minestarlibrary.protection.Guest;
 import org.bukkit.entity.Player;
 
 import de.minestar.fifthelement.Core;
@@ -32,6 +33,8 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 import de.minestar.moneypit.data.guests.Group;
 import de.minestar.moneypit.data.guests.GroupManager;
 import de.minestar.moneypit.data.guests.GuestHelper;
+
+import java.util.Collection;
 
 public class cmdWarpUninvite extends AbstractExtendedCommand {
 
@@ -75,7 +78,7 @@ public class cmdWarpUninvite extends AbstractExtendedCommand {
                     String canonicalName = targetGroup.replaceFirst(GuestHelper.GROUP_PREFIX, "");
 
                     // GROUP WAS GUEST
-                    if (warp.isGuest(targetGroup))
+                    if (warp.isGuestGroup(targetGroup))
                     {
                         Core.warpManager.removeGuest(warp, targetGroup);
                         PlayerUtils.sendSuccess(player, "Gruppe '" + canonicalName + "' wurde aus dem Warp '" + warp.getName() + "' ausgeladen.");

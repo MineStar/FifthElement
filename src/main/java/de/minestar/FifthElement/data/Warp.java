@@ -179,15 +179,14 @@ public class Warp {
         return false;
     }
 
-    public boolean isGuest(String playerName) {
+    public boolean isGuest(String guestName)
+    {
         if (guests != null) {
-            for (Guest guest : this.guests.values()) {
+            for (Guest guest : this.guests.values())
+            {
                 if (guest.isValid())
                 {
-                    if (guest.hasAccess(playerName))
-                    {
-                        return true;
-                    }
+                    if (guest.hasAccess(guestName)) return true;
                 }
                 else {
                     this.removeGuest(guest.getName());
@@ -197,15 +196,34 @@ public class Warp {
         return false;
     }
 
-    public boolean isGuest(Player player) {
+    public boolean isGuest(Player player)
+    {
         return isGuest(player.getUniqueId().toString());
+    }
+
+    public boolean isGuestGroup(String guestGroup)
+    {
+        if (guests != null) {
+            for (Guest guest : this.guests.values())
+            {
+                if (guest.isValid())
+                {
+                    if (guest.getName().equals(guestGroup)) return true;
+                }
+                else {
+                    this.removeGuest(guest.getName());
+                }
+            }
+        }
+        return false;
     }
 
     public boolean canUse(UUID playerUUID) {
         return isPublic || isOwner(playerUUID) || isGuest(playerUUID.toString());
     }
 
-    public boolean canUse(Player player) {
+    public boolean canUse(Player player)
+    {
         return canUse(player.getUniqueId()) || PermissionUtils.playerCanUseCommand(player, PERMISSION_USE_ALL_WARPS);
     }
 
